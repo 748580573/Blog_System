@@ -11,12 +11,8 @@
     </settings>
 
     <mappers>
-        <mapper resource="classpath:mapper/marketInsight.xml"/>
+        <mapper resource="mapper/nicheInsightNew.xml"/>
 
-        <!--基础模块end-->
-
-
-        <!--业务模块end-->
     </mappers>
 
 </configuration>

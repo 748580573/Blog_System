@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>H+ 后台主题UI框架 - 视频播放</title>
+    <meta name="keywords" content="H+后台主题,后台bootstrap框架,会员中心主题,后台HTML,响应式后台">
+    <meta name="description" content="H+是一个完全响应式，基于Bootstrap3最新版本开发的扁平化主题，她采用了主流的左右两栏式布局，使用了Html5+CSS3等现代技术">
+
+    <link rel="shortcut icon" href="favicon.ico"> <link href="css/bootstrap.min.css-v=3.3.5.css" tppabs="http://www.zi-han.net/theme/hplus/css/bootstrap.min.css?v=3.3.5" rel="stylesheet">
+    <link href="css/font-awesome.min.css-v=4.4.0.css" tppabs="http://www.zi-han.net/theme/hplus/css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+    <link href="css/style.min.css-v=4.0.0.css" tppabs="http://www.zi-han.net/theme/hplus/css/style.min.css?v=4.0.0" rel="stylesheet">
+    <link rel="stylesheet" href="css/plugins/plyr/plyr.css" tppabs="http://www.zi-han.net/theme/hplus/css/plugins/plyr/plyr.css"><base target="_blank">
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>HTML5 多媒体播放器  <a href="javascript:if(confirm('https://plyr.io/  \n\n���ļ��޷��� Teleport Ultra ����, ��Ϊ ����һ�����·���ⲿ������Ϊ������ʼ��ַ�ĵ�ַ��  \n\n�����ڷ������ϴ���?'))window.location='https://plyr.io/'" tppabs="https://plyr.io/" target="_blank">https://plyr.io/</a></h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="form_basic.html#" tppabs="http://www.zi-han.net/theme/hplus/form_basic.html#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user">
+                                <li><a href="form_basic.html#" tppabs="http://www.zi-han.net/theme/hplus/form_basic.html#">选项1</a>
+                                </li>
+                                <li><a href="form_basic.html#" tppabs="http://www.zi-han.net/theme/hplus/form_basic.html#">选项2</a>
+                                </li>
+                            </ul>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <p>Plyr 是一个使用 HTML5 开发的基于浏览器上的多媒体播放器。支持自定义的播放控制和&nbsp;WebVTT 字幕。</p>
+                        <p>特性：</p>
+                        <ul>
+                            <li>
+                                <p><strong>可访问性</strong> - 完全支持字幕和屏幕阅读器</p>
+                            </li>
+                            <li>
+                                <p><strong>轻量级</strong> - 压缩后只有 4.8Kb</p>
+                            </li>
+                            <li>
+                                <p><strong>可定制</strong> - 外观可以根据需要进行调整</p>
+                            </li>
+                            <li>
+                                <p><strong>语义化</strong> - 使用 HTML5 的输入框进行音量和进度的调整</p>
+                            </li>
+                            <li>
+                                <p><strong>快速响应</strong> - 就像你预期的那样</p>
+                            </li>
+                            <li>
+                                <p><strong>音频和视频</strong>- 支持视频和纯音频</p>
+                            </li>
+                            <li>
+                                <p><strong>API</strong>&nbsp;- 易用 API</p>
+                            </li>
+                            <li>
+                                <p><strong>向下兼容</strong> - 如果浏览器不支持，则自动使用内建播放器</p>
+                            </li>
+                            <li>
+                                <p><strong>全屏支持</strong> -支持原生全屏和退出全屏</p>
+                            </li>
+                            <li>
+                                <p><strong>无依赖</strong> - 使用原生 JS 编写，不需要jQuery</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-8">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>视频播放</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="form_basic.html#" tppabs="http://www.zi-han.net/theme/hplus/form_basic.html#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user">
+                                <li><a href="form_basic.html#" tppabs="http://www.zi-han.net/theme/hplus/form_basic.html#">选项1</a>
+                                </li>
+                                <li><a href="form_basic.html#" tppabs="http://www.zi-han.net/theme/hplus/form_basic.html#">选项2</a>
+                                </li>
+                            </ul>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="player">
+                            <video poster="https://plyr.io/poster.jpg" controls crossorigin>
+                                <!-- Video files -->
+                                <source src="../../../cdn.selz.com/plyr/1.0/movie.mp4" tppabs="https://cdn.selz.com/plyr/1.0/movie.mp4" type="video/mp4">
+                                <source src="../../../cdn.selz.com/plyr/1.0/movie.webm" tppabs="https://cdn.selz.com/plyr/1.0/movie.webm" type="video/webm">
+
+                                <!-- Text track file -->
+                                <track kind="captions" label="English" srclang="en" src="../../../cdn.selz.com/plyr/1.0/example_captions_en.vtt" tppabs="https://cdn.selz.com/plyr/1.0/example_captions_en.vtt" default>
+
+                                    <!-- Fallback for browsers that don't support the <video> element -->
+                                    <a href="../../../cdn.selz.com/plyr/1.0/movie.mp4" tppabs="https://cdn.selz.com/plyr/1.0/movie.mp4">Download</a>
+                            </video>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>音频播放</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="form_basic.html#" tppabs="http://www.zi-han.net/theme/hplus/form_basic.html#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user">
+                                <li><a href="form_basic.html#" tppabs="http://www.zi-han.net/theme/hplus/form_basic.html#">选项1</a>
+                                </li>
+                                <li><a href="form_basic.html#" tppabs="http://www.zi-han.net/theme/hplus/form_basic.html#">选项2</a>
+                                </li>
+                            </ul>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="player">
+                            <audio controls>
+                                <!-- Audio files -->
+                                <source src="../../../music.baidu.com/cms/app/muplayer/test_mp3/1.mp3" tppabs="http://music.baidu.com/cms/app/muplayer/test_mp3/1.mp3" type="audio/mp3">
+
+                                <!-- Fallback for browsers that don't support the <audio> element -->
+                                您的浏览器不支持在线播放，请<a href="../../../music.baidu.com/cms/app/muplayer/test_mp3/1.mp3" tppabs="http://music.baidu.com/cms/app/muplayer/test_mp3/1.mp3">下载</a>
+                            </audio>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        (function(d,u){var a=new XMLHttpRequest(),b=d.body;if("withCredentials" in a){a.open("GET",u,true);a.send();a.onload=function(){var c=d.createElement("div");c.setAttribute("hidden","");c.innerHTML=a.responseText;b.insertBefore(c,b.childNodes[0])}}})(document, "css/plugins/plyr/sprite.svg"/*tpa=http://www.zi-han.net/theme/hplus/css/plugins/plyr/sprite.svg*/);
+    </script>
+    <script src="js/plugins/plyr/plyr.js" tppabs="http://www.zi-han.net/theme/hplus/js/plugins/plyr/plyr.js"></script>
+    <script>
+        plyr.setup();
+    </script>
+    <script src="js/jquery.min.js-v=2.1.4" tppabs="http://www.zi-han.net/theme/hplus/js/jquery.min.js?v=2.1.4"></script>
+    <script src="js/bootstrap.min.js-v=3.3.5" tppabs="http://www.zi-han.net/theme/hplus/js/bootstrap.min.js?v=3.3.5"></script>
+    <script src="js/content.min.js-v=1.0.0" tppabs="http://www.zi-han.net/theme/hplus/js/content.min.js?v=1.0.0"></script>
+    <script type="text/javascript" src="../../../tajs.qq.com/stats-sId=9051096" tppabs="http://tajs.qq.com/stats?sId=9051096" charset="UTF-8"></script>
+    
+</body>
+
+</html>

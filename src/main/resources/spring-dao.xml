@@ -1,54 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
-        http://www.springframework.org/schema/tx
-        http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+	http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+    http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-4.0.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd"
+       default-autowire="byName" default-lazy-init="true">
+
+    <context:component-scan base-package="com"/>
 
 
-    <!--市场洞察数据源oracle-->
-    <!--<bean id="MARKEETINSIGHT" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">-->
-        <!--<property name="driverClass" value="oracle.jdbc.driver.OracleDriver"></property>-->
-        <!--<property name="jdbcUrl" value="jdbc:oracle:thin:@//133.37.96.77:1521/gpop"></property>-->
-        <!--&lt;!&ndash; 用户名&ndash;&gt;-->
-        <!--<property name="user" value="dkgpop"></property>-->
-        <!--&lt;!&ndash; 用户密码&ndash;&gt;-->
-        <!--<property name="password" value="P2_3qwas#"></property>-->
-        <!--&lt;!&ndash;当连接池中的连接耗尽的时候c3p0一次同时获取的连接数。默认值: 3 &ndash;&gt;-->
-        <!--<property name="acquireIncrement" value="10"></property>-->
-        <!--&lt;!&ndash; 初始化连接池中的连接数，取值应在minPoolSize与maxPoolSize之间，默认为3&ndash;&gt;-->
-        <!--<property name="initialPoolSize" value="10"></property>-->
-        <!--&lt;!&ndash;最大空闲时间，60秒内未使用则连接被丢弃。若为0则永不丢弃。默认值: 0 &ndash;&gt;-->
-        <!--<property name="maxIdleTime" value="60"></property>-->
-        <!--&lt;!&ndash;连接池中保留的最大连接数。默认值: 15 &ndash;&gt;-->
-        <!--<property name="maxPoolSize" value="300"></property>-->
-        <!--&lt;!&ndash; 连接池中保留的最小连接数，默认为：3&ndash;&gt;-->
-        <!--<property name="minPoolSize" value="10"></property>-->
-        <!--&lt;!&ndash;重新尝试的时间间隔，默认为：1000毫秒&ndash;&gt;-->
-        <!--<property name="acquireRetryDelay" value="1000"></property>-->
-        <!--&lt;!&ndash;定义在从数据库获取新连接失败后重复尝试的次数。默认值: 30 ；小于等于0表示无限次&ndash;&gt;-->
-        <!--<property name="acquireRetryAttempts" value="60"></property>-->
-        <!--&lt;!&ndash;如果为false，则获取连接失败将会引起所有等待连接池来获取连接的线程抛出异常，-->
-        <!--但是数据源仍有效保留，并在下次调用getConnection()的时候继续尝试获取连接。如果设为true，-->
-        <!--那么在尝试获取连接失败后该数据源将申明已断开并永久关闭。默认: false&ndash;&gt;-->
-        <!--<property name="breakAfterAcquireFailure" value="false"></property>-->
-    <!--</bean>-->
-
-    <!--<bean id="oraSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">-->
-        <!--<property name="dataSource" ref="MARKEETINSIGHT"/>-->
-        <!--<property name="configLocation"  value="classpath:mybatis-config.xml" />-->
-    <!--</bean>-->
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:/config.properties</value>
+            </list>
+        </property>
+    </bean>
 
 
 
-    <!--<bean id="oraSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">-->
-        <!--<constructor-arg index="0" ref="oraSessionFactory"></constructor-arg>-->
-    <!--</bean>-->
+    <bean id="blogDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+        <property name="driverClass" value="${database.driver}"></property>
+        <property name="jdbcUrl" value="${database.url}"></property>
+        <!-- 用户名-->
+        <property name="user" value="${database.user}"></property>
+        <!-- 用户密码-->
+        <property name="password" value="${database.password}"></property>
+        <!--当连接池中的连接耗尽的时候c3p0一次同时获取的连接数。默认值: 3 -->
+        <property name="acquireIncrement" value="10"></property>
+        <!-- 初始化连接池中的连接数，取值应在minPoolSize与maxPoolSize之间，默认为3-->
+        <property name="initialPoolSize" value="10"></property>
+        <!--最大空闲时间，60秒内未使用则连接被丢弃。若为0则永不丢弃。默认值: 0 -->
+        <property name="maxIdleTime" value="60"></property>
+        <!--连接池中保留的最大连接数。默认值: 15 -->
+        <property name="maxPoolSize" value="300"></property>
+        <!-- 连接池中保留的最小连接数，默认为：3-->
+        <property name="minPoolSize" value="10"></property>
+        <!--重新尝试的时间间隔，默认为：1000毫秒-->
+        <property name="acquireRetryDelay" value="1000"></property>
+        <!--定义在从数据库获取新连接失败后重复尝试的次数。默认值: 30 ；小于等于0表示无限次-->
+        <property name="acquireRetryAttempts" value="60"></property>
+        <!--如果为false，则获取连接失败将会引起所有等待连接池来获取连接的线程抛出异常，
+        但是数据源仍有效保留，并在下次调用getConnection()的时候继续尝试获取连接。如果设为true，
+        那么在尝试获取连接失败后该数据源将申明已断开并永久关闭。默认: false-->
+        <property name="breakAfterAcquireFailure" value="false"></property>
+    </bean>
 
-    <!--<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">-->
-        <!--<property name="dataSource" ref="MARKEETINSIGHT" />-->
-    <!--</bean>-->
+    <bean id="SessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="blogDataSource"/>
+        <property name="configLocation"  value="classpath:mybatis-config.xml" />
+    </bean>
+
+    <bean id="sessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg index="0" ref="SessionFactory"></constructor-arg>
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="blogDataSource" />
+    </bean>
 
 
 </beans>
