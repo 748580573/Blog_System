@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <script src="../js/jquery-3.2.1.min.js"></script>
+    <script src="../js/vue.js"></script>
+
+    <link href="../css/Common.css" type="text/css" rel="stylesheet">
+    <link href="../css/index.css" type="text/css" rel="stylesheet">
+
+</head>
+<body style="height: 4300px;">
+
+<div id="nav" class="header">
+    <div class="decoration"></div>
+    <div class="header-content">
+        <div class="motto">
+            <a href="#">奥米伽小分队 |</a>
+            <div class="author_motto"> &nbsp;&nbsp;他山之石，可以攻玉</div>
+        </div>
+
+        <ul class="menu">
+            <li v-for="title in titles">
+                <a href="#">{{title.name}}<img class="icon-arrow" src="../img/a.png" v-if="title.sub != null && title.sub.length > 0"></a>
+                <ul class="dropdown-menu" v-if="title.sub != null && title.sub.length > 0">
+                    <li v-for="subTitle in title.sub">
+                        <a href="#">{{subTitle.name}}</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+
+        <div class="search">
+            <input type="text">
+            <img src="../img/search.png">
+        </div>
+    </div>
+</div>
+
+<div class="separateLine_h"></div>
+
+<div class="content_left">
+    <div class="blog_top">
+        <div id="Carousel" class="Carousel">
+            <div class="Carousel_content">
+                <ul class="Carousel_content_ul">
+                    <li class="Carousel_content_li" alt="0" ><img src="../img/1.jpeg"></li>
+                    <li class="Carousel_content_li" alt="1" hidden="hidden"><img src="../img/2.jpeg"></li>
+                    <li class="Carousel_content_li" alt="2" hidden><img src="../img/3.jpg"></li>
+                </ul>
+            </div>
+
+            <div class="Carousel_button">
+                <div>
+                    <div class="Carousel_circle" alt="0" onclick="carousel_button(this)"></div>
+                    <div class="Carousel_circle" alt="1" onclick="carousel_button(this)"></div>
+                    <div class="Carousel_circle" alt="2" onclick="carousel_button(this)"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="recommend_blog">
+            <ul class="recommend_blog_ul">
+                <li class="recommend_blog_ul_li">
+                    <a href="#">
+                        <img src="../img/b.jpg">
+                        <p>
+                            【巴啦啦能量】
+                            <br>
+                            论程序员的素颜
+                        </p>
+                    </a>
+                </li>
+                <li class="separateLine_h"></li>
+                <li class="recommend_blog_ul_li">
+                    <a href="#">
+                        <img src="../img/c.jpg">
+                        <p>
+                            【巴啦啦能量】
+                            <br>
+                            论程序员的素颜
+                        </p>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="separateLine_h"></div>
+
+    <div class="knowledge">
+        <div class="knowledge_theme_nav">
+            <div style="height: 100%">
+                <ul class="knowledge_theme_nav_ul">
+                    <li class="knowledge_theme_nav_ul_li" onclick="click_title(this)" style="border-bottom:2px solid black" data-sign="1">栏目一</li>
+                    <li class="knowledge_theme_nav_ul_li" onclick="click_title(this)" data-sign="2">栏目二</li>
+                    <li class="knowledge_theme_nav_ul_li" onclick="click_title(this)" data-sign="3">栏目三</li>
+                    <li class="knowledge_theme_nav_ul_li" onclick="click_title(this)" data-sign="4">栏目四</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="separateLine_h"></div>
+
+
+        <div class="knowledge_theme_content">
+
+            <div class="knowledge_theme_content_left">
+                <ul class="knowledge_theme_ul">
+                    <li  class="knowledge_theme_ul_li">
+                        <a href="#">
+                            <img src="../img/b.jpg">
+                            <p>
+                                【巴啦啦能量】
+                                <br>
+                                论程序员的素颜
+                            </p>
+                        </a>
+                    </li>
+                    <li class="separateLine_h"></li>
+
+                    <li class="knowledge_theme_ul_li">
+                        <a href="#">
+                            <img src="../img/c.jpg">
+                            <p>
+                                【巴啦啦能量】
+                                <br>
+                                论程序员的素颜
+                            </p>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="separateLine_v"></div>
+
+            <div class="knowledge_theme_content_right">
+                <ul data-sign="1">
+                    <li style="height: 40%;background-color: #d4d4d4;" onmouseover="changeLi(this)">
+                        <i>1</i>
+                        <a  href="">标题</a>
+                        <p class="description">asd</p>
+                    </li>
+                    <li onmouseover="changeLi(this)">
+                        <i>1</i>
+                        <a  href="">标题</a>
+                        <p class="description" hidden>asd</p>
+                    </li>
+                    <li onmouseover="changeLi(this)">
+                        <i>1</i>
+                        <a  href="">标题</a>
+                        <p class="description" hidden>asd</p>
+                    </li>
+                    <li onmouseover="changeLi(this)">
+                        <i>1</i>
+                        <a  href="">标题</a>
+                        <p class="description" hidden>asd</p>
+                    </li>
+                    <li onmouseover="changeLi(this)">
+                        <i>1</i>
+                        <a  href="">标题</a>
+                        <p class="description" hidden>asd</p>
+                    </li>
+                </ul>
+                <ul data-sign="2" hidden>
+                    <li style="height: 40%;background-color: #d4d4d4;" onmouseover="changeLi(this)">
+                        <i>1</i>
+                        <a  href="">标题1</a>
+                        <p class="description">asd</p>
+                    </li>
+                    <li onmouseover="changeLi(this)">
+                        <i>1</i>
+                        <a  href="">标题2</a>
+                        <p class="description" hidden>asd</p>
+                    </li>
+                    <li onmouseover="changeLi(this)">
+                        <i>1</i>
+                        <a  href="">标题3</a>
+                        <p class="description" hidden>asd</p>
+                    </li>
+                    <li onmouseover="changeLi(this)">
+                        <i>1</i>
+                        <a  href="">标题4</a>
+                        <p class="description" hidden>asd</p>
+                    </li>
+                    <li onmouseover="changeLi(this)">
+                        <i>1</i>
+                        <a  href="">标题5</a>
+                        <p class="description" hidden>asd</p>
+                    </li>
+                </ul>
+                <ul data-sign="3" hidden>
+                    <li style="height: 40%;background-color: #d4d4d4;" onmouseover="changeLi(this)">
+                        <i>1</i>
+                        <a  href="">java</a>
+                        <p class="description">java教程</p>
+                    </li>
+                    <li onmouseover="changeLi(this)">
+                        <i>1</i>
+                        <a  href="">标题2</a>
+                        <p class="description" hidden>asd</p>
+                    </li>
+                    <li onmouseover="changeLi(this)">
+                        <i>1</i>
+                        <a  href="">标题3</a>
+                        <p class="description" hidden>asd</p>
+                    </li>
+                    <li onmouseover="changeLi(this)">
+                        <i>1</i>
+                        <a  href="">标题4</a>
+                        <p class="description" hidden>asd</p>
+                    </li>
+                    <li onmouseover="changeLi(this)">
+                        <i>1</i>
+                        <a  href="">标题5</a>
+                        <p class="description" hidden>asd</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="separateLine_h"></div>
+
+    <div class="special_recommend">
+        <div class="special_recommend_title">
+            <ul>
+                <li>特别推荐</li>
+            </ul>
+        </div>
+
+        <div class="separateLine_h"></div>
+
+        <div class="special_recommend_content">
+            <ul>
+                <li class="special_recommend_content_li">
+                    <div class="special_recommen_detail">
+                        <div style="width: 369px;overflow: hidden">
+                            <img  class="special_recommen_detail_img" src="../img/c.jpg">
+                        </div>
+                        <div>2019秋招-战争学院面试</div>
+                        <div class="separateLine_h"></div>
+                        <div><p class="special_recommen_detail_desc text_overflow">洛丹伦国王泰瑞纳斯·米奈希尔二世的儿子，乌瑟尔·光明使者的弟子。在恶魔的惩罚下，巫妖王诞生的唯一目的就是：统帅被称为天灾的庞大亡灵军队。耐奥祖是兽人萨满长老，他的地位曾经高如德拉诺氏族的兽人大酋长，却也沦落到成为燃烧军团的奴隶。</p></div>
+                        <div class="separateLine_h"></div>
+                        <div>+<a href="#" class="special_recommen_detail_a">阅读全文</a></div>
+                    </div>
+                </li>
+                <li class="special_recommend_content_li">
+                    <div class="special_recommen_detail">
+                        <div style="width: 369px;overflow: hidden">
+                            <img  class="special_recommen_detail_img" src="../img/c.jpg">
+                        </div>
+                        <div>2019秋招-战争学院面试</div>
+                        <div class="separateLine_h"></div>
+                        <div><p class="special_recommen_detail_desc text_overflow">洛丹伦国王泰瑞纳斯·米奈希尔二世的儿子，乌瑟尔·光明使者的弟子。在恶魔的惩罚下，巫妖王诞生的唯一目的就是：统帅被称为天灾的庞大亡灵军队。耐奥祖是兽人萨满长老，他的地位曾经高如德拉诺氏族的兽人大酋长，却也沦落到成为燃烧军团的奴隶。</p></div>
+                        <div class="separateLine_h"></div>
+                        <div>+<a href="#" class="special_recommen_detail_a">阅读全文</a></div>
+                    </div>
+                </li>
+                <li class="special_recommend_content_li">
+                    <div class="special_recommen_detail">
+                        <div style="width: 369px;overflow: hidden">
+                            <img  class="special_recommen_detail_img" src="../img/c.jpg">
+                        </div>
+                        <div>2019秋招-战争学院面试</div>
+                        <div class="separateLine_h"></div>
+                        <div><p class="special_recommen_detail_desc text_overflow">洛丹伦国王泰瑞纳斯·米奈希尔二世的儿子，乌瑟尔·光明使者的弟子。在恶魔的惩罚下，巫妖王诞生的唯一目的就是：统帅被称为天灾的庞大亡灵军队。耐奥祖是兽人萨满长老，他的地位曾经高如德拉诺氏族的兽人大酋长，却也沦落到成为燃烧军团的奴隶。</p></div>
+                        <div class="separateLine_h"></div>
+                        <div>+<a href="#" class="special_recommen_detail_a">阅读全文</a></div>
+                    </div>
+                </li>
+                <li class="special_recommend_content_li">
+                    <div class="special_recommen_detail">
+                        <div style="width: 369px;overflow: hidden">
+                            <img  class="special_recommen_detail_img" src="../img/c.jpg">
+                        </div>
+                        <div>2019秋招-战争学院面试</div>
+                        <div class="separateLine_h"></div>
+                        <div><p class="special_recommen_detail_desc text_overflow">洛丹伦国王泰瑞纳斯·米奈希尔二世的儿子，乌瑟尔·光明使者的弟子。在恶魔的惩罚下，巫妖王诞生的唯一目的就是：统帅被称为天灾的庞大亡灵军队。耐奥祖是兽人萨满长老，他的地位曾经高如德拉诺氏族的兽人大酋长，却也沦落到成为燃烧军团的奴隶。</p></div>
+                        <div class="separateLine_h"></div>
+                        <div>+<a href="#" class="special_recommen_detail_a">阅读全文</a></div>
+                    </div>
+                </li>
+                <li class="special_recommend_content_li">
+                    <div class="special_recommen_detail">
+                        <div style="width: 369px;overflow: hidden">
+                            <img  class="special_recommen_detail_img" src="../img/c.jpg">
+                        </div>
+                        <div>2019秋招-战争学院面试</div>
+                        <div class="separateLine_h"></div>
+                        <div><p class="special_recommen_detail_desc text_overflow">洛丹伦国王泰瑞纳斯·米奈希尔二世的儿子，乌瑟尔·光明使者的弟子。在恶魔的惩罚下，巫妖王诞生的唯一目的就是：统帅被称为天灾的庞大亡灵军队。耐奥祖是兽人萨满长老，他的地位曾经高如德拉诺氏族的兽人大酋长，却也沦落到成为燃烧军团的奴隶。</p></div>
+                        <div class="separateLine_h"></div>
+                        <div>+<a href="#" class="special_recommen_detail_a">阅读全文</a></div>
+                    </div>
+                </li>
+                <li class="special_recommend_content_li">
+                    <div class="special_recommen_detail">
+                        <div style="width: 369px;overflow: hidden">
+                            <img  class="special_recommen_detail_img " src="../img/c.jpg">
+                        </div>
+                        <div>2019秋招-战争学院面试</div>
+                        <div class="separateLine_h"></div>
+                        <div><p class="special_recommen_detail_desc text_overflow">洛丹伦国王泰瑞纳斯·米奈希尔二世的儿子，乌瑟尔·光明使者的弟子。在恶魔的惩罚下，巫妖王诞生的唯一目的就是：统帅被称为天灾的庞大亡灵军队。耐奥祖是兽人萨满长老，他的地位曾经高如德拉诺氏族的兽人大酋长，却也沦落到成为燃烧军团的奴隶。</p></div>
+                        <div class="separateLine_h"></div>
+                        <div>+<a href="#" class="special_recommen_detail_a">阅读全文</a></div>
+                    </div>
+                </li>
+
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="separateLine_h"></div>
+
+
+    <div class="shiumo">
+        <img src="../img/shuimo.jpg" width="1280px" height="260px" alt="">
+    </div>
+
+    <div class="separateLine_h"></div>
+    <div class="new_article">
+        <div class="special_recommend_title">
+            <ul>
+                <li>最新文章</li>
+            </ul>
+        </div>
+
+        <div class="separateLine_h"></div>
+
+        <div class="new_article_content">
+            <ul class="new_article_content_ul">
+                <li class="new_article_content_li">
+                    <h3><a href="#">德玛西亚</a></h3>
+                    <div class="new_article_content_tail">
+                        <div class="new_article_content_tail_left">
+                            <img src="../img/c.jpg" width="367px" height="300px">
+                        </div>
+                        <div class="new_article_content_tail_right">
+                            <p class="text_overflow">洛丹伦国王泰瑞纳斯·米奈希尔二世的儿子，乌瑟尔·光明使者的弟子。在恶魔的惩罚下，巫妖王诞生的唯一目的就是：统帅被称为天灾的庞大亡灵军队。耐奥祖是兽人萨满长老，他的地位曾经高如德拉诺氏族的兽人大酋长，却也沦落到成为燃烧军团的奴隶。洛丹伦国王泰瑞纳斯·米奈希尔二世的儿子，乌瑟尔·光明使者的弟子。在恶魔的惩罚下，巫妖王诞生的唯一目的就是：统帅被称为天灾的庞大亡灵军队。耐奥祖是兽人萨满长老，他的地位曾经高如德拉诺氏族的兽人大酋长，却也沦落到成为燃烧军团的奴隶。</p>
+                            <br>
+                            <div>
+                                <img class="author_img" src="../img/author_img.png">
+                                <span class="author_name">比丘特之剑</span>
+                                <span class="tags">【<span class="tags">艾泽拉斯|洛丹洛|阿尔萨斯</span>】</span>
+                                <span class="text_color_deepgray">2019-01-21</span>
+                                <a class="looking" href="#"></a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="new_article_content_li">
+                    <h3><a href="#">德玛西亚</a></h3>
+                    <div class="new_article_content_tail">
+                        <div class="new_article_content_tail_left">
+                            <img src="../img/c.jpg" width="367px" height="300px">
+                        </div>
+                        <div class="new_article_content_tail_right">
+                            <p class="text_overflow">洛丹伦国王泰瑞纳斯·米奈希尔二世的儿子，乌瑟尔·光明使者的弟子。在恶魔的惩罚下，巫妖王诞生的唯一目的就是：统帅被称为天灾的庞大亡灵军队。耐奥祖是兽人萨满长老，他的地位曾经高如德拉诺氏族的兽人大酋长，却也沦落到成为燃烧军团的奴隶。洛丹伦国王泰瑞纳斯·米奈希尔二世的儿子，乌瑟尔·光明使者的弟子。在恶魔的惩罚下，巫妖王诞生的唯一目的就是：统帅被称为天灾的庞大亡灵军队。耐奥祖是兽人萨满长老，他的地位曾经高如德拉诺氏族的兽人大酋长，却也沦落到成为燃烧军团的奴隶。</p>
+                            <br>
+                            <div>
+                                <img class="author_img" src="../img/author_img.png">
+                                <span class="author_name">比丘特之剑</span>
+                                <span class="tags">【<span class="tags">艾泽拉斯|洛丹洛|阿尔萨斯</span>】</span>
+                                <span class="text_color_deepgray">2019-01-21</span>
+                                <a class="looking" href="#"></a>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </li>
+
+                <li class="new_article_content_li">
+                    <h3><a href="#">德玛西亚</a></h3>
+                    <div class="new_article_content_tail">
+                        <div class="new_article_content_tail_left">
+                            <img src="../img/c.jpg" width="367px" height="300px">
+                        </div>
+                        <div class="new_article_content_tail_right">
+                            <p class="text_overflow">洛丹伦国王泰瑞纳斯·米奈希尔二世的儿子，乌瑟尔·光明使者的弟子。在恶魔的惩罚下，巫妖王诞生的唯一目的就是：统帅被称为天灾的庞大亡灵军队。耐奥祖是兽人萨满长老，他的地位曾经高如德拉诺氏族的兽人大酋长，却也沦落到成为燃烧军团的奴隶。洛丹伦国王泰瑞纳斯·米奈希尔二世的儿子，乌瑟尔·光明使者的弟子。在恶魔的惩罚下，巫妖王诞生的唯一目的就是：统帅被称为天灾的庞大亡灵军队。耐奥祖是兽人萨满长老，他的地位曾经高如德拉诺氏族的兽人大酋长，却也沦落到成为燃烧军团的奴隶。</p>
+                            <br>
+                            <div>
+                                <img class="author_img" src="../img/author_img.png">
+                                <span class="author_name">比丘特之剑</span>
+                                <span class="tags">【<span class="tags">艾泽拉斯|洛丹洛|阿尔萨斯</span>】</span>
+                                <span class="text_color_deepgray">2019-01-21</span>
+                                <a class="looking" href="#"></a>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </li>
+
+                <li class="new_article_content_li">
+                    <h3><a href="#">德玛西亚</a></h3>
+                    <div class="new_article_content_tail">
+                        <div class="new_article_content_tail_left">
+                            <img src="../img/c.jpg" width="367px" height="300px">
+                        </div>
+                        <div class="new_article_content_tail_right">
+                            <p class="text_overflow">洛丹伦国王泰瑞纳斯·米奈希尔二世的儿子，乌瑟尔·光明使者的弟子。在恶魔的惩罚下，巫妖王诞生的唯一目的就是：统帅被称为天灾的庞大亡灵军队。耐奥祖是兽人萨满长老，他的地位曾经高如德拉诺氏族的兽人大酋长，却也沦落到成为燃烧军团的奴隶。洛丹伦国王泰瑞纳斯·米奈希尔二世的儿子，乌瑟尔·光明使者的弟子。在恶魔的惩罚下，巫妖王诞生的唯一目的就是：统帅被称为天灾的庞大亡灵军队。耐奥祖是兽人萨满长老，他的地位曾经高如德拉诺氏族的兽人大酋长，却也沦落到成为燃烧军团的奴隶。</p>
+                            <br>
+                            <div>
+                                <img class="author_img" src="../img/author_img.png">
+                                <span class="author_name">比丘特之剑</span>
+                                <span class="tags">【<span class="tags">艾泽拉斯|洛丹洛|阿尔萨斯</span>】</span>
+                                <span class="text_color_deepgray">2019-01-21</span>
+                                <a class="looking" href="#"></a>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </li>
+
+                <li class="new_article_content_li">
+                    <h3><a href="#">德玛西亚</a></h3>
+                    <div class="new_article_content_tail">
+                        <div class="new_article_content_tail_left">
+                            <img src="../img/c.jpg" width="367px" height="300px">
+                        </div>
+                        <div class="new_article_content_tail_right">
+                            <p class="text_overflow">洛丹伦国王泰瑞纳斯·米奈希尔二世的儿子，乌瑟尔·光明使者的弟子。在恶魔的惩罚下，巫妖王诞生的唯一目的就是：统帅被称为天灾的庞大亡灵军队。耐奥祖是兽人萨满长老，他的地位曾经高如德拉诺氏族的兽人大酋长，却也沦落到成为燃烧军团的奴隶。洛丹伦国王泰瑞纳斯·米奈希尔二世的儿子，乌瑟尔·光明使者的弟子。在恶魔的惩罚下，巫妖王诞生的唯一目的就是：统帅被称为天灾的庞大亡灵军队。耐奥祖是兽人萨满长老，他的地位曾经高如德拉诺氏族的兽人大酋长，却也沦落到成为燃烧军团的奴隶。</p>
+                            <br>
+                            <div>
+                                <img class="author_img" src="../img/author_img.png">
+                                <span class="author_name">比丘特之剑</span>
+                                <span class="tags">【<span class="tags">艾泽拉斯|洛丹洛|阿尔萨斯</span>】</span>
+                                <span class="text_color_deepgray">2019-01-21</span>
+                                <a class="looking" href="#"></a>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+
+    </div>
+</div>
+
+<div class="content_right">
+    <div class="business_card">
+        <h2>名片</h2>
+        <p>网名：比丘特之剑 | Mr-W</p>
+        <p>职业：boy:software_Engineer</p>
+        <p>现居：艾泽拉斯-洛丹伦</p>
+        <p>Email：748580573@qq.com</p>
+
+        <ul class="business_card_ul">
+            <li class="business_card_li"><a class="business_card_a circle_border" href=""><img src="../img/home.png" width="45px" height="45px"></a></li>
+            <li class="business_card_li"><a class="business_card_a circle_border" href=""><img src="../img/xinfeng.png" width="45px" height="45px"></a></li>
+            <li class="business_card_li"><a class="business_card_a circle_border" href=""><img src="../img/QQ.png" width="45px" height="45px"></a></li>
+            <li class="business_card_li"><a class="business_card_a circle_border" href=""><img src="../img/Git.png" width="45px" height="45px"></a></li>
+        </ul>
+    </div>
+
+    <div class="separateLine_h"></div>
+
+    <div class="hot">
+        <div class="separateLine_h"></div>
+        <div class="hot_div">
+            <ul>
+                <li>热门文章</li>
+            </ul>
+        </div>
+
+        <div class="separateLine_h"></div>
+
+        <ul class="hot_ul">
+            <li class="hot_li"><a class="hot_ul_li_a" href="#">昨天我对你说了什么</a></li>
+            <li class="hot_li"><a class="hot_ul_li_a" href="#">昨天我对你说了什么</a></li>
+            <li class="hot_li"><a class="hot_ul_li_a" href="#">昨天我对你说了什么</a></li>
+            <li class="hot_li"><a class="hot_ul_li_a" href="#">昨天我对你说了什么</a></li>
+            <li class="hot_li"><a class="hot_ul_li_a" href="#">昨天我对你说了什么</a></li>
+        </ul>
+    </div>
+
+    <div class="separateLine_h"></div>
+
+    <div class="rank">
+        <div class="separateLine_h"></div>
+        <div class="hot_div">
+            <ul>
+                <li>点击排行</li>
+            </ul>
+        </div>
+
+        <div class="separateLine_h"></div>
+
+        <ul class="rank_ul">
+            <li class="rank_ul_li">
+                <p class="rank_ul_li_p text_overflow text_indentation">你的痛苦我都心疼想为你解决挡开流言紧握你手想飞奔往前我相信爱能证明一切 </p>
+                <div class="rank_ul_li_div">
+                    <div class="rank_ul_li_div_img">
+                        <img src="../img/c.jpg" width="150px" height="120px">
+                    </div>
+                    <div class="rank_ul_li_span text_overflow">因为要离别就走破这双鞋我陪你走一夜直到心不再滴血而你流尽泪水天空不停地闪着雷照不亮我心中黑黑黑黑黑就走破这双鞋我陪你走一夜黑黑黑黑黑就走破这双鞋我陪你走一夜</div>
+                </div>
+            </li>
+
+            <li class="rank_ul_li">
+                <p class="rank_ul_li_p text_overflow text_indentation">你的痛苦我都心疼想为你解决挡开流言紧握你手想飞奔往前我相信爱能证明一切 </p>
+                <div class="rank_ul_li_div">
+                    <div class="rank_ul_li_div_img">
+                        <img src="../img/c.jpg" width="150px" height="120px">
+                    </div>
+                    <div class="rank_ul_li_span text_overflow">因为要离别就走破这双鞋我陪你走一夜直到心不再滴血而你流尽泪水天空不停地闪着雷照不亮我心中黑黑黑黑黑就走破这双鞋我陪你走一夜黑黑黑黑黑就走破这双鞋我陪你走一夜</div>
+                </div>
+            </li>
+
+            <li class="rank_ul_li">
+                <p class="rank_ul_li_p text_overflow text_indentation">你的痛苦我都心疼想为你解决挡开流言紧握你手想飞奔往前我相信爱能证明一切 </p>
+                <div class="rank_ul_li_div">
+                    <div class="rank_ul_li_div_img">
+                        <img src="../img/c.jpg" width="150px" height="120px">
+                    </div>
+                    <div class="rank_ul_li_span text_overflow">因为要离别就走破这双鞋我陪你走一夜直到心不再滴血而你流尽泪水天空不停地闪着雷照不亮我心中黑黑黑黑黑就走破这双鞋我陪你走一夜黑黑黑黑黑就走破这双鞋我陪你走一夜</div>
+                </div>
+            </li>
+
+            <li class="rank_ul_li">
+                <p class="rank_ul_li_p text_overflow text_indentation">你的痛苦我都心疼想为你解决挡开流言紧握你手想飞奔往前我相信爱能证明一切 </p>
+                <div class="rank_ul_li_div">
+                    <div class="rank_ul_li_div_img">
+                        <img src="../img/c.jpg" width="150px" height="120px">
+                    </div>
+                    <div class="rank_ul_li_span text_overflow">因为要离别就走破这双鞋我陪你走一夜直到心不再滴血而你流尽泪水天空不停地闪着雷照不亮我心中黑黑黑黑黑就走破这双鞋我陪你走一夜黑黑黑黑黑就走破这双鞋我陪你走一夜</div>
+                </div>
+            </li>
+
+
+        </ul>
+    </div>
+</div>
+</body>
+<script src="../js/index.js"></script>
+</html>

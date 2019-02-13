@@ -7,11 +7,15 @@
     </properties>
     <settings>
         <!-- 打印查询语句 -->
-        <setting name="logImpl" value="STDOUT_LOGGING" />
+        <setting name="logImpl" value="LOG4J" />
     </settings>
 
     <mappers>
         <mapper resource="mapper/nicheInsightNew.xml"/>
+        <mapper resource="mapper/blog.xml"/>
+        <mapper resource="mapper/tags.xml"/>
+        <mapper resource="mapper/blog_tag.xml"/>
+
 
     </mappers>
 

@@ -4,8 +4,17 @@
 
 <mapper namespace="blog">
 
-    <select id="addBlog" resultType="map">
-        SELECT * FROM test
+    <resultMap id="blogMap" type="com.heng.blog_system.bean.Blog">
+        <result property="blogCode" column="blog_code"/>
+        <result property="blogTilte" column="blog_title"/>
+        <result property="blogDesc" column="blog_desc"/>
+        <result property="blogContent" column="blog_content"/>
+        <result property="blogConverUrl" column="blog_conver_url"/>
+    </resultMap>
+
+    <select id="addBlog" parameterType="map">
+        INSERT INTO blog_article(blog_code,blog_title,blog_desc,blog_content,blog_conver_url)
+        VALUES (#{blog_code},#{blog_title},#{blog_desc},#{blog_content},#{imgUrl});
     </select>
 </mapper>
 

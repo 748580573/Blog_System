@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="blogTag">
+
+    <resultMap id="blogMap" type="com.heng.blog_system.bean.Blog">
+        <result property="blogCode" column="blog_code"/>
+        <result property="blogTilte" column="blog_title"/>
+        <result property="blogDesc" column="blog_desc"/>
+        <result property="blogContent" column="blog_content"/>
+        <result property="blogConverUrl" column="blog_conver_url"/>
+        <result property="tags" column="tag_name"/>
+    </resultMap>
+
+    <insert id="addBlog" parameterType="map">
+        INSERT INTO blog_article(blog_code,blog_title,blog_desc,blog_content,blog_conver_url)
+        VALUES (#{blog_code},#{blog_title},#{blog_desc},#{blog_content},#{imgUrl});
+    </insert>
+
+    <select id="selectBlog" parameterType="map" resultMap="blogMap">
+        SELECT *
+        FROM blog_article
+        WHERE 1 = 1
+        <if test="blog_code != null">
+            AND blog_code = "${blog_code}"
+        </if>
+    </select>
+
+    <select id="selectBlogForSearch" parameterType="map" resultMap="blogMap">
+        SELECT
+        *
+        FROM
+        blog_article
+        LEFT JOIN (
+        SELECT
+        GROUP_CONCAT( DISTINCT tags.tag_name ) tag_name ,blog_article.blog_code
+        FROM
+        blog_article,
+        tag_article,
+        tags
+        WHERE
+        tag_article.blog_code = blog_article.blog_code
+        AND tags.tag_code = tag_article.tag_code
+        <if test="blog_code != null">
+            AND tag_article.blog_code = "${blog_code}"
+        </if>
+        ) tagresult ON tagresult.blog_code = blog_article.blog_code;
+
+    </select>
+
+    <!--##############################################################################-->
+
+    <resultMap id="tagMap" type="com.heng.blog_system.bean.Tag">
+        <result property="tagCode" column="tag_code"/>
+        <result property="tagName" column="tag_name"/>
+    </resultMap>
+
+    <insert id="addTag" parameterType="map">
+        INSERT INTO tags(tag_code,tag_name)
+        VALUES (#{tag_code},#{tag_name})
+    </insert>
+
+    <select id="selectTag" resultMap="tagMap" parameterType="map">
+        SELECT *
+        FROM tags
+        WHERE 1 = 1
+        <if test="tag_code != null">
+            AND tag_code = #{tag_code}
+        </if>
+    </select>
+
+    <select id="selectAllTag" resultMap="tagMap">
+        SELECT *
+        FROM tags
+    </select>
+
+    <!--################################标签-博客关联表################################################-->
+
+    <insert id="insertTagBlog" parameterType="map">
+        INSERT INTO tag_article(blog_code,tag_code) values (#{blog_code},#{tag_code})
+    </insert>
+</mapper>
+

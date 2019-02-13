@@ -144,7 +144,7 @@
 
 
 <div class="html"></div>
-<button id="but">点我</button>
+<button id="but" onclick="sub_form()">点我</button>
 
 </body>
 
@@ -183,33 +183,32 @@
             msgFilesTooMany: "选择上传的文件数量({n}) 超过允许的最大数值{m}！",
         });
 
-        
-        $("#but").click(function () {
-            var imgUrl = "";
-            $("#uploadfile").fileinput("upload");
-            $("#uploadfile").on("fileuploaded", function(event, data, previewId, index) {
-                imgUrl = data["response"][0];
+    });
 
-                var blog_title = $("#blog_title").val();
-                var blog_desc = $("#blog_desc").val();
-                var bolg_tags = $("#blog_tags").val();
-                var blog_content = $("#summernote").summernote("code");
-
-
-                $.ajax({
-                    url:"/blog_system/test",
-                    type:"POST",
-                    data:{"blog_title":blog_title,"blog_desc":blog_desc,"bolg_tags":bolg_tags,
-                        "blog_content":blog_content,"imgUrl":imgUrl},
-                    success:function () {
-                    }
-                })
-            });
-
+    var imgUrl;
+    var sub_form = function () {
+        $("#uploadfile").fileinput("upload");
+        $("#uploadfile").on("fileuploaded", function(event, data, previewId, index) {
+            var aaa = data["response"][0];
+            imgUrl = data["response"][0];
 
         });
 
-    });
+        var blog_title = $("#blog_title").val();
+        var blog_desc = $("#blog_desc").val();
+        var bolg_tags = $("#blog_tags").val();
+        var blog_content = $("#summernote").summernote("code");
+
+
+        $.ajax({
+            url:"/blog_system//blog/editBlog",
+            type:"POST",
+            data:{"blog_title":blog_title,"blog_desc":blog_desc,"bolg_tags":bolg_tags,
+                "blog_content":blog_content,"imgUrl":imgUrl},
+            success:function () {
+            }
+        })
+    };
 
     var getTag = function (obj) {
         var text = $(obj).text();

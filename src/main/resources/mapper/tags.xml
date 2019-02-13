@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="tags">
+
+    <resultMap id="tagMap" type="com.heng.blog_system.bean.Tag">
+        <result property="tagCode" column="tag_code"/>
+        <result property="tagName" column="tag_name"/>
+    </resultMap>
+
+    <select id="addTag" parameterType="map">
+        INSERT INTO tags(tag_code,tag_name)
+        VALUES (#{tag_code},#{tag_name})
+    </select>
+    
+    <select id="selectTag" resultMap="tagMap" parameterType="map">
+        SELECT *
+        FROM tags
+        WHERE 1 = 1
+        <if test="tag_code != null">
+            AND tag_code = #{tag_code}
+        </if>
+    </select>
+
+    <select id="selectAllTag" resultMap="tagMap">
+        SELECT *
+        FROM tags
+    </select>
+</mapper>
+

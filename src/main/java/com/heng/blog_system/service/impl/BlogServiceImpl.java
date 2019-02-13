@@ -1,0 +1,181 @@
+package com.heng.blog_system.service.impl;
+
+import com.heng.blog_system.bean.Blog;
+import com.heng.blog_system.bean.Tag;
+import com.heng.blog_system.cache.BlogCache;
+import com.heng.blog_system.db.BlogDao;
+import com.heng.blog_system.service.BlogService;
+import com.heng.blog_system.utils.Utils;
+import com.heng.util.ESClient;
+import org.apache.log4j.Logger;
+import org.elasticsearch.action.index.IndexResponse;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.rest.RestStatus;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.SearchHits;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@Service
+public class BlogServiceImpl implements BlogService {
+
+    private Logger logger = Logger.getLogger(BlogServiceImpl.class);
+
+    @Autowired
+    private BlogCache blogCache;
+
+    @Autowired
+    private ESClient esClient;
+
+    @Autowired
+    private BlogDao blogDao;
+
+    @Override
+    @Transactional
+    public Map<String, Object> addBlog(Map<String, Object> map) {
+        Map<String, Object> result = new HashMap<>();
+        String blogCode = null;
+        String tag_code = null;
+        String tags = "";
+        Blog blog = null;
+
+        if (map.get("blog_title") != null) {
+            blogCode = Utils.md5(map.get("blog_title").toString());
+            map.put("blog_code", blogCode);
+        }
+
+        Blog bl = null;
+        bl = blogCache.getBlog(blogCode);
+
+
+        if (Utils.isEmpty(bl)){
+            bl = blogDao.get("blogTag.selectBlog", map);
+            if (Utils.isEmpty(bl)){
+                bl = Blog.mapToBlog(map);
+                blogCache.putBlog(blogCode, bl);
+                blogDao.save("blogTag.addBlog", map);
+            }
+        }
+        /*if (Utils.isEmpty()){
+            Blog bl = blogDao.get("selectBlog", map);
+            if (Utils.isEmpty(bl)){
+                bl = Blog.mapToBlog(map);
+                blogCache.putBlog(blogCode, bl);
+                blogDao.save("blogTag.addBlog", map);
+            }
+        }*/
+
+        if (map.get("bolg_tags") != null) {
+            tags = map.get("bolg_tags").toString();
+        }
+        String[] bolg_tags = tags.trim().split(" ");
+
+        for (int i = 0; i < bolg_tags.length; i++) {
+            if (bolg_tags[i].trim().length() == 0){
+                continue;
+            }
+            Map<String, Object> param = new HashMap<>();
+            tag_code = Utils.md5(bolg_tags[i]);
+            param.put("tag_code", tag_code);
+            param.put("tag_name", bolg_tags[i]);
+            Tag tag = blogCache.getTag(tag_code);
+
+            if (Utils.isEmpty(tag)) {
+                Tag ta = blogDao.get("blogTag.selectTag",param);
+                if (Utils.isEmpty(ta)){
+                    blogDao.save("blogTag.addTag", param);
+                    blogCache.putTag(tag_code, Tag.mapToTag(param));
+
+                    Map<String,Object> tagBlog = new HashMap<>();                 //关联tag与blog
+                    tagBlog.put("blog_code", blogCode);
+                    tagBlog.put("tag_code", tag_code);
+                    blogDao.save("blogTag.insertTagBlog", tagBlog);
+                }
+            }
+        }
+
+
+
+
+        //存入ES
+        blog = Blog.mapToBlog(map);
+
+        try {
+            String indexName = blog.getClass().getSimpleName().toLowerCase();
+            String type = blog.getClass().getSimpleName();
+            Class<?> clazz = blog.getClass();
+            if (!esClient.existIndex(indexName)) {
+                esClient.createIndex(indexName, type, clazz);
+                IndexResponse response = esClient.insertData(indexName, type, blog);
+                RestStatus status = response.status();
+                result.put("code", status.getStatus());
+                logger.info("向es插入数据" + Utils.objectToJson(blog));
+            }else {
+                if(!Utils.isEmpty(blog)) {
+                    long hitNum = esClient.preciseSearch(indexName, type, "blogCode",blogCode).getHits().totalHits;
+                    if (hitNum == 0) {
+                        IndexResponse response = esClient.insertData(indexName, type, blog);
+                        RestStatus status = response.status();
+                        result.put("code", status.getStatus());
+                        logger.info("向es插入数据" + Utils.objectToJson(blog));
+                    } else {
+                        logger.info("es已存在该数据" + Utils.objectToJson(blog));
+                    }
+                }
+            }
+            return result;
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        result.put("error", "插入数据失败");
+        return result;
+    }
+
+
+    public Map<String,Object> selectBlogs(Map<String,Object> form){
+        String title = form.get("title").toString();
+        Map<String,Object> result = new HashMap<>();
+        String indexName = Blog.class.getSimpleName().toLowerCase();
+        String indexType = Blog.class.getSimpleName();
+        try {
+            SearchResponse response = esClient.matchSearch(indexName, indexType, "blogTilte", title);
+            SearchHits hits = response.getHits();
+            int code = response.status().getStatus();
+            long totalHits = hits.getTotalHits();
+            result.put("resultTotal", totalHits);
+            result.put("code", code);
+            List<String> blogCodes = new ArrayList<>();
+            for (SearchHit hit : hits){
+                blogCodes.add(hit.getSourceAsMap().get("blogCode").toString());
+            }
+
+            List<Blog> blogList = new ArrayList<>();
+            for (String blogCode : blogCodes){
+                Map<String,Object> map = new HashMap<>();
+                map.put("blog_code", blogCode);
+                Blog blog = blogDao.get("blogTag.selectBlogForSearch",map);
+                String tag = blog.getTags().replace(",", " ");
+                blog.setTags(tag);
+                if (!Utils.isEmpty(blog)){
+                    blogList.add(blog);
+                }
+            }
+            result.put("data", blogList);
+            return  result;
+        } catch (IOException e) {
+            logger.info(e);
+            result.put("message", e.getMessage());
+        }
+        return result;
+    }
+
+}

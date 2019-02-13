@@ -4,8 +4,9 @@
 
 <mapper namespace="nicheInsightNew">
 
-    <select id="test" resultType="map">
-        SELECT * FROM test
+    <select id="test" resultType="map" parameterType="map">
+        INSERT INTO blog_article(blog_title,blog_desc,blog_content,blog_conver_url)
+        VALUES (#{blog_title}，#{blog_desc})
     </select>
 </mapper>
 

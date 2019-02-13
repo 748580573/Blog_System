@@ -20,34 +20,31 @@
         </property>
     </bean>
 
+    <bean id="blogDataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="url" value="${database.url}"/>
+        <property name="driverClassName" value="${database.driver}"/>
+        <property name="username" value="${database.user}"/>
+        <property name="password" value="${database.password}"/>
 
+        <property name="filters" value="stat"/>
 
-    <bean id="blogDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
-        <property name="driverClass" value="${database.driver}"></property>
-        <property name="jdbcUrl" value="${database.url}"></property>
-        <!-- 用户名-->
-        <property name="user" value="${database.user}"></property>
-        <!-- 用户密码-->
-        <property name="password" value="${database.password}"></property>
-        <!--当连接池中的连接耗尽的时候c3p0一次同时获取的连接数。默认值: 3 -->
-        <property name="acquireIncrement" value="10"></property>
-        <!-- 初始化连接池中的连接数，取值应在minPoolSize与maxPoolSize之间，默认为3-->
-        <property name="initialPoolSize" value="10"></property>
-        <!--最大空闲时间，60秒内未使用则连接被丢弃。若为0则永不丢弃。默认值: 0 -->
-        <property name="maxIdleTime" value="60"></property>
-        <!--连接池中保留的最大连接数。默认值: 15 -->
-        <property name="maxPoolSize" value="300"></property>
-        <!-- 连接池中保留的最小连接数，默认为：3-->
-        <property name="minPoolSize" value="10"></property>
-        <!--重新尝试的时间间隔，默认为：1000毫秒-->
-        <property name="acquireRetryDelay" value="1000"></property>
-        <!--定义在从数据库获取新连接失败后重复尝试的次数。默认值: 30 ；小于等于0表示无限次-->
-        <property name="acquireRetryAttempts" value="60"></property>
-        <!--如果为false，则获取连接失败将会引起所有等待连接池来获取连接的线程抛出异常，
-        但是数据源仍有效保留，并在下次调用getConnection()的时候继续尝试获取连接。如果设为true，
-        那么在尝试获取连接失败后该数据源将申明已断开并永久关闭。默认: false-->
-        <property name="breakAfterAcquireFailure" value="false"></property>
+        <property name="maxActive" value="20"/>
+        <property name="initialSize" value="1"/>
+        <property name="maxWait" value="60000"/>
+        <property name="minIdle" value="1"/>
+
+        <property name="timeBetweenEvictionRunsMillis" value="60000"/>
+        <property name="minEvictableIdleTimeMillis" value="300000"/>
+
+        <property name="validationQuery" value="SELECT 'x'"/>
+        <property name="testWhileIdle" value="true"/>
+        <property name="testOnBorrow" value="false"/>
+        <property name="testOnReturn" value="false"/>
+
+        <property name="poolPreparedStatements" value="true"/>
+        <property name="maxPoolPreparedStatementPerConnectionSize" value="50"/>
     </bean>
+
 
     <bean id="SessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="blogDataSource"/>
@@ -61,6 +58,4 @@
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="blogDataSource" />
     </bean>
-
-
 </beans>

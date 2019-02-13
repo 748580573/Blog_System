@@ -1,7 +1,6 @@
 package com.heng.blog_system.controller;
 
-import com.heng.blog_system.bean.User;
-import com.heng.blog_system.db.TestDB;
+import com.heng.blog_system.db.BlogDao;
 import com.heng.blog_system.utils.RequestUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,7 +15,7 @@ import java.util.Map;
 public class TestController {
 
     @Autowired
-    TestDB testDB;
+    BlogDao testDB;
 
     @RequestMapping(value = {"/test"})
     @ResponseBody

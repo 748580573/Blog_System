@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class TestDB extends SqlSessionDaoSupport {
+public class BlogDao extends SqlSessionDaoSupport {
 
     @Autowired
     public void setSqlSessionTemplate(SqlSessionTemplate sessionTemplate) {
