@@ -11,11 +11,12 @@
         <result property="blogContent" column="blog_content"/>
         <result property="blogConverUrl" column="blog_conver_url"/>
         <result property="tags" column="tag_name"/>
+        <result property="createDate" column="create_date"/>
     </resultMap>
 
     <insert id="addBlog" parameterType="map">
-        INSERT INTO blog_article(blog_code,blog_title,blog_desc,blog_content,blog_conver_url)
-        VALUES (#{blog_code},#{blog_title},#{blog_desc},#{blog_content},#{imgUrl});
+        INSERT INTO blog_article(blog_code,blog_title,blog_desc,blog_content,blog_conver_url,create_date)
+        VALUES (#{blog_code},#{blog_title},#{blog_desc},#{blog_content},#{imgUrl},#{create_date});
     </insert>
 
     <select id="selectBlog" parameterType="map" resultMap="blogMap">
@@ -45,8 +46,40 @@
         <if test="blog_code != null">
             AND tag_article.blog_code = "${blog_code}"
         </if>
-        ) tagresult ON tagresult.blog_code = blog_article.blog_code;
+        GROUP BY tag_article.blog_code
+        ) tagresult ON tagresult.blog_code = blog_article.blog_code
+        <if test="newBlog != null">
+            order by create_date
+        </if>
+        <if test="clickNumber != null">
+            order by click_number
+        </if>
+        <if test="pageNumber != null">
+           limit ${(pageNumber - 1) * pageTotal} ,${pageNumber * pageTotal}
+        </if>
+    </select>
 
+    <select id="selectBlogForRecommend" parameterType="map" resultMap="blogMap">
+        SELECT
+        *
+        FROM
+        blog_article
+        LEFT JOIN (
+        SELECT
+        GROUP_CONCAT( DISTINCT tags.tag_name ) tag_name ,blog_article.blog_code
+        FROM
+        blog_article,
+        tag_article,
+        tags
+        WHERE
+        tag_article.blog_code = blog_article.blog_code
+        AND tags.tag_code = tag_article.tag_code
+        GROUP BY tag_article.blog_code
+        ) tagresult ON tagresult.blog_code = blog_article.blog_code
+        ORDER BY click_number,create_date
+        <if test="pageNumber != null">
+            limit ${(pageNumber - 1) * pageTotal} ,${pageNumber * pageTotal}
+        </if>
     </select>
 
     <!--##############################################################################-->

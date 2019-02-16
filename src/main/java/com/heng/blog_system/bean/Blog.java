@@ -18,6 +18,10 @@ public class Blog {
 
     private String tags;                             //博客标签
 
+    private int clickNumber;                        //博客点击量
+
+    private String createDate;                      //博客创建日期
+
     public String getBlogCode() {
         return blogCode;
     }
@@ -64,6 +68,22 @@ public class Blog {
 
     public void setTags(String tags) {
         this.tags = tags;
+    }
+
+    public int getClickNumber() {
+        return clickNumber;
+    }
+
+    public void setClickNumber(int clickNumber) {
+        this.clickNumber = clickNumber;
+    }
+
+    public String getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(String createDate) {
+        this.createDate = createDate;
     }
 
     /**

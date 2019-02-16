@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <script src="../js/jquery-3.2.1.min.js"></script>
+    <script src="../js/vue.js"></script>
+
+    <link href="../css/Common.css" type="text/css" rel="stylesheet">
+    <link href="../css/index.css" type="text/css" rel="stylesheet">
+    <link href="../css/blog.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+
+<div id="nav" class="header">
+    <div class="decoration"></div>
+    <div class="header-content">
+        <div class="motto">
+            <a href="#">奥米伽小分队 |</a>
+            <div class="author_motto"> &nbsp;&nbsp;他山之石，可以攻玉</div>
+        </div>
+
+        <ul class="menu">
+            <li v-for="title in titles">
+                <a href="#">{{title.name}}<img class="icon-arrow" src="../img/a.png" v-if="title.sub != null && title.sub.length > 0"></a>
+                <ul class="dropdown-menu" v-if="title.sub != null && title.sub.length > 0">
+                    <li v-for="subTitle in title.sub">
+                        <a href="#">{{subTitle.name}}</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+
+        <div class="search">
+            <input type="text">
+            <img src="../img/search.png">
+        </div>
+    </div>
+</div>
+
+<div class="separateLine_h"></div>
+
+<div class="content_left" style="background-color: white">
+    <div class="blog" id="blog">
+        <div class="blog_classfity">
+            <span>您现在的位置是：</span>网站首页 > 技术专栏
+        </div>
+        <div style="background-color: black;width: 90%;height: 4px;margin-top: 10px;"></div>
+        <div class="blog_tilte">2019秋招-有赞面试</div>
+        <div class="blog_info"><img src="../img/author_img.png">&nbsp;&nbsp; <img src="../img/calendar.png">&nbsp;&nbsp;{{createDate}}</div>
+        <div class="blog_tags">
+            <div class="blog_tag" v-for="tag in tags">{{tag}}</div>
+        </div>
+        <div class="blog_des"><span>简介</span>{{blogDesc}}</div>
+        <div id="blog_content" class="blog_content">{{blogContent}}</div>
+    </div>
+
+
+</div>
+
+<div class="content_right">
+    <div class="business_card">
+        <h2>名片</h2>
+        <p>网名：比丘特之剑 | Mr-W</p>
+        <p>职业：boy:software_Engineer</p>
+        <p>现居：艾泽拉斯-洛丹伦</p>
+        <p>Email：748580573@qq.com</p>
+
+        <ul class="business_card_ul">
+            <li class="business_card_li"><a class="business_card_a circle_border" href=""><img src="../img/home.png" width="45px" height="45px"></a></li>
+            <li class="business_card_li"><a class="business_card_a circle_border" href=""><img src="../img/xinfeng.png" width="45px" height="45px"></a></li>
+            <li class="business_card_li"><a class="business_card_a circle_border" href=""><img src="../img/QQ.png" width="45px" height="45px"></a></li>
+            <li class="business_card_li"><a class="business_card_a circle_border" href=""><img src="../img/Git.png" width="45px" height="45px"></a></li>
+        </ul>
+    </div>
+
+    <div class="separateLine_h"></div>
+
+    <div class="hot">
+        <div class="separateLine_h"></div>
+        <div class="hot_div">
+            <ul>
+                <li>热门文章</li>
+            </ul>
+        </div>
+
+        <div class="separateLine_h"></div>
+
+        <ul class="hot_ul">
+            <li class="hot_li"><a class="hot_ul_li_a" href="#">昨天我对你说了什么</a></li>
+            <li class="hot_li"><a class="hot_ul_li_a" href="#">昨天我对你说了什么</a></li>
+            <li class="hot_li"><a class="hot_ul_li_a" href="#">昨天我对你说了什么</a></li>
+            <li class="hot_li"><a class="hot_ul_li_a" href="#">昨天我对你说了什么</a></li>
+            <li class="hot_li"><a class="hot_ul_li_a" href="#">昨天我对你说了什么</a></li>
+        </ul>
+    </div>
+
+    <div class="separateLine_h"></div>
+
+    <div class="rank">
+        <div class="separateLine_h"></div>
+        <div class="hot_div">
+            <ul>
+                <li>点击排行</li>
+            </ul>
+        </div>
+
+        <div class="separateLine_h"></div>
+
+        <ul class="rank_ul">
+            <li class="rank_ul_li">
+                <p class="rank_ul_li_p text_overflow text_indentation">你的痛苦我都心疼想为你解决挡开流言紧握你手想飞奔往前我相信爱能证明一切 </p>
+                <div class="rank_ul_li_div">
+                    <div class="rank_ul_li_div_img">
+                        <img src="../img/c.jpg" width="150px" height="120px">
+                    </div>
+                    <div class="rank_ul_li_span text_overflow">因为要离别就走破这双鞋我陪你走一夜直到心不再滴血而你流尽泪水天空不停地闪着雷照不亮我心中黑黑黑黑黑就走破这双鞋我陪你走一夜黑黑黑黑黑就走破这双鞋我陪你走一夜</div>
+                </div>
+            </li>
+
+            <li class="rank_ul_li">
+                <p class="rank_ul_li_p text_overflow text_indentation">你的痛苦我都心疼想为你解决挡开流言紧握你手想飞奔往前我相信爱能证明一切 </p>
+                <div class="rank_ul_li_div">
+                    <div class="rank_ul_li_div_img">
+                        <img src="../img/c.jpg" width="150px" height="120px">
+                    </div>
+                    <div class="rank_ul_li_span text_overflow">因为要离别就走破这双鞋我陪你走一夜直到心不再滴血而你流尽泪水天空不停地闪着雷照不亮我心中黑黑黑黑黑就走破这双鞋我陪你走一夜黑黑黑黑黑就走破这双鞋我陪你走一夜</div>
+                </div>
+            </li>
+
+            <li class="rank_ul_li">
+                <p class="rank_ul_li_p text_overflow text_indentation">你的痛苦我都心疼想为你解决挡开流言紧握你手想飞奔往前我相信爱能证明一切 </p>
+                <div class="rank_ul_li_div">
+                    <div class="rank_ul_li_div_img">
+                        <img src="../img/c.jpg" width="150px" height="120px">
+                    </div>
+                    <div class="rank_ul_li_span text_overflow">因为要离别就走破这双鞋我陪你走一夜直到心不再滴血而你流尽泪水天空不停地闪着雷照不亮我心中黑黑黑黑黑就走破这双鞋我陪你走一夜黑黑黑黑黑就走破这双鞋我陪你走一夜</div>
+                </div>
+            </li>
+
+            <li class="rank_ul_li">
+                <p class="rank_ul_li_p text_overflow text_indentation">你的痛苦我都心疼想为你解决挡开流言紧握你手想飞奔往前我相信爱能证明一切 </p>
+                <div class="rank_ul_li_div">
+                    <div class="rank_ul_li_div_img">
+                        <img src="../img/c.jpg" width="150px" height="120px">
+                    </div>
+                    <div class="rank_ul_li_span text_overflow">因为要离别就走破这双鞋我陪你走一夜直到心不再滴血而你流尽泪水天空不停地闪着雷照不亮我心中黑黑黑黑黑就走破这双鞋我陪你走一夜黑黑黑黑黑就走破这双鞋我陪你走一夜</div>
+                </div>
+            </li>
+
+
+        </ul>
+    </div>
+</div>
+</body>
+<script src="../js/blog.js"></script>
+</html>

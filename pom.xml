@@ -125,7 +125,8 @@
         <plugins>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <configuration> <appendAssemblyId>false</appendAssemblyId>
+                <configuration>
+                    <appendAssemblyId>false</appendAssemblyId>
                     <descriptorRefs> <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
                     <archive>
@@ -138,9 +139,6 @@
                     <execution>
                         <id>make-assembly</id>
                         <phase>package</phase>
-                        <goals>
-                            <goal>assembly</goal>
-                        </goals>
                     </execution>
                 </executions>
             </plugin>
@@ -150,6 +148,14 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>1.5.4.RELEASE</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
             </plugin>
 
         </plugins>

@@ -154,7 +154,7 @@ body{
 
 .content_left{
     height: 100%;
-    /*width: 1320px;*/
+    width: 1320px;
     margin-left: 1.5%;
     float: left;
 }
@@ -505,6 +505,14 @@ body{
     border-bottom: 1px solid #bbb4b7;
 }
 
+.new_article_content_li:hover{
+    cursor: pointer;
+}
+
+.new_article_content_li a{
+    font-size: 1.5em;
+}
+
 .new_article_content_li:hover .new_article_content_tail_left img{
     width: 104%;
     height: 104%;
@@ -555,7 +563,6 @@ body{
 
 .content_right{
     width: 440px;
-    height: 4300px;
     display: inline-block;
     margin-left: 45px;
 }
@@ -668,6 +675,10 @@ body{
     margin-top: 3%;
     border-bottom: 1px solid #bbb4b7;
     height: 200px;
+}
+
+.rank_ul_li:hover{
+    cursor: pointer;
 }
 
 .rank_ul_li_div{

@@ -1,5 +1,6 @@
 package com.heng.blog_system.utils;
 
+import org.apache.log4j.Logger;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
@@ -10,6 +11,10 @@ import java.io.IOException;
 import java.util.*;
 
 public class RequestUtil {
+
+    private static Logger logger = Logger.getLogger(RequestUtil.class);
+
+    private static String contextPath = RequestUtil.class.getResource("/").getPath();
 
     //获取form表单数据
     @SuppressWarnings("unchecked")
@@ -56,7 +61,7 @@ public class RequestUtil {
      * @return
      * @throws IOException
      */
-    public static List<String> fileUpLoad(HttpServletRequest request) throws IOException {
+    public static List<String> fileUpLoad(HttpServletRequest request,String path) throws IOException {
         List<String> filePath = new ArrayList<>();
         long startTime = System.currentTimeMillis();
         //将当前上下文初始化给  CommonsMutipartResolver （多部分解析器）
@@ -70,15 +75,20 @@ public class RequestUtil {
             while (iterator.hasNext()){
                 MultipartFile file = multiRequest.getFile(iterator.next().toString());
                 if (file != null){
-                    String path = "e:/" + file.getOriginalFilename();
                     //上传
-                    file.transferTo(new File(path));
-                    filePath.add(path);
+                    String outPath = path + Utils.obtainRandomCode() + file.getOriginalFilename();
+                    Utils.transferTo(file, outPath);
+//                    file.transferTo(new File(contextPath + path));
+                    filePath.add(outPath.replace(path, "imgs/"));
                 }
             }
         }
         long endTime = System.currentTimeMillis();
-        System.out.println("文件上传耗时" + String.valueOf(endTime - startTime));
+        if (filePath.size() > 0){
+            logger.info("文件上传耗时" + String.valueOf(endTime - startTime));
+        }else {
+            logger.info("图片上传失败");
+        }
         return filePath;
     }
 }

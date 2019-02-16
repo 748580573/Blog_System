@@ -7,6 +7,7 @@ import com.heng.blog_system.db.BlogDao;
 import com.heng.blog_system.service.BlogService;
 import com.heng.blog_system.utils.Utils;
 import com.heng.util.ESClient;
+import com.heng.util.ESUtils;
 import org.apache.log4j.Logger;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchResponse;
@@ -18,10 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class BlogServiceImpl implements BlogService {
@@ -59,7 +57,11 @@ public class BlogServiceImpl implements BlogService {
             bl = blogDao.get("blogTag.selectBlog", map);
             if (Utils.isEmpty(bl)){
                 bl = Blog.mapToBlog(map);
+                String createDate = Utils.obtainCurrentTime();
+                map.put("create_date", createDate);
+                bl.setCreateDate(createDate);
                 blogCache.putBlog(blogCode, bl);
+
                 blogDao.save("blogTag.addBlog", map);
             }
         }
@@ -104,12 +106,14 @@ public class BlogServiceImpl implements BlogService {
 
 
 
-        //存入ES
+        //存入ES（el中不存博客内容）
         blog = Blog.mapToBlog(map);
+        blog.setBlogContent("");
+
 
         try {
-            String indexName = blog.getClass().getSimpleName().toLowerCase();
-            String type = blog.getClass().getSimpleName();
+            String indexName = ESUtils.getEsIndexNameFromClazz(Blog.class);
+            String type = ESUtils.getEsTypeFromClazz(Blog.class);
             Class<?> clazz = blog.getClass();
             if (!esClient.existIndex(indexName)) {
                 esClient.createIndex(indexName, type, clazz);
@@ -141,6 +145,7 @@ public class BlogServiceImpl implements BlogService {
     }
 
 
+    @Transactional
     public Map<String,Object> selectBlogs(Map<String,Object> form){
         String title = form.get("title").toString();
         Map<String,Object> result = new HashMap<>();
@@ -178,4 +183,81 @@ public class BlogServiceImpl implements BlogService {
         return result;
     }
 
+    @Override
+    @Transactional
+    public Map<String, Object> selectHosBlogs(Map<String, Object> form) {
+        Map<String, Object> result = new HashMap<>();
+        form.put("pageNumber", 1);
+        form.put("pageTotal", 6);
+        try {
+            List<Blog> blogs = blogDao.getList("blogTag.selectBlogForSearch",form);
+            for (Blog blog : blogs){
+                if (Utils.isEmpty(blogCache.getBlog(blog.getBlogCode()))){
+                    String tag = blog.getTags();
+                    blog.setTags(tag.replace(",", " "));
+                    blogCache.putBlog(blog.getBlogCode(), blog);
+                }
+            }
+            result.put("data", blogs);
+            result.put("code", "201");
+            result.put("message", "查询成功");
+            return result;
+        }catch (Exception e){
+            logger.info(e);
+            result.put("code", "401");
+            result.put("message", e.getMessage());
+        }
+        return result;
+    }
+
+    @Override
+    @Transactional
+    public Map<String, Object> fuzzySearch(Map<String, Object> form,Class<?> clazz) {
+        String key = null;
+        String indexName = ESUtils.getEsIndexNameFromClazz(clazz);
+        String indexType = ESUtils.getEsTypeFromClazz(clazz);
+        if (form.get("key") != null){
+            key = form.get("key").toString();
+        }
+        Map<String,Object> result = new HashMap<>();
+        Map<String,Object> param = new HashMap<>();
+        param.put("blogTilte",key );
+        param.put("tags", key);
+        try {
+            SearchResponse response =esClient.boolMulitSearchForShould(indexName, indexType, param);
+            SearchHits hits = response.getHits();
+            result.put("code", response.status().getStatus());
+            result.put("msg", "查询成功");
+            List<Map<String,Object>> data = new ArrayList<>();
+            for (SearchHit hit : hits){
+                data.add(hit.getSourceAsMap());
+            }
+            result.put("data", data);
+        } catch (IOException e) {
+            logger.info(e);
+            result.put("code", "401");
+            result.put("msg", "es查询异常");
+        }
+
+        return result;
+    }
+
+    @Override
+    @Transactional
+    public Map<String, Object> selectRecommendBlog(Map<String, Object> form) {
+        Map<String,Object> result = new HashMap<>();
+        form.put("pageNumber", 1);
+        form.put("pageTotal", 6);
+        try {
+            List<Blog> list = blogDao.getList("blogTag.selectBlogForRecommend",form);
+            result.put("data", list);
+            result.put("code", 201);
+            result.put("msg", "查询成功");
+        }catch (Exception e){
+            logger.info(e);
+            result.put("code", 500);
+            result.put("msg", "查询数据失败,请查看日志");
+        }
+        return result;
+    }
 }

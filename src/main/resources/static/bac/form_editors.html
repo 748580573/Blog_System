@@ -19,8 +19,8 @@
 
     <!-- include summernote css/js -->
     <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote.css" rel="stylesheet">
-    <script src="../hplus/js/summernote.js"></script>
-    <script src="../hplus/js/summernote-zh-CN.js"></script>
+    <script src="js/summernote.js"></script>
+    <script src="js/summernote-zh-CN.js"></script>
 
     <style type="text/css">
         .label:hover{
@@ -39,6 +39,12 @@
 
         #uploadfile{
             opacity: 0;
+        }
+
+        #but{
+            font-size: 1.5em;
+            position: absolute;
+            left: 40%;
         }
 
 
@@ -139,12 +145,10 @@
 
 
 <div style="margin-left: 10%">
-    <div id="summernote" >summernote 1</div>
+    <div id="summernote">summernote 1</div>
 </div>
 
-
-<div class="html"></div>
-<button id="but" onclick="sub_form()">点我</button>
+<button id="but" class="btn btn-primary" type="button" onclick="sub_form()"><i class="fa fa-check btn-lg"></i>提&nbsp;交</button>
 
 </body>
 
@@ -154,16 +158,15 @@
             height:500,
             width:1400,
             callbacks: {
-                onImageUpload: function(files) {
-                    alert("hello")
-                    // upload image to server and create imgNode...
+                onImageUpload: function(files, editor, $editable) {
+                    sendFile(files, editor, $editable)
                 }
             }
         });
 
         $("#uploadfile").fileinput({
             language:'zh',
-            uploadUrl:"/blog_system/blog/uploadFile",
+            uploadUrl:"/blog_system/file/fileUpload",
             allowedFileExtensions: ['jpg', 'gif', 'png'],
             uploadAsync: true,
             showPreview :true, //是否显示预览
@@ -176,7 +179,7 @@
             maxImageWidth: 1000,//图片的最大宽度
             maxImageHeight: 1000,//图片的最大高度
             maxFileSize:0,//单位为kb，如果为0表示不限制文件大小
-            maxFileCount:1, //表示允许同时上传的最大文件个数
+            maxFileCount:100, //表示允许同时上传的最大文件个数
             enctype:'multipart/form-data',
             validateInitialCount:true,
             previewFileIcon: "<iclass='glyphicon glyphicon-king'></i>",
@@ -185,21 +188,59 @@
 
     });
 
-    var imgUrl;
-    var sub_form = function () {
-        $("#uploadfile").fileinput("upload");
-        $("#uploadfile").on("fileuploaded", function(event, data, previewId, index) {
-            var aaa = data["response"][0];
-            imgUrl = data["response"][0];
-
+    /**
+     * 处理富文本编辑器文件上传的路径
+     * @param files
+     * @param editor
+     * @param $editable
+     */
+    function sendFile(files, editor, $editable) {
+        var data = new FormData();
+        data.append("ajaxTaskFile", files[0]);
+        $.ajax({
+            data : data,
+            type : "POST",
+            url : "/blog_system/file/fileUpload", //图片上传出来的url，返回的是图片上传后的路径，http格式
+            uploadAsync:false,
+            cache : false,
+            contentType : false,
+            processData : false,        //这个很有必要
+            dataType : "json",
+            success: function(data) {//data是返回的hash,key之类的值，key是定义的文件名
+                $('#summernote').summernote('insertImage', data.path);
+            },
+            error:function(){
+                alert("上传失败");
+            }
         });
+    }
 
+    var imgUrl = "";
+
+    var sub_form = function () {
+
+        var file =  document.getElementById("uploadfile").files[0];
+        var data = new FormData();
+        var imgUrl = "";
+        data.append("file", file);
+        $.ajax({
+            url:"/blog_system/file/fileUpload",
+            data:data,
+            type:"post",
+            async:false,
+            uploadAsync:false,
+            cache : false,
+            contentType : false,
+            processData : false,        //这个很有必要
+            dataType : "json",
+            success:function (result) {
+                imgUrl = result.path;
+            }
+        });
         var blog_title = $("#blog_title").val();
         var blog_desc = $("#blog_desc").val();
         var bolg_tags = $("#blog_tags").val();
         var blog_content = $("#summernote").summernote("code");
-
-
         $.ajax({
             url:"/blog_system//blog/editBlog",
             type:"POST",

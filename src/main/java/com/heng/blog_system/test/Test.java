@@ -1,9 +1,10 @@
 package com.heng.blog_system.test;
 
+import com.heng.blog_system.utils.Utils;
+
 public class Test {
 
     public static void main(String[] args) {
-        String a = "       ";
-        System.out.println(a.trim().length());
+        System.out.println(Utils.obtainCurrentTime());
     }
 }

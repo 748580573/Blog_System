@@ -10,7 +10,7 @@
     <link href="../css/index.css" type="text/css" rel="stylesheet">
 
 </head>
-<body style="height: 4300px;">
+<body>
 
 <div id="nav" class="header">
     <div class="decoration"></div>
@@ -232,7 +232,7 @@
 
         <div class="separateLine_h"></div>
 
-        <div class="special_recommend_content">
+        <div id="recommendBlog" class="special_recommend_content">
             <ul>
                 <li class="special_recommend_content_li">
                     <div class="special_recommen_detail">
@@ -246,67 +246,18 @@
                         <div>+<a href="#" class="special_recommen_detail_a">阅读全文</a></div>
                     </div>
                 </li>
-                <li class="special_recommend_content_li">
+                <li class="special_recommend_content_li" v-for="blog in blogs" >
                     <div class="special_recommen_detail">
                         <div style="width: 369px;overflow: hidden">
-                            <img  class="special_recommen_detail_img" src="../img/c.jpg">
+                            <img  class="special_recommen_detail_img" v-bind:src="blog.blogConverUrl">
                         </div>
-                        <div>2019秋招-战争学院面试</div>
+                        <div>{{blog.blogTilte}}</div>
                         <div class="separateLine_h"></div>
-                        <div><p class="special_recommen_detail_desc text_overflow">洛丹伦国王泰瑞纳斯·米奈希尔二世的儿子，乌瑟尔·光明使者的弟子。在恶魔的惩罚下，巫妖王诞生的唯一目的就是：统帅被称为天灾的庞大亡灵军队。耐奥祖是兽人萨满长老，他的地位曾经高如德拉诺氏族的兽人大酋长，却也沦落到成为燃烧军团的奴隶。</p></div>
+                        <div><p class="special_recommen_detail_desc text_overflow">{{blog.blogDesc}}</p></div>
                         <div class="separateLine_h"></div>
-                        <div>+<a href="#" class="special_recommen_detail_a">阅读全文</a></div>
+                        <div>+<a href="#" class="special_recommen_detail_a" v-bind:data-src="blog.blogCode" onclick="view_blog(this)">阅读全文</a></div>
                     </div>
                 </li>
-                <li class="special_recommend_content_li">
-                    <div class="special_recommen_detail">
-                        <div style="width: 369px;overflow: hidden">
-                            <img  class="special_recommen_detail_img" src="../img/c.jpg">
-                        </div>
-                        <div>2019秋招-战争学院面试</div>
-                        <div class="separateLine_h"></div>
-                        <div><p class="special_recommen_detail_desc text_overflow">洛丹伦国王泰瑞纳斯·米奈希尔二世的儿子，乌瑟尔·光明使者的弟子。在恶魔的惩罚下，巫妖王诞生的唯一目的就是：统帅被称为天灾的庞大亡灵军队。耐奥祖是兽人萨满长老，他的地位曾经高如德拉诺氏族的兽人大酋长，却也沦落到成为燃烧军团的奴隶。</p></div>
-                        <div class="separateLine_h"></div>
-                        <div>+<a href="#" class="special_recommen_detail_a">阅读全文</a></div>
-                    </div>
-                </li>
-                <li class="special_recommend_content_li">
-                    <div class="special_recommen_detail">
-                        <div style="width: 369px;overflow: hidden">
-                            <img  class="special_recommen_detail_img" src="../img/c.jpg">
-                        </div>
-                        <div>2019秋招-战争学院面试</div>
-                        <div class="separateLine_h"></div>
-                        <div><p class="special_recommen_detail_desc text_overflow">洛丹伦国王泰瑞纳斯·米奈希尔二世的儿子，乌瑟尔·光明使者的弟子。在恶魔的惩罚下，巫妖王诞生的唯一目的就是：统帅被称为天灾的庞大亡灵军队。耐奥祖是兽人萨满长老，他的地位曾经高如德拉诺氏族的兽人大酋长，却也沦落到成为燃烧军团的奴隶。</p></div>
-                        <div class="separateLine_h"></div>
-                        <div>+<a href="#" class="special_recommen_detail_a">阅读全文</a></div>
-                    </div>
-                </li>
-                <li class="special_recommend_content_li">
-                    <div class="special_recommen_detail">
-                        <div style="width: 369px;overflow: hidden">
-                            <img  class="special_recommen_detail_img" src="../img/c.jpg">
-                        </div>
-                        <div>2019秋招-战争学院面试</div>
-                        <div class="separateLine_h"></div>
-                        <div><p class="special_recommen_detail_desc text_overflow">洛丹伦国王泰瑞纳斯·米奈希尔二世的儿子，乌瑟尔·光明使者的弟子。在恶魔的惩罚下，巫妖王诞生的唯一目的就是：统帅被称为天灾的庞大亡灵军队。耐奥祖是兽人萨满长老，他的地位曾经高如德拉诺氏族的兽人大酋长，却也沦落到成为燃烧军团的奴隶。</p></div>
-                        <div class="separateLine_h"></div>
-                        <div>+<a href="#" class="special_recommen_detail_a">阅读全文</a></div>
-                    </div>
-                </li>
-                <li class="special_recommend_content_li">
-                    <div class="special_recommen_detail">
-                        <div style="width: 369px;overflow: hidden">
-                            <img  class="special_recommen_detail_img " src="../img/c.jpg">
-                        </div>
-                        <div>2019秋招-战争学院面试</div>
-                        <div class="separateLine_h"></div>
-                        <div><p class="special_recommen_detail_desc text_overflow">洛丹伦国王泰瑞纳斯·米奈希尔二世的儿子，乌瑟尔·光明使者的弟子。在恶魔的惩罚下，巫妖王诞生的唯一目的就是：统帅被称为天灾的庞大亡灵军队。耐奥祖是兽人萨满长老，他的地位曾经高如德拉诺氏族的兽人大酋长，却也沦落到成为燃烧军团的奴隶。</p></div>
-                        <div class="separateLine_h"></div>
-                        <div>+<a href="#" class="special_recommen_detail_a">阅读全文</a></div>
-                    </div>
-                </li>
-
             </ul>
         </div>
 
@@ -329,22 +280,22 @@
 
         <div class="separateLine_h"></div>
 
-        <div class="new_article_content">
+        <div id="newBlog" class="new_article_content">
             <ul class="new_article_content_ul">
-                <li class="new_article_content_li">
-                    <h3><a href="#">德玛西亚</a></h3>
+                <li class="new_article_content_li" v-for="blog in blogs" v-bind:data-src="blog.blogCode" onclick="view_blog(this)">
+                    <h3><a href="#">{{blog.blogTilte}}</a></h3>
                     <div class="new_article_content_tail">
                         <div class="new_article_content_tail_left">
-                            <img src="../img/c.jpg" width="367px" height="300px">
+                            <img v-bind:src="blog.blogConverUrl" width="367px" height="300px">
                         </div>
                         <div class="new_article_content_tail_right">
-                            <p class="text_overflow">洛丹伦国王泰瑞纳斯·米奈希尔二世的儿子，乌瑟尔·光明使者的弟子。在恶魔的惩罚下，巫妖王诞生的唯一目的就是：统帅被称为天灾的庞大亡灵军队。耐奥祖是兽人萨满长老，他的地位曾经高如德拉诺氏族的兽人大酋长，却也沦落到成为燃烧军团的奴隶。洛丹伦国王泰瑞纳斯·米奈希尔二世的儿子，乌瑟尔·光明使者的弟子。在恶魔的惩罚下，巫妖王诞生的唯一目的就是：统帅被称为天灾的庞大亡灵军队。耐奥祖是兽人萨满长老，他的地位曾经高如德拉诺氏族的兽人大酋长，却也沦落到成为燃烧军团的奴隶。</p>
+                            <p class="text_overflow">{{blog.blogDesc}}</p>
                             <br>
                             <div>
                                 <img class="author_img" src="../img/author_img.png">
                                 <span class="author_name">比丘特之剑</span>
-                                <span class="tags">【<span class="tags">艾泽拉斯|洛丹洛|阿尔萨斯</span>】</span>
-                                <span class="text_color_deepgray">2019-01-21</span>
+                                <span class="tags">【<span class="tags">{{blog.tags}}</span>】</span>
+                                <span class="text_color_deepgray">{{blog.createDate}}</span>
                                 <a class="looking" href="#"></a>
                             </div>
                         </div>
@@ -367,77 +318,10 @@
                                 <span class="text_color_deepgray">2019-01-21</span>
                                 <a class="looking" href="#"></a>
                             </div>
-
                         </div>
-
                     </div>
                 </li>
 
-                <li class="new_article_content_li">
-                    <h3><a href="#">德玛西亚</a></h3>
-                    <div class="new_article_content_tail">
-                        <div class="new_article_content_tail_left">
-                            <img src="../img/c.jpg" width="367px" height="300px">
-                        </div>
-                        <div class="new_article_content_tail_right">
-                            <p class="text_overflow">洛丹伦国王泰瑞纳斯·米奈希尔二世的儿子，乌瑟尔·光明使者的弟子。在恶魔的惩罚下，巫妖王诞生的唯一目的就是：统帅被称为天灾的庞大亡灵军队。耐奥祖是兽人萨满长老，他的地位曾经高如德拉诺氏族的兽人大酋长，却也沦落到成为燃烧军团的奴隶。洛丹伦国王泰瑞纳斯·米奈希尔二世的儿子，乌瑟尔·光明使者的弟子。在恶魔的惩罚下，巫妖王诞生的唯一目的就是：统帅被称为天灾的庞大亡灵军队。耐奥祖是兽人萨满长老，他的地位曾经高如德拉诺氏族的兽人大酋长，却也沦落到成为燃烧军团的奴隶。</p>
-                            <br>
-                            <div>
-                                <img class="author_img" src="../img/author_img.png">
-                                <span class="author_name">比丘特之剑</span>
-                                <span class="tags">【<span class="tags">艾泽拉斯|洛丹洛|阿尔萨斯</span>】</span>
-                                <span class="text_color_deepgray">2019-01-21</span>
-                                <a class="looking" href="#"></a>
-                            </div>
-
-                        </div>
-
-                    </div>
-                </li>
-
-                <li class="new_article_content_li">
-                    <h3><a href="#">德玛西亚</a></h3>
-                    <div class="new_article_content_tail">
-                        <div class="new_article_content_tail_left">
-                            <img src="../img/c.jpg" width="367px" height="300px">
-                        </div>
-                        <div class="new_article_content_tail_right">
-                            <p class="text_overflow">洛丹伦国王泰瑞纳斯·米奈希尔二世的儿子，乌瑟尔·光明使者的弟子。在恶魔的惩罚下，巫妖王诞生的唯一目的就是：统帅被称为天灾的庞大亡灵军队。耐奥祖是兽人萨满长老，他的地位曾经高如德拉诺氏族的兽人大酋长，却也沦落到成为燃烧军团的奴隶。洛丹伦国王泰瑞纳斯·米奈希尔二世的儿子，乌瑟尔·光明使者的弟子。在恶魔的惩罚下，巫妖王诞生的唯一目的就是：统帅被称为天灾的庞大亡灵军队。耐奥祖是兽人萨满长老，他的地位曾经高如德拉诺氏族的兽人大酋长，却也沦落到成为燃烧军团的奴隶。</p>
-                            <br>
-                            <div>
-                                <img class="author_img" src="../img/author_img.png">
-                                <span class="author_name">比丘特之剑</span>
-                                <span class="tags">【<span class="tags">艾泽拉斯|洛丹洛|阿尔萨斯</span>】</span>
-                                <span class="text_color_deepgray">2019-01-21</span>
-                                <a class="looking" href="#"></a>
-                            </div>
-
-                        </div>
-
-                    </div>
-                </li>
-
-                <li class="new_article_content_li">
-                    <h3><a href="#">德玛西亚</a></h3>
-                    <div class="new_article_content_tail">
-                        <div class="new_article_content_tail_left">
-                            <img src="../img/c.jpg" width="367px" height="300px">
-                        </div>
-                        <div class="new_article_content_tail_right">
-                            <p class="text_overflow">洛丹伦国王泰瑞纳斯·米奈希尔二世的儿子，乌瑟尔·光明使者的弟子。在恶魔的惩罚下，巫妖王诞生的唯一目的就是：统帅被称为天灾的庞大亡灵军队。耐奥祖是兽人萨满长老，他的地位曾经高如德拉诺氏族的兽人大酋长，却也沦落到成为燃烧军团的奴隶。洛丹伦国王泰瑞纳斯·米奈希尔二世的儿子，乌瑟尔·光明使者的弟子。在恶魔的惩罚下，巫妖王诞生的唯一目的就是：统帅被称为天灾的庞大亡灵军队。耐奥祖是兽人萨满长老，他的地位曾经高如德拉诺氏族的兽人大酋长，却也沦落到成为燃烧军团的奴隶。</p>
-                            <br>
-                            <div>
-                                <img class="author_img" src="../img/author_img.png">
-                                <span class="author_name">比丘特之剑</span>
-                                <span class="tags">【<span class="tags">艾泽拉斯|洛丹洛|阿尔萨斯</span>】</span>
-                                <span class="text_color_deepgray">2019-01-21</span>
-                                <a class="looking" href="#"></a>
-                            </div>
-
-                        </div>
-
-                    </div>
-                </li>
             </ul>
         </div>
 
@@ -484,7 +368,7 @@
 
     <div class="separateLine_h"></div>
 
-    <div class="rank">
+    <div class="rank" id="rank">
         <div class="separateLine_h"></div>
         <div class="hot_div">
             <ul>
@@ -504,38 +388,15 @@
                     <div class="rank_ul_li_span text_overflow">因为要离别就走破这双鞋我陪你走一夜直到心不再滴血而你流尽泪水天空不停地闪着雷照不亮我心中黑黑黑黑黑就走破这双鞋我陪你走一夜黑黑黑黑黑就走破这双鞋我陪你走一夜</div>
                 </div>
             </li>
-
-            <li class="rank_ul_li">
-                <p class="rank_ul_li_p text_overflow text_indentation">你的痛苦我都心疼想为你解决挡开流言紧握你手想飞奔往前我相信爱能证明一切 </p>
+            <li class="rank_ul_li" v-for="blog in blogs" v-bind:data-src="blog.blogCode" onclick="view_blog(this)">
+                <p class="rank_ul_li_p text_overflow text_indentation">{{blog.blogTilte}}</p>
                 <div class="rank_ul_li_div">
                     <div class="rank_ul_li_div_img">
-                        <img src="../img/c.jpg" width="150px" height="120px">
+                        <img v-bind:src="blog.blogConverUrl" width="150px" height="120px">
                     </div>
-                    <div class="rank_ul_li_span text_overflow">因为要离别就走破这双鞋我陪你走一夜直到心不再滴血而你流尽泪水天空不停地闪着雷照不亮我心中黑黑黑黑黑就走破这双鞋我陪你走一夜黑黑黑黑黑就走破这双鞋我陪你走一夜</div>
+                    <div class="rank_ul_li_span text_overflow">{{blog.blogDesc}}</div>
                 </div>
             </li>
-
-            <li class="rank_ul_li">
-                <p class="rank_ul_li_p text_overflow text_indentation">你的痛苦我都心疼想为你解决挡开流言紧握你手想飞奔往前我相信爱能证明一切 </p>
-                <div class="rank_ul_li_div">
-                    <div class="rank_ul_li_div_img">
-                        <img src="../img/c.jpg" width="150px" height="120px">
-                    </div>
-                    <div class="rank_ul_li_span text_overflow">因为要离别就走破这双鞋我陪你走一夜直到心不再滴血而你流尽泪水天空不停地闪着雷照不亮我心中黑黑黑黑黑就走破这双鞋我陪你走一夜黑黑黑黑黑就走破这双鞋我陪你走一夜</div>
-                </div>
-            </li>
-
-            <li class="rank_ul_li">
-                <p class="rank_ul_li_p text_overflow text_indentation">你的痛苦我都心疼想为你解决挡开流言紧握你手想飞奔往前我相信爱能证明一切 </p>
-                <div class="rank_ul_li_div">
-                    <div class="rank_ul_li_div_img">
-                        <img src="../img/c.jpg" width="150px" height="120px">
-                    </div>
-                    <div class="rank_ul_li_span text_overflow">因为要离别就走破这双鞋我陪你走一夜直到心不再滴血而你流尽泪水天空不停地闪着雷照不亮我心中黑黑黑黑黑就走破这双鞋我陪你走一夜黑黑黑黑黑就走破这双鞋我陪你走一夜</div>
-                </div>
-            </li>
-
-
         </ul>
     </div>
 </div>
