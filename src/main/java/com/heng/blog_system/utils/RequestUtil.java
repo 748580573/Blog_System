@@ -77,6 +77,7 @@ public class RequestUtil {
                 if (file != null){
                     //上传
                     String outPath = path + Utils.obtainRandomCode() + file.getOriginalFilename();
+                    logger.info("图片上传，路径为" + outPath);
                     Utils.transferTo(file, outPath);
 //                    file.transferTo(new File(contextPath + path));
                     filePath.add(outPath.replace(path, "imgs/"));

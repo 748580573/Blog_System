@@ -10,7 +10,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 public class ContextConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/imgs/**").addResourceLocations("file:E:/test/");
+        String system  = System.getProperty("os.name");
+        if (system.contains("Windows") || system.contains("windows")){
+            registry.addResourceHandler("/imgs/**").addResourceLocations("file:E:/test/");
+        }else {
+            registry.addResourceHandler("/imgs/**").addResourceLocations("file:/home/F/img/");
+        }
 
         super.addResourceHandlers(registry);
     }

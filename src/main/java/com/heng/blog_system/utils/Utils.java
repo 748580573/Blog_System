@@ -103,12 +103,61 @@ public class Utils {
         return false;
     }
 
+    /**
+     * 获取数字，默认为0
+     * @param object
+     * @return
+     */
     public static Integer getDefaultNumber(Object object){
         if (object == null){
             return 0;
         }else {
             String number = object.toString();
             return Integer.parseInt(number);
+        }
+    }
+
+    /**
+     *
+     * @param filePath  文件路径
+     * @param charCode   字符编码
+     * @return
+     */
+    public static String readyFileFromStream(String filePath,String charCode){
+        BufferedReader reader = null;
+        StringBuffer sb = new StringBuffer();
+        try {
+            String line;
+            reader = new BufferedReader(new InputStreamReader(new FileInputStream(filePath),charCode));
+            while ((line = reader.readLine()) != null){
+                sb.append(line);
+            }
+            return sb.toString();
+        } catch (IOException e) {
+            logger.info("读取文件" + filePath + "失败");
+            logger.info(e);
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 将博客写入文件
+     * @param filePath
+     * @param content
+     * @param charCode
+     */
+    public static void writeFileFromContent(String filePath,String content,String charCode){
+        BufferedWriter writer = null;
+        try {
+            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filePath),charCode));
+            writer.write(content);
+            writer.close();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
