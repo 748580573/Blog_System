@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.text.TabExpander;
 import java.io.IOException;
 import java.util.*;
 
@@ -54,7 +55,7 @@ public class BlogServiceImpl implements BlogService {
 
 
         if (Utils.isEmpty(bl)){
-            bl = blogDao.get("blogTag.selectBlog", map);
+            bl = blogDao.get("blogTag.selectBlogForIndex", map);
             if (Utils.isEmpty(bl)){
                 bl = Blog.mapToBlog(map);
                 String createDate = Utils.obtainCurrentTime();
@@ -95,14 +96,13 @@ public class BlogServiceImpl implements BlogService {
                     blogDao.save("blogTag.addTag", param);
                     blogCache.putTag(tag_code, Tag.mapToTag(param));
 
-                    Map<String,Object> tagBlog = new HashMap<>();                 //关联tag与blog
-                    tagBlog.put("blog_code", blogCode);
-                    tagBlog.put("tag_code", tag_code);
-                    blogDao.save("blogTag.insertTagBlog", tagBlog);
                 }
             }
+            Map<String,Object> tagBlog = new HashMap<>();                 //关联tag与blog
+            tagBlog.put("blog_code", blogCode);
+            tagBlog.put("tag_code", tag_code);
+            blogDao.save("blogTag.insertTagBlog", tagBlog);
         }
-
 
 
 
@@ -187,8 +187,6 @@ public class BlogServiceImpl implements BlogService {
     @Transactional
     public Map<String, Object> selectHosBlogs(Map<String, Object> form) {
         Map<String, Object> result = new HashMap<>();
-        form.put("pageNumber", 1);
-        form.put("pageTotal", 6);
         try {
             List<Blog> blogs = blogDao.getList("blogTag.selectBlogForSearch",form);
             for (Blog blog : blogs){
@@ -228,11 +226,20 @@ public class BlogServiceImpl implements BlogService {
             SearchHits hits = response.getHits();
             result.put("code", response.status().getStatus());
             result.put("msg", "查询成功");
-            List<Map<String,Object>> data = new ArrayList<>();
+            List<Blog> list = new ArrayList<>();
             for (SearchHit hit : hits){
-                data.add(hit.getSourceAsMap());
+                String blogCode = hit.getSourceAsMap().get("blogCode").toString();
+                Blog blog = blogCache.getBlog(blogCode);
+                if (blog == null){
+                    Map<String,Object> tempParam = new HashMap<>();
+                    tempParam.put("blog_code", blogCode);
+                    blog = blogDao.get("blogTag.selectBlogForIndex",tempParam);
+                    blogCache.putBlog(blogCode, blog);
+                }
+                list.add(blog);
+
             }
-            result.put("data", data);
+            result.put("data", list);
         } catch (IOException e) {
             logger.info(e);
             result.put("code", "401");
@@ -258,6 +265,29 @@ public class BlogServiceImpl implements BlogService {
             result.put("code", 500);
             result.put("msg", "查询数据失败,请查看日志");
         }
+        return result;
+    }
+
+    @Override
+    public Map<String, Object> selectBlog(Map<String, Object> form) {
+        Map<String,Object> result = new HashMap<>();
+        if (!Utils.isEmpty(form.get("blog_code"))){
+            String blogCode = form.get("blog_code").toString();
+            try {
+                Blog blog = blogDao.get("blogTag.selectBlogForShow",form);
+                result.put("code",201 );
+                result.put("msg", "查询成功");
+                result.put("data", blog);
+                return result;
+            }catch (Exception e){
+                logger.info("查询:" +  blogCode + " 博客失败");
+                result.put("code",500 );
+                result.put("msg", "查询失败");
+                logger.info(e);
+            }
+        }
+        result.put("code",500);
+        result.put("msg", "缺少参数");
         return result;
     }
 }

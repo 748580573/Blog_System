@@ -27,6 +27,11 @@ public class BlogController {
         return result;
     }
 
+    /**
+     * 站内搜索
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "/fuzzy")
     public Map<String,Object> fuzzySearch(HttpServletRequest request){
         Map<String,Object> result = null;
@@ -48,7 +53,8 @@ public class BlogController {
         Map<String,Object> result = null;
         Map<String,Object> form = RequestUtil.getFormData(request);
         form.put("clickNumber", true);                   //开启按点击量查询
-
+        form.put("pageNumber", 1);
+        form.put("pageTotal", 4);
         result = blogService.selectHosBlogs(form);
         return result;
     }
@@ -58,6 +64,8 @@ public class BlogController {
         Map<String,Object> result = null;
         Map<String,Object> form = RequestUtil.getFormData(request);
         form.put("newBlog", true);                   //开启按点击量查询
+        form.put("pageNumber", 1);
+        form.put("pageTotal", 6);
         result = blogService.selectHosBlogs(form);
         return result;
     }
@@ -73,7 +81,19 @@ public class BlogController {
         Map<String,Object> form = RequestUtil.getFormData(request);
         result = blogService.selectRecommendBlog(form);
         return result;
+    }
 
+    /**
+     * 用于博客内容展示
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/searchBlog")
+    public Map<String,Object> searchBlogForShow(HttpServletRequest request){
+        Map<String,Object> result = null;
+        Map<String,Object> form = RequestUtil.getFormData(request);
+        result = blogService.selectBlog(form);
+        return result;
     }
 
 }

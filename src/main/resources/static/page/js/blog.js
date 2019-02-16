@@ -13,11 +13,11 @@ var nav = new Vue({
 $(document).ready(function () {
     var blogCode =  getUrlParam("blogCode");
     $.ajax({
-        url:"/blog_system//blog/searchHotBlog",
+        url:"/blog_system//blog/searchBlog",
         data:{"blog_code":blogCode},
         type:"POST",
         success:function (result) {
-            var data = result.data[0];
+            var data = result.data;
             var tagList = data.tags;
             var tags = tagList.split(",");
             var blogCode = data.blogCode;

@@ -53,16 +53,19 @@ public class BlogCache {
         tags.put(key,tag );
     }
 
+    /**
+     * 用于首页缓存
+     */
     private LoadingCache<String, Blog> blogs = CacheBuilder.newBuilder()
             .maximumSize(100)
-            .expireAfterAccess(10, TimeUnit.MINUTES)
+            .expireAfterAccess(5, TimeUnit.MINUTES)
             .build(
                     new CacheLoader<String, Blog>() {
                         @Override
                         public Blog load(String key) throws Exception {
                             Map<String,Object> map = new HashMap<>();
                             map.put("blog_code", key);
-                            Blog blog = blogDao.get("blogTag.selectBlog",map);
+                            Blog blog = blogDao.get("blogTag.selectBlogFormIndex",map);
                             return blog;
                         }
                     }
@@ -82,4 +85,5 @@ public class BlogCache {
     public void putBlog(String key,Blog blog){
         blogs.put(key, blog);
     }
+
 }

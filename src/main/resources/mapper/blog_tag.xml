@@ -4,7 +4,8 @@
 
 <mapper namespace="blogTag">
 
-    <resultMap id="blogMap" type="com.heng.blog_system.bean.Blog">
+    <!--#####################用于博客内容展示#################################-->
+    <resultMap id="blogMapForShow" type="com.heng.blog_system.bean.Blog">
         <result property="blogCode" column="blog_code"/>
         <result property="blogTilte" column="blog_title"/>
         <result property="blogDesc" column="blog_desc"/>
@@ -14,26 +15,30 @@
         <result property="createDate" column="create_date"/>
     </resultMap>
 
+    <!--###################用于首页###############################-->
+    <resultMap id="blogMapForIndex" type="com.heng.blog_system.bean.Blog">
+        <result property="blogCode" column="blog_code"/>
+        <result property="blogTilte" column="blog_title"/>
+        <result property="blogDesc" column="blog_desc"/>
+        <result property="blogConverUrl" column="blog_conver_url"/>
+        <result property="tags" column="tag_name"/>
+        <result property="createDate" column="create_date"/>
+    </resultMap>
+
+    
+
     <insert id="addBlog" parameterType="map">
         INSERT INTO blog_article(blog_code,blog_title,blog_desc,blog_content,blog_conver_url,create_date)
         VALUES (#{blog_code},#{blog_title},#{blog_desc},#{blog_content},#{imgUrl},#{create_date});
     </insert>
 
-    <select id="selectBlog" parameterType="map" resultMap="blogMap">
-        SELECT *
-        FROM blog_article
-        WHERE 1 = 1
-        <if test="blog_code != null">
-            AND blog_code = "${blog_code}"
-        </if>
-    </select>
-
-    <select id="selectBlogForSearch" parameterType="map" resultMap="blogMap">
+    <!--用于首页-->
+    <select id="selectBlogForIndex" parameterType="map" resultMap="blogMapForIndex">
         SELECT
         *
         FROM
-        blog_article
-        LEFT JOIN (
+        blog_article,
+        (
         SELECT
         GROUP_CONCAT( DISTINCT tags.tag_name ) tag_name ,blog_article.blog_code
         FROM
@@ -47,24 +52,64 @@
             AND tag_article.blog_code = "${blog_code}"
         </if>
         GROUP BY tag_article.blog_code
-        ) tagresult ON tagresult.blog_code = blog_article.blog_code
-        <if test="newBlog != null">
-            order by create_date
-        </if>
-        <if test="clickNumber != null">
-            order by click_number
-        </if>
-        <if test="pageNumber != null">
-           limit ${(pageNumber - 1) * pageTotal} ,${pageNumber * pageTotal}
-        </if>
+        ) tagresult
+        WHERE tagresult.blog_code = blog_article.blog_code
     </select>
 
-    <select id="selectBlogForRecommend" parameterType="map" resultMap="blogMap">
+    <!--用于博客展示-->
+    <select id="selectBlogForShow" parameterType="map" resultMap="blogMapForShow">
         SELECT
         *
         FROM
-        blog_article
-        LEFT JOIN (
+        blog_article,
+        (
+        SELECT
+        GROUP_CONCAT( DISTINCT tags.tag_name ) tag_name ,blog_article.blog_code
+        FROM
+        blog_article,
+        tag_article,
+        tags
+        WHERE
+        tag_article.blog_code = blog_article.blog_code
+        AND tags.tag_code = tag_article.tag_code
+        <if test="blog_code != null">
+            AND tag_article.blog_code = "${blog_code}"
+        </if>
+        GROUP BY tag_article.blog_code
+        ) tagresult
+        WHERE tagresult.blog_code = blog_article.blog_code
+    </select>
+
+
+    <select id="selectBlogForSearch" parameterType="map" resultMap="blogMapForIndex">
+        SELECT
+        *
+        FROM
+        blog_article,
+         (
+        SELECT
+        GROUP_CONCAT( DISTINCT tags.tag_name ) tag_name ,blog_article.blog_code
+        FROM
+        blog_article,
+        tag_article,
+        tags
+        WHERE
+        tag_article.blog_code = blog_article.blog_code
+        AND tags.tag_code = tag_article.tag_code
+        <if test="blog_code != null">
+            AND tag_article.blog_code = "${blog_code}"
+        </if>
+        GROUP BY tag_article.blog_code
+        ) tagresult
+        WHERE tagresult.blog_code = blog_article.blog_code
+    </select>
+
+    <select id="selectBlogForRecommend" parameterType="map" resultMap="blogMapForIndex">
+        SELECT
+        *
+        FROM
+        blog_article,
+         (
         SELECT
         GROUP_CONCAT( DISTINCT tags.tag_name ) tag_name ,blog_article.blog_code
         FROM
@@ -75,7 +120,8 @@
         tag_article.blog_code = blog_article.blog_code
         AND tags.tag_code = tag_article.tag_code
         GROUP BY tag_article.blog_code
-        ) tagresult ON tagresult.blog_code = blog_article.blog_code
+        ) tagresult
+        WHERE tagresult.blog_code = blog_article.blog_code
         ORDER BY click_number,create_date
         <if test="pageNumber != null">
             limit ${(pageNumber - 1) * pageTotal} ,${pageNumber * pageTotal}

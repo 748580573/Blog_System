@@ -6,6 +6,11 @@ public interface BlogService {
 
     public Map<String,Object> addBlog(Map<String,Object> map);
 
+    /**
+     * 查询多个博客
+     * @param form
+     * @return
+     */
     public Map<String,Object> selectBlogs(Map<String,Object> form);
 
     /**
@@ -24,5 +29,12 @@ public interface BlogService {
     public Map<String,Object> fuzzySearch(Map<String,Object> form,Class<?> clazz);
 
     public Map<String,Object> selectRecommendBlog(Map<String,Object> form);
+
+    /**
+     * 查询单个博客
+     * @param form
+     * @return
+     */
+    public Map<String,Object> selectBlog(Map<String,Object> form);
 
 }

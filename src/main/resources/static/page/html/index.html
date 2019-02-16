@@ -32,8 +32,8 @@
         </ul>
 
         <div class="search">
-            <input type="text">
-            <img src="../img/search.png">
+            <input id="key" type="text">
+            <img src="../img/search.png" onclick="search()">
         </div>
     </div>
 </div>
@@ -302,26 +302,6 @@
                     </div>
                 </li>
 
-                <li class="new_article_content_li">
-                    <h3><a href="#">德玛西亚</a></h3>
-                    <div class="new_article_content_tail">
-                        <div class="new_article_content_tail_left">
-                            <img src="../img/c.jpg" width="367px" height="300px">
-                        </div>
-                        <div class="new_article_content_tail_right">
-                            <p class="text_overflow">洛丹伦国王泰瑞纳斯·米奈希尔二世的儿子，乌瑟尔·光明使者的弟子。在恶魔的惩罚下，巫妖王诞生的唯一目的就是：统帅被称为天灾的庞大亡灵军队。耐奥祖是兽人萨满长老，他的地位曾经高如德拉诺氏族的兽人大酋长，却也沦落到成为燃烧军团的奴隶。洛丹伦国王泰瑞纳斯·米奈希尔二世的儿子，乌瑟尔·光明使者的弟子。在恶魔的惩罚下，巫妖王诞生的唯一目的就是：统帅被称为天灾的庞大亡灵军队。耐奥祖是兽人萨满长老，他的地位曾经高如德拉诺氏族的兽人大酋长，却也沦落到成为燃烧军团的奴隶。</p>
-                            <br>
-                            <div>
-                                <img class="author_img" src="../img/author_img.png">
-                                <span class="author_name">比丘特之剑</span>
-                                <span class="tags">【<span class="tags">艾泽拉斯|洛丹洛|阿尔萨斯</span>】</span>
-                                <span class="text_color_deepgray">2019-01-21</span>
-                                <a class="looking" href="#"></a>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-
             </ul>
         </div>
 
@@ -379,15 +359,7 @@
         <div class="separateLine_h"></div>
 
         <ul class="rank_ul">
-            <li class="rank_ul_li">
-                <p class="rank_ul_li_p text_overflow text_indentation">你的痛苦我都心疼想为你解决挡开流言紧握你手想飞奔往前我相信爱能证明一切 </p>
-                <div class="rank_ul_li_div">
-                    <div class="rank_ul_li_div_img">
-                        <img src="../img/c.jpg" width="150px" height="120px">
-                    </div>
-                    <div class="rank_ul_li_span text_overflow">因为要离别就走破这双鞋我陪你走一夜直到心不再滴血而你流尽泪水天空不停地闪着雷照不亮我心中黑黑黑黑黑就走破这双鞋我陪你走一夜黑黑黑黑黑就走破这双鞋我陪你走一夜</div>
-                </div>
-            </li>
+
             <li class="rank_ul_li" v-for="blog in blogs" v-bind:data-src="blog.blogCode" onclick="view_blog(this)">
                 <p class="rank_ul_li_p text_overflow text_indentation">{{blog.blogTilte}}</p>
                 <div class="rank_ul_li_div">

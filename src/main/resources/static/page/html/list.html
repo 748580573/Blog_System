@@ -8,7 +8,7 @@
 
     <link href="../css/Common.css" type="text/css" rel="stylesheet">
     <link href="../css/index.css" type="text/css" rel="stylesheet">
-    <link href="../css/blog.css" type="text/css" rel="stylesheet">
+
 </head>
 <body>
 
@@ -40,23 +40,38 @@
 
 <div class="separateLine_h"></div>
 
-<div class="content_left" style="background-color: white">
-    <div class="blog" id="blog">
-        <div class="blog_classfity">
-            <span>您现在的位置是：</span>网站首页 > 技术专栏
-        </div>
-        <div style="background-color: black;width: 90%;height: 4px;margin-top: 10px;"></div>
-        <div class="blog_tilte">2019秋招-有赞面试</div>
-        <div class="blog_info"><img src="../img/author_img.png">&nbsp;&nbsp; <img src="../img/calendar.png">&nbsp;&nbsp;{{createDate}}</div>
-        <div class="blog_tags">
-            <div class="blog_tag" v-for="tag in tags">{{tag}}</div>
-        </div>
-        <div class="blog_des"><span>简介</span>{{blogDesc}}</div>
-        <div id="blog_content" class="blog_content">{{blogContent}}</div>
+
+<div class="content_left">
+    <div id="list" class="new_article_content">
+        <ul class="new_article_content_ul">
+            <li class="new_article_content_li" v-for="blog in blogs" v-bind:data-src="blog.blogCode" onclick="view_blog(this)">
+                <h3><a href="#">{{blog.blogTilte}}</a></h3>
+                <div class="new_article_content_tail">
+                    <div class="new_article_content_tail_left">
+                        <img v-bind:src="blog.blogConverUrl" width="367px" height="300px">
+                    </div>
+                    <div class="new_article_content_tail_right">
+                        <p class="text_overflow">{{blog.blogDesc}}</p>
+                        <br>
+                        <div>
+                            <img class="author_img" src="../img/author_img.png">
+                            <span class="author_name">比丘特之剑</span>
+                            <span class="tags">【<span class="tags">{{blog.tags}}</span>】</span>
+                            <span class="text_color_deepgray">{{blog.createDate}}</span>
+                            <a class="looking" href="#"></a>
+                        </div>
+                    </div>
+                </div>
+            </li>
+
+
+        </ul>
     </div>
 
-
 </div>
+
+
+
 
 <div class="content_right">
     <div class="business_card">
@@ -97,7 +112,7 @@
 
     <div class="separateLine_h"></div>
 
-    <div class="rank">
+    <div class="rank" id="rank">
         <div class="separateLine_h"></div>
         <div class="hot_div">
             <ul>
@@ -117,40 +132,20 @@
                     <div class="rank_ul_li_span text_overflow">因为要离别就走破这双鞋我陪你走一夜直到心不再滴血而你流尽泪水天空不停地闪着雷照不亮我心中黑黑黑黑黑就走破这双鞋我陪你走一夜黑黑黑黑黑就走破这双鞋我陪你走一夜</div>
                 </div>
             </li>
-
-            <li class="rank_ul_li">
-                <p class="rank_ul_li_p text_overflow text_indentation">你的痛苦我都心疼想为你解决挡开流言紧握你手想飞奔往前我相信爱能证明一切 </p>
+            <li class="rank_ul_li" v-for="blog in blogs" v-bind:data-src="blog.blogCode" onclick="view_blog(this)">
+                <p class="rank_ul_li_p text_overflow text_indentation">{{blog.blogTilte}}</p>
                 <div class="rank_ul_li_div">
                     <div class="rank_ul_li_div_img">
-                        <img src="../img/c.jpg" width="150px" height="120px">
+                        <img v-bind:src="blog.blogConverUrl" width="150px" height="120px">
                     </div>
-                    <div class="rank_ul_li_span text_overflow">因为要离别就走破这双鞋我陪你走一夜直到心不再滴血而你流尽泪水天空不停地闪着雷照不亮我心中黑黑黑黑黑就走破这双鞋我陪你走一夜黑黑黑黑黑就走破这双鞋我陪你走一夜</div>
-                </div>
-            </li>
-
-            <li class="rank_ul_li">
-                <p class="rank_ul_li_p text_overflow text_indentation">你的痛苦我都心疼想为你解决挡开流言紧握你手想飞奔往前我相信爱能证明一切 </p>
-                <div class="rank_ul_li_div">
-                    <div class="rank_ul_li_div_img">
-                        <img src="../img/c.jpg" width="150px" height="120px">
-                    </div>
-                    <div class="rank_ul_li_span text_overflow">因为要离别就走破这双鞋我陪你走一夜直到心不再滴血而你流尽泪水天空不停地闪着雷照不亮我心中黑黑黑黑黑就走破这双鞋我陪你走一夜黑黑黑黑黑就走破这双鞋我陪你走一夜</div>
-                </div>
-            </li>
-
-            <li class="rank_ul_li">
-                <p class="rank_ul_li_p text_overflow text_indentation">你的痛苦我都心疼想为你解决挡开流言紧握你手想飞奔往前我相信爱能证明一切 </p>
-                <div class="rank_ul_li_div">
-                    <div class="rank_ul_li_div_img">
-                        <img src="../img/c.jpg" width="150px" height="120px">
-                    </div>
-                    <div class="rank_ul_li_span text_overflow">因为要离别就走破这双鞋我陪你走一夜直到心不再滴血而你流尽泪水天空不停地闪着雷照不亮我心中黑黑黑黑黑就走破这双鞋我陪你走一夜黑黑黑黑黑就走破这双鞋我陪你走一夜</div>
+                    <div class="rank_ul_li_span text_overflow">{{blog.blogDesc}}</div>
                 </div>
             </li>
         </ul>
     </div>
 </div>
 </body>
-<script src="../js/blog.js"></script>
-<script src="../js/blog.js"></script>
+<script src="../js/utils.js"></script>
+<script src="../js/nav.js"></script>
+<script src="../js/list.js"></script>
 </html>

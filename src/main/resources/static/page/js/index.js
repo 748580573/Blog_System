@@ -13,7 +13,6 @@ var nav = new Vue({
 // var img_width;
 // var img_height;
 $(function () {
-
         compentent_reset(".Carousel_content", ".Carousel_content_li img");
         compentent_reset(".recommend_blog_ul_li", ".recommend_blog_ul_li img");
         compentent_reset(".knowledge_theme_ul_li", ".knowledge_theme_ul_li img");
@@ -24,10 +23,10 @@ $(function () {
 
         });
 
-        setInterval(carousel, 5000);
-        init_hotBlog();
-        init_newBlog();
-        init_recommendBlog();
+        setTimeout(setInterval(carousel, 5000),0);
+        setTimeout(init_hotBlog(),0);
+        setTimeout(init_newBlog(),0);
+        setTimeout(init_recommendBlog(),0);
 
     }
 );
@@ -247,5 +246,9 @@ function chageTitleContent(data_sign) {
             }
         }
     }
-
 }
+
+var search = function () {
+    var key = $("#key").val();
+    window.location = "/blog_system/page/html/list.html?key="+key;
+};
