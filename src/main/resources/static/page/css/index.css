@@ -95,7 +95,7 @@ body{
     transition-duration:0.5s ;
 }
 
-.dropdown-menu{
+.dropdown_menu{
     background-color: #1C2327;
     position: absolute;
     width: 8.4%;
@@ -103,12 +103,12 @@ body{
     z-index: 10;
 }
 
-.dropdown-menu li{
+.dropdown_menu li{
     float: none;
     width: 100%;
 }
 
-.dropdown-menu li a{
+.dropdown_menu li a{
     display: block;
     width: 100%;
 }
@@ -659,6 +659,7 @@ body{
 .hot_li:hover{
     box-shadow: darkgrey 1px 1px 1px 1px;
     transition: box-shadow 0.5s;
+    cursor: pointer;
 
 }
 

@@ -25,7 +25,7 @@
         <result property="createDate" column="create_date"/>
     </resultMap>
 
-    
+
 
     <insert id="addBlog" parameterType="map">
         INSERT INTO blog_article(blog_code,blog_title,blog_desc,blog_content,blog_conver_url,create_date)
@@ -86,7 +86,7 @@
         *
         FROM
         blog_article,
-         (
+        (
         SELECT
         GROUP_CONCAT( DISTINCT tags.tag_name ) tag_name ,blog_article.blog_code
         FROM
@@ -102,6 +102,9 @@
         GROUP BY tag_article.blog_code
         ) tagresult
         WHERE tagresult.blog_code = blog_article.blog_code
+        <if test="pageNumber != null">
+            limit ${(pageNumber - 1) * pageTotal} ,${pageNumber * pageTotal}
+        </if>
     </select>
 
     <select id="selectBlogForRecommend" parameterType="map" resultMap="blogMapForIndex">
@@ -109,7 +112,7 @@
         *
         FROM
         blog_article,
-         (
+        (
         SELECT
         GROUP_CONCAT( DISTINCT tags.tag_name ) tag_name ,blog_article.blog_code
         FROM
@@ -123,6 +126,15 @@
         ) tagresult
         WHERE tagresult.blog_code = blog_article.blog_code
         ORDER BY click_number,create_date
+        <if test="pageNumber != null">
+            limit ${(pageNumber - 1) * pageTotal} ,${pageNumber * pageTotal}
+        </if>
+    </select>
+
+    <select id="selectBlogForRank" resultMap="blogMapForIndex" parameterType="map">
+        SELECT *
+        FROM blog_article
+        ORDER BY click_number,create_date DESC
         <if test="pageNumber != null">
             limit ${(pageNumber - 1) * pageTotal} ,${pageNumber * pageTotal}
         </if>

@@ -1,18 +1,10 @@
-var nav = new Vue({
-    el: "#nav",
-    data: {
-        titles: [
-            {name: "home", sub: [{name: "开心宝典"}, {name: "快乐成长法"}, {name: "素质教育"}]},
-            {name: "product", sub: []},
-            {name: "servicess", sub: [{name: "开心宝典"}, {name: "快乐成长法"}, {name: "素质教育"}]},
-            {name: "contact", sub: []}
-        ]
-    }
-});
+
 
 // var img_width;
 // var img_height;
 $(function () {
+
+
         compentent_reset(".Carousel_content", ".Carousel_content_li img");
         compentent_reset(".recommend_blog_ul_li", ".recommend_blog_ul_li img");
         compentent_reset(".knowledge_theme_ul_li", ".knowledge_theme_ul_li img");
@@ -27,6 +19,7 @@ $(function () {
         setTimeout(init_hotBlog(),0);
         setTimeout(init_newBlog(),0);
         setTimeout(init_recommendBlog(),0);
+        setTimeout(init_rankBlog,0);
 
     }
 );
@@ -83,13 +76,29 @@ var init_recommendBlog = function () {
             })
         }
     })
-}
+};
+
+var init_rankBlog = function () {
+    $.ajax({
+        url:"/blog_system/blog/rank",
+        type:"POST",
+        success:function (result) {
+            var data = result.data;
+            var rankBlog = new Vue({
+                el:"#hot",
+                data:{
+                    blogs:data
+                }
+            })
+        }
+    })
+};
 /**
  * 查看某片博客
  * @param obj
  */
 var view_blog = function (obj) {
-    var blog_id = $(obj).attr("data-src");
+    var blog_id = $(obj).attr("data-code");
     window.location = "/blog_system/page/html/blog.html?blogCode="+blog_id;
 };
 
@@ -247,6 +256,15 @@ function chageTitleContent(data_sign) {
         }
     }
 }
+
+$(function () {
+    $("#key").keydown(function(event) {
+        if (event.keyCode == 13) {
+            var key = $("#key").val();
+            window.location = "/blog_system/page/html/list.html?key="+key;
+        }
+    })
+})
 
 var search = function () {
     var key = $("#key").val();

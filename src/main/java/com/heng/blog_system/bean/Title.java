@@ -1,6 +1,11 @@
 package com.heng.blog_system.bean;
 
-public class Title {
+import java.io.Serializable;
+
+public class Title implements Serializable {
+
+    private static final long serialVersionUID = -5809782578272943999L;
+
     private int id;
 
     private int parId;            //父标题Id(最多二级标题)

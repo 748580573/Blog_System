@@ -4,6 +4,7 @@ import com.heng.blog_system.bean.Blog;
 import com.heng.blog_system.bean.Tag;
 import com.heng.blog_system.cache.BlogCache;
 import com.heng.blog_system.db.BlogDao;
+import com.heng.blog_system.db.RedisCache;
 import com.heng.blog_system.service.BlogService;
 import com.heng.blog_system.utils.Utils;
 import com.heng.util.ESClient;
@@ -15,6 +16,7 @@ import org.elasticsearch.rest.RestStatus;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +28,9 @@ import java.util.*;
 public class BlogServiceImpl implements BlogService {
 
     private Logger logger = Logger.getLogger(BlogServiceImpl.class);
+
+    @Autowired
+    private RedisCache redisCache;
 
     @Autowired
     private BlogCache blogCache;
@@ -45,13 +50,17 @@ public class BlogServiceImpl implements BlogService {
         String tags = "";
         Blog blog = null;
 
+
+
         if (map.get("blog_title") != null) {
             blogCode = Utils.md5(map.get("blog_title").toString());
             map.put("blog_code", blogCode);
         }
 
         Blog bl = null;
-        bl = blogCache.getBlog(blogCode);
+//        bl = blogCache.getBlog(blogCode);
+
+        bl = (Blog) redisCache.get(blogCode);
 
 
         if (Utils.isEmpty(bl)){
@@ -61,8 +70,8 @@ public class BlogServiceImpl implements BlogService {
                 String createDate = Utils.obtainCurrentTime();
                 map.put("create_date", createDate);
                 bl.setCreateDate(createDate);
-                blogCache.putBlog(blogCode, bl);
-
+                redisCache.put(blogCode, bl);
+//                blogCache.putBlog(blogCode, bl);
                 blogDao.save("blogTag.addBlog", map);
             }
         }
@@ -88,13 +97,15 @@ public class BlogServiceImpl implements BlogService {
             tag_code = Utils.md5(bolg_tags[i]);
             param.put("tag_code", tag_code);
             param.put("tag_name", bolg_tags[i]);
-            Tag tag = blogCache.getTag(tag_code);
+            Tag tag = (Tag) redisCache.get(tag_code);
+//            Tag tag = blogCache.getTag(tag_code);
 
             if (Utils.isEmpty(tag)) {
                 Tag ta = blogDao.get("blogTag.selectTag",param);
                 if (Utils.isEmpty(ta)){
                     blogDao.save("blogTag.addTag", param);
-                    blogCache.putTag(tag_code, Tag.mapToTag(param));
+                    redisCache.put(tag_code, Tag.mapToTag(param));
+//                    blogCache.putTag(tag_code, Tag.mapToTag(param));
 
                 }
             }
@@ -185,18 +196,26 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     @Transactional
-    public Map<String, Object> selectHosBlogs(Map<String, Object> form) {
+    public Map<String, Object> selectHostBlogs(Map<String, Object> form) {
         Map<String, Object> result = new HashMap<>();
+
+        List<Blog> data = (List<Blog>) redisCache.get("host");
+
         try {
-            List<Blog> blogs = blogDao.getList("blogTag.selectBlogForSearch",form);
-            for (Blog blog : blogs){
-                if (Utils.isEmpty(blogCache.getBlog(blog.getBlogCode()))){
+            if (data == null || data.size() <= 0){
+                data = blogDao.getList("blogTag.selectBlogForSearch",form);
+                redisCache.put("host", data);
+            }
+            for (Blog blog : data){
+//                if (Utils.isEmpty(blogCache.getBlog(blog.getBlogCode()))){
+                if (Utils.isEmpty(redisCache.get(blog.getBlogCode()))){
                     String tag = blog.getTags();
                     blog.setTags(tag.replace(",", " "));
-                    blogCache.putBlog(blog.getBlogCode(), blog);
+                    redisCache.put(blog.getBlogCode(), blog);
+//                    blogCache.putBlog(blog.getBlogCode(), blog);
                 }
             }
-            result.put("data", blogs);
+            result.put("data", data);
             result.put("code", "201");
             result.put("message", "查询成功");
             return result;
@@ -211,6 +230,8 @@ public class BlogServiceImpl implements BlogService {
     @Override
     @Transactional
     public Map<String, Object> fuzzySearch(Map<String, Object> form,Class<?> clazz) {
+        Integer pageNo = Utils.getDefaultNumber(form.get("pageNo"),1);
+        Integer pageSize = Utils.getDefaultNumber(form.get("pageSize"), 3);
         String key = null;
         String indexName = ESUtils.getEsIndexNameFromClazz(clazz);
         String indexType = ESUtils.getEsTypeFromClazz(clazz);
@@ -222,19 +243,23 @@ public class BlogServiceImpl implements BlogService {
         param.put("blogTilte",key );
         param.put("tags", key);
         try {
-            SearchResponse response =esClient.boolMulitSearchForShould(indexName, indexType, param);
+            SearchResponse response =esClient.boolMulitSearchForShould(indexName, indexType, param,pageNo,pageSize);
+            logger.info("站内搜索到的数据：" + response);
             SearchHits hits = response.getHits();
+            result.put("total", (hits.totalHits + pageSize) / pageSize);
             result.put("code", response.status().getStatus());
             result.put("msg", "查询成功");
             List<Blog> list = new ArrayList<>();
             for (SearchHit hit : hits){
                 String blogCode = hit.getSourceAsMap().get("blogCode").toString();
-                Blog blog = blogCache.getBlog(blogCode);
+//                Blog blog = blogCache.getBlog(blogCode);
+                Blog blog = (Blog) redisCache.get(blogCode);
                 if (blog == null){
                     Map<String,Object> tempParam = new HashMap<>();
                     tempParam.put("blog_code", blogCode);
                     blog = blogDao.get("blogTag.selectBlogForIndex",tempParam);
-                    blogCache.putBlog(blogCode, blog);
+//                    blogCache.putBlog(blogCode, blog);
+                    redisCache.put(blogCode, blog);
                 }
                 list.add(blog);
 
@@ -288,6 +313,59 @@ public class BlogServiceImpl implements BlogService {
         }
         result.put("code",500);
         result.put("msg", "缺少参数");
+        return result;
+    }
+
+    @Override
+    public Map<String, Object> selectBlogForRank(Map<String, Object> form) {
+        List<Blog> data = (List<Blog>) redisCache.get("rank");
+        Map<String,Object> result = new HashMap<>();
+        try {
+            if (data == null || data.size() <= 0){
+                data = blogDao.getList("blogTag.selectBlogForRank",form);
+                redisCache.put("rank", data);
+            }
+            result.put("code", 201);
+            result.put("data", data);
+            result.put("msg", "查询成功");
+        }catch (Exception e){
+            result.put("code", 500);
+            result.put("msg", "查询数据异常，请检查日志");
+            e.printStackTrace();
+            logger.info(e);
+        }
+        return result;
+    }
+
+    @Override
+    public Map<String, Object> selectNewBlogs(Map<String, Object> form) {
+        Map<String, Object> result = new HashMap<>();
+
+        List<Blog> data = (List<Blog>) redisCache.get("new");
+
+        try {
+            if (data == null || data.size() <= 0){
+                data = blogDao.getList("blogTag.selectBlogForSearch",form);
+                redisCache.put("new", data);
+            }
+            for (Blog blog : data){
+//                if (Utils.isEmpty(blogCache.getBlog(blog.getBlogCode()))){
+                if (Utils.isEmpty(redisCache.get(blog.getBlogCode()))){
+                    String tag = blog.getTags();
+                    blog.setTags(tag.replace(",", " "));
+                    redisCache.put(blog.getBlogCode(), blog);
+//                    blogCache.putBlog(blog.getBlogCode(), blog);
+                }
+            }
+            result.put("data", data);
+            result.put("code", "201");
+            result.put("message", "查询成功");
+            return result;
+        }catch (Exception e){
+            logger.info(e);
+            result.put("code", "401");
+            result.put("message", e.getMessage());
+        }
         return result;
     }
 }

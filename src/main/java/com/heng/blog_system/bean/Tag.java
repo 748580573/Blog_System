@@ -2,9 +2,13 @@ package com.heng.blog_system.bean;
 
 import com.heng.blog_system.utils.Utils;
 
+import java.io.Serializable;
 import java.util.Map;
 
-public class Tag {
+public class Tag implements Serializable {
+
+    private static final long serialVersionUID = -5809782578272943999L;
+
 
     private String tagCode;                 //标签编码
 

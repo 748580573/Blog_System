@@ -59,4 +59,39 @@
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="blogDataSource" />
     </bean>
+
+
+
+    <!--####################################### Redis ######################################-->
+
+    <!-- jedis 连接池 配置 -->
+    <bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig" >
+        <property name="maxIdle" value="${redis.maxIdle}" />
+        <property name="maxWaitMillis" value="${redis.maxWait}" />
+        <property name="testOnBorrow" value="${redis.testOnBorrow}" />
+    </bean>
+
+    <!-- redis服务器中心 -->
+    <bean id="connectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+        <property name="poolConfig" ref="poolConfig"/>
+        <property name="port" value="${redis.port}"/>
+        <property name="hostName" value="${redis.host}"/>
+        <!--<property name="password" value="${redis.password}"/>-->
+        <property name="timeout" value="${redis.timeout}"/>
+        <property name="database" value="1"/>
+    </bean>
+
+    <bean id="cacheRedisTemplate" class="org.springframework.data.redis.core.RedisTemplate" >
+        <property name="connectionFactory" ref="connectionFactory" />
+        <property name="keySerializer" ref="stringRedisSerializer" />
+        <property name="hashKeySerializer" ref="stringRedisSerializer" />
+        <property name="valueSerializer" ref="stringRedisSerializer" />
+        <property name="hashValueSerializer" ref="stringRedisSerializer" />
+    </bean>
+
+    <bean id="stringRedisSerializer" class="org.springframework.data.redis.serializer.StringRedisSerializer" />
+
+
+
+
 </beans>

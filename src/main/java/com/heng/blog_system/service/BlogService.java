@@ -18,7 +18,10 @@ public interface BlogService {
      * @param form
      * @return
      */
-    public Map<String,Object> selectHosBlogs(Map<String,Object> form);
+    public Map<String,Object> selectHostBlogs(Map<String,Object> form);
+
+
+    public Map<String,Object> selectNewBlogs(Map<String,Object> form);
 
     /**
      * 站内搜索
@@ -36,5 +39,12 @@ public interface BlogService {
      * @return
      */
     public Map<String,Object> selectBlog(Map<String,Object> form);
+
+    /**
+     * 排行查询
+     * @param form
+     * @return
+     */
+    public Map<String,Object> selectBlogForRank(Map<String,Object> form);
 
 }

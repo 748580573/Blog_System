@@ -108,9 +108,9 @@ public class Utils {
      * @param object
      * @return
      */
-    public static Integer getDefaultNumber(Object object){
+    public static Integer getDefaultNumber(Object object,int defaultValue){
         if (object == null){
-            return 0;
+            return defaultValue;
         }else {
             String number = object.toString();
             return Integer.parseInt(number);
@@ -159,5 +159,48 @@ public class Utils {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Object 转 byte[]
+     * @param bytes
+     * @return
+     */
+    public static Object toObject(byte[] bytes){
+        Object obj = null;
+
+        try {
+            ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+            ObjectInputStream ois = new ObjectInputStream(bis);
+            obj = ois.readObject();
+            ois.close();
+            bis.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return obj;
+    }
+
+    /**
+     * byte[] 转Object
+     * @param obj
+     * @return
+     */
+    public static byte[] toByteArray(Object obj){
+        byte[] bytes = null;
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        try {
+            ObjectOutputStream oos = new ObjectOutputStream(bos);
+            oos.writeObject(obj);
+            oos.flush();
+            bytes = bos.toByteArray();
+            oos.close();
+            bos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return bytes;
     }
 }

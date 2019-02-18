@@ -2,9 +2,12 @@ package com.heng.blog_system.bean;
 
 import com.heng.blog_system.utils.Utils;
 
+import java.io.Serializable;
 import java.util.Map;
 
-public class Blog {
+public class Blog implements Serializable {
+
+    private static final long serialVersionUID = -5809782578272943999L;
 
     private String blogCode;                             //博客编码
 

@@ -6,8 +6,10 @@
     <script src="../js/jquery-3.2.1.min.js"></script>
     <script src="../js/vue.js"></script>
 
-    <link href="../css/Common.css" type="text/css" rel="stylesheet">
+    <link href="../css/bootstrap.css" type="text/css" rel="stylesheet">
     <link href="../css/index.css" type="text/css" rel="stylesheet">
+    <link href="../css/Common.css" type="text/css" rel="stylesheet">
+
 
 </head>
 <body>
@@ -22,21 +24,22 @@
 
         <ul class="menu">
             <li v-for="title in titles">
-                <a href="#">{{title.name}}<img class="icon-arrow" src="../img/a.png" v-if="title.sub != null && title.sub.length > 0"></a>
-                <ul class="dropdown-menu" v-if="title.sub != null && title.sub.length > 0">
+                <a v-bind:href="title.url">{{title.name}}<img class="icon-arrow" src="../img/a.png" v-if="title.sub != null && title.sub.length > 0"></a>
+                <ul class="dropdown_menu" v-if="title.sub != null && title.sub.length > 0">
                     <li v-for="subTitle in title.sub">
-                        <a href="#">{{subTitle.name}}</a>
+                        <a v-bind:href="subTitle.url">{{subTitle.name}}</a>
                     </li>
                 </ul>
             </li>
         </ul>
 
         <div class="search">
-            <input type="text">
-            <img src="../img/search.png">
+            <input id="key" type="text">
+            <img src="../img/search.png" onclick="search()">
         </div>
     </div>
 </div>
+
 
 <div class="separateLine_h"></div>
 
@@ -44,7 +47,7 @@
 <div class="content_left">
     <div id="list" class="new_article_content">
         <ul class="new_article_content_ul">
-            <li class="new_article_content_li" v-for="blog in blogs" v-bind:data-src="blog.blogCode" onclick="view_blog(this)">
+            <li class="new_article_content_li" v-for="blog in blogs" v-bind:data-code="blog.blogCode" onclick="view_blog(this)">
                 <h3><a href="#">{{blog.blogTilte}}</a></h3>
                 <div class="new_article_content_tail">
                     <div class="new_article_content_tail_left">
@@ -63,14 +66,27 @@
                     </div>
                 </div>
             </li>
-
-
         </ul>
     </div>
 
+    <div style="width: 100%;height: 50px"></div>
+
+   <div style="width: 100%;" align="center">
+       <div class="btn-toolbar" role="toolbar" style="display: inline-block">
+           <div class="btn-group">
+               <button type="button" class="btn btn-default"><</button>
+           </div>
+           <div id="pageNumber" class="btn-group">
+               <button type="button" class="btn btn-default">1</button>
+               <button type="button" class="btn btn-default">2</button>
+               <button type="button" class="btn btn-default">3</button>
+           </div>
+           <div class="btn-group">
+               <button type="button" class="btn btn-default">> </button>
+           </div>
+       </div>
+   </div>
 </div>
-
-
 
 
 <div class="content_right">
@@ -82,16 +98,16 @@
         <p>Email：748580573@qq.com</p>
 
         <ul class="business_card_ul">
-            <li class="business_card_li"><a class="business_card_a circle_border" href=""><img src="../img/home.png" width="45px" height="45px"></a></li>
-            <li class="business_card_li"><a class="business_card_a circle_border" href=""><img src="../img/xinfeng.png" width="45px" height="45px"></a></li>
-            <li class="business_card_li"><a class="business_card_a circle_border" href=""><img src="../img/QQ.png" width="45px" height="45px"></a></li>
-            <li class="business_card_li"><a class="business_card_a circle_border" href=""><img src="../img/Git.png" width="45px" height="45px"></a></li>
+            <li class="business_card_li"><a class="business_card_a circle_border" href="/blog_system/page/html/index.html"><img src="../img/home.png" width="45px" height="45px"></a></li>
+            <li class="business_card_li"><a class="business_card_a circle_border" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=748580573@qq.com" target="_blank"><img src="../img/xinfeng.png" width="45px" height="45px"></a></li>
+            <li class="business_card_li"><a class="business_card_a circle_border" href="http://wpa.qq.com/msgrd?v=3&uin=748580573&site=qq&menu=yes" target="_blank"><img src="../img/QQ.png" width="45px" height="45px"></a></li>
+            <li class="business_card_li"><a class="business_card_a circle_border" href="https://github.com/748580573/" target="_blank"><img src="../img/Git.png" width="45px" height="45px"></a></li>
         </ul>
     </div>
 
     <div class="separateLine_h"></div>
 
-    <div class="hot">
+    <div class="hot" id="hot">
         <div class="separateLine_h"></div>
         <div class="hot_div">
             <ul>
@@ -102,11 +118,9 @@
         <div class="separateLine_h"></div>
 
         <ul class="hot_ul">
-            <li class="hot_li"><a class="hot_ul_li_a" href="#">昨天我对你说了什么</a></li>
-            <li class="hot_li"><a class="hot_ul_li_a" href="#">昨天我对你说了什么</a></li>
-            <li class="hot_li"><a class="hot_ul_li_a" href="#">昨天我对你说了什么</a></li>
-            <li class="hot_li"><a class="hot_ul_li_a" href="#">昨天我对你说了什么</a></li>
-            <li class="hot_li"><a class="hot_ul_li_a" href="#">昨天我对你说了什么</a></li>
+            <li class="hot_li" v-for="blog in blogs" v-bind:data-code="blog.blogCode" onclick="view_blog(this)">
+                <a class="hot_ul_li_a">{{blog.blogTilte}}</a>
+            </li>
         </ul>
     </div>
 
@@ -123,20 +137,12 @@
         <div class="separateLine_h"></div>
 
         <ul class="rank_ul">
-            <li class="rank_ul_li">
-                <p class="rank_ul_li_p text_overflow text_indentation">你的痛苦我都心疼想为你解决挡开流言紧握你手想飞奔往前我相信爱能证明一切 </p>
-                <div class="rank_ul_li_div">
-                    <div class="rank_ul_li_div_img">
-                        <img src="../img/c.jpg" width="150px" height="120px">
-                    </div>
-                    <div class="rank_ul_li_span text_overflow">因为要离别就走破这双鞋我陪你走一夜直到心不再滴血而你流尽泪水天空不停地闪着雷照不亮我心中黑黑黑黑黑就走破这双鞋我陪你走一夜黑黑黑黑黑就走破这双鞋我陪你走一夜</div>
-                </div>
-            </li>
-            <li class="rank_ul_li" v-for="blog in blogs" v-bind:data-src="blog.blogCode" onclick="view_blog(this)">
+
+            <li class="rank_ul_li" v-for="blog in blogs" v-bind:data-code="blog.blogCode" onclick="view_blog(this)">
                 <p class="rank_ul_li_p text_overflow text_indentation">{{blog.blogTilte}}</p>
                 <div class="rank_ul_li_div">
                     <div class="rank_ul_li_div_img">
-                        <img v-bind:src="blog.blogConverUrl" width="150px" height="120px">
+                        <img width="150px" height="120px" src="" v-bind:data-original="blog.blogConverUrl" >
                     </div>
                     <div class="rank_ul_li_span text_overflow">{{blog.blogDesc}}</div>
                 </div>
@@ -144,8 +150,12 @@
         </ul>
     </div>
 </div>
+
 </body>
+
 <script src="../js/utils.js"></script>
 <script src="../js/nav.js"></script>
 <script src="../js/list.js"></script>
+<script src="../js/rank.js"></script>
+
 </html>

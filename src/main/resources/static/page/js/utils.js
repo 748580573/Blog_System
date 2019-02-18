@@ -14,3 +14,8 @@ function getUrlParam(key) {
     //返回参数值
     return result ? decodeURIComponent(result[2]) : null;
 }
+
+var view_blog = function (obj) {
+    var blog_id = $(obj).attr("data-code");
+    window.location = "/blog_system/page/html/blog.html?blogCode="+blog_id;
+};
