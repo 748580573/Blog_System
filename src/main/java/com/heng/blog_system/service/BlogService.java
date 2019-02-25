@@ -1,5 +1,6 @@
 package com.heng.blog_system.service;
 
+
 import java.util.Map;
 
 public interface BlogService {
@@ -11,7 +12,7 @@ public interface BlogService {
      * @param form
      * @return
      */
-    public Map<String,Object> selectBlogs(Map<String,Object> form);
+    public Map<String,Object> selectBlogList(Map<String,Object> form);
 
     /**
      * 查询热门文章
@@ -46,5 +47,16 @@ public interface BlogService {
      * @return
      */
     public Map<String,Object> selectBlogForRank(Map<String,Object> form);
+
+    /**
+     * 修改博客
+     * @param form
+     * @return
+     */
+    public Map<String,Object> updateBlog(Map<String,Object> form);
+
+
+    public Map<String,Object> test();
+
 
 }

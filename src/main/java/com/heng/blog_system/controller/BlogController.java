@@ -38,11 +38,12 @@ public class BlogController {
         return result;
     }
 
-    @RequestMapping(value = "/search")
+    @RequestMapping(value = "/blogList")
     public Map<String,Object> searchBlog(HttpServletRequest request){
         Map<String,Object> result = null;
         Map<String,Object> form = RequestUtil.getFormData(request);
-        result = blogService.selectBlogs(form);
+        form.put("pageTotal", 10);                    //限制页面内容数
+        result = blogService.selectBlogList(form);
         return result;
     }
 
@@ -82,7 +83,7 @@ public class BlogController {
     }
 
     /**
-     * 用于博客内容展示
+     * 用于博客内容展示(查询某个博客)
      * @param request
      * @return
      */
@@ -101,6 +102,19 @@ public class BlogController {
         form.put("pageNumber", 1);
         form.put("pageTotal", 5);
         result = blogService.selectBlogForRank(form);
+        return result;
+    }
+
+    /**
+     * 跟新博客
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/update")
+    public Map<String,Object> modifyBlog(HttpServletRequest request){
+        Map<String,Object> result = null;
+        Map<String,Object> form = RequestUtil.getFormData(request);
+        result = blogService.updateBlog(form);
         return result;
     }
 

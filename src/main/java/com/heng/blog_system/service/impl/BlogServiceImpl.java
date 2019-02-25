@@ -1,11 +1,13 @@
 package com.heng.blog_system.service.impl;
 
+import com.heng.blog_system.anno.RedisKey;
 import com.heng.blog_system.bean.Blog;
 import com.heng.blog_system.bean.Tag;
 import com.heng.blog_system.cache.BlogCache;
 import com.heng.blog_system.db.BlogDao;
 import com.heng.blog_system.db.RedisCache;
 import com.heng.blog_system.service.BlogService;
+import com.heng.blog_system.utils.MapUtils;
 import com.heng.blog_system.utils.Utils;
 import com.heng.util.ESClient;
 import com.heng.util.ESUtils;
@@ -75,19 +77,11 @@ public class BlogServiceImpl implements BlogService {
                 blogDao.save("blogTag.addBlog", map);
             }
         }
-        /*if (Utils.isEmpty()){
-            Blog bl = blogDao.get("selectBlog", map);
-            if (Utils.isEmpty(bl)){
-                bl = Blog.mapToBlog(map);
-                blogCache.putBlog(blogCode, bl);
-                blogDao.save("blogTag.addBlog", map);
-            }
-        }*/
 
         if (map.get("bolg_tags") != null) {
             tags = map.get("bolg_tags").toString();
         }
-        String[] bolg_tags = tags.trim().split(" ");
+        String[] bolg_tags = getTags(tags);
 
         for (int i = 0; i < bolg_tags.length; i++) {
             if (bolg_tags[i].trim().length() == 0){
@@ -98,14 +92,12 @@ public class BlogServiceImpl implements BlogService {
             param.put("tag_code", tag_code);
             param.put("tag_name", bolg_tags[i]);
             Tag tag = (Tag) redisCache.get(tag_code);
-//            Tag tag = blogCache.getTag(tag_code);
 
             if (Utils.isEmpty(tag)) {
                 Tag ta = blogDao.get("blogTag.selectTag",param);
                 if (Utils.isEmpty(ta)){
                     blogDao.save("blogTag.addTag", param);
                     redisCache.put(tag_code, Tag.mapToTag(param));
-//                    blogCache.putTag(tag_code, Tag.mapToTag(param));
 
                 }
             }
@@ -145,6 +137,7 @@ public class BlogServiceImpl implements BlogService {
                     }
                 }
             }
+            result.put("code", 201);
             return result;
         } catch (IOException e) {
             e.printStackTrace();
@@ -157,39 +150,26 @@ public class BlogServiceImpl implements BlogService {
 
 
     @Transactional
-    public Map<String,Object> selectBlogs(Map<String,Object> form){
-        String title = form.get("title").toString();
+    public Map<String,Object> selectBlogList(Map<String,Object> form){
+        Integer page = Utils.getDefaultNumber(form.get("pageNumber"), 1);
+        Integer pageSize = Utils.getDefaultNumber(form.get("pageTotal"), 6);
+        form.put("pageNumber", page);
+        String redisKey = "listBlog" + page;
         Map<String,Object> result = new HashMap<>();
-        String indexName = Blog.class.getSimpleName().toLowerCase();
-        String indexType = Blog.class.getSimpleName();
+        List<Blog> data = (List<Blog>) redisCache.get(redisKey);
         try {
-            SearchResponse response = esClient.matchSearch(indexName, indexType, "blogTilte", title);
-            SearchHits hits = response.getHits();
-            int code = response.status().getStatus();
-            long totalHits = hits.getTotalHits();
-            result.put("resultTotal", totalHits);
-            result.put("code", code);
-            List<String> blogCodes = new ArrayList<>();
-            for (SearchHit hit : hits){
-                blogCodes.add(hit.getSourceAsMap().get("blogCode").toString());
+            if (data == null || data.size() <= 0){
+                data = blogDao.getList("blogTag.selectBlogForSearch",form);
+                redisCache.put(redisKey, data);
             }
-
-            List<Blog> blogList = new ArrayList<>();
-            for (String blogCode : blogCodes){
-                Map<String,Object> map = new HashMap<>();
-                map.put("blog_code", blogCode);
-                Blog blog = blogDao.get("blogTag.selectBlogForSearch",map);
-                String tag = blog.getTags().replace(",", " ");
-                blog.setTags(tag);
-                if (!Utils.isEmpty(blog)){
-                    blogList.add(blog);
-                }
-            }
-            result.put("data", blogList);
+            int total = blogDao.get("blogTag.selectBlogTotal");
+            result.put("total", (total + pageSize) / pageSize);
+            result.put("data", data);
+            result.put("data", 201);
             return  result;
-        } catch (IOException e) {
-            logger.info(e);
+        } catch (Exception e) {
             result.put("message", e.getMessage());
+            e.printStackTrace();
         }
         return result;
     }
@@ -216,7 +196,7 @@ public class BlogServiceImpl implements BlogService {
                 }
             }
             result.put("data", data);
-            result.put("code", "201");
+            result.put("code", 201);
             result.put("message", "查询成功");
             return result;
         }catch (Exception e){
@@ -265,6 +245,8 @@ public class BlogServiceImpl implements BlogService {
 
             }
             result.put("data", list);
+            result.put("code", 201);
+            return result;
         } catch (IOException e) {
             logger.info(e);
             result.put("code", "401");
@@ -280,8 +262,12 @@ public class BlogServiceImpl implements BlogService {
         Map<String,Object> result = new HashMap<>();
         form.put("pageNumber", 1);
         form.put("pageTotal", 6);
+        List<Blog> list = (List<Blog>) redisCache.get("recommend");
         try {
-            List<Blog> list = blogDao.getList("blogTag.selectBlogForRecommend",form);
+            if (list == null || list.size() <= 0){
+                list = blogDao.getList("blogTag.selectBlogForRecommend",form);
+                redisCache.put("recommend", list);
+            }
             result.put("data", list);
             result.put("code", 201);
             result.put("msg", "查询成功");
@@ -294,6 +280,7 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
+    @Transactional
     public Map<String, Object> selectBlog(Map<String, Object> form) {
         Map<String,Object> result = new HashMap<>();
         if (!Utils.isEmpty(form.get("blog_code"))){
@@ -317,6 +304,7 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
+    @Transactional
     public Map<String, Object> selectBlogForRank(Map<String, Object> form) {
         List<Blog> data = (List<Blog>) redisCache.get("rank");
         Map<String,Object> result = new HashMap<>();
@@ -338,6 +326,7 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
+    @Transactional
     public Map<String, Object> selectNewBlogs(Map<String, Object> form) {
         Map<String, Object> result = new HashMap<>();
 
@@ -354,7 +343,9 @@ public class BlogServiceImpl implements BlogService {
                     String tag = blog.getTags();
                     blog.setTags(tag.replace(",", " "));
                     redisCache.put(blog.getBlogCode(), blog);
-//                    blogCache.putBlog(blog.getBlogCode(), blog);
+//                    blogCach
+// jjjj
+// e.putBlog(blog.getBlogCode(), blog);
                 }
             }
             result.put("data", data);
@@ -367,5 +358,78 @@ public class BlogServiceImpl implements BlogService {
             result.put("message", e.getMessage());
         }
         return result;
+    }
+
+    @Override
+    @Transactional
+    public Map<String, Object> updateBlog(Map<String, Object> form) {
+        Map<String,Object> result = new HashMap<>();
+        String blog_title= MapUtils.getString(form, "blog_title");
+        String blog_code = Utils.md5(blog_title);
+        form.put("blog_code", blog_code);
+        String newTag = MapUtils.getString(form, "bolg_tags");
+
+        if (blog_code != null){
+            try {
+                blogDao.update("blogTag.updateBlog", form);               //更新blog
+                String oldTag = blogDao.get("blogTag.selecTagsByBlog",form);
+                Set<String> newTags = compareTags(getTags(newTag), getTags(oldTag));
+                for (String tag : newTags){
+                    Map<String, Object> param = new HashMap<>();
+                    param.put("blog_code", blog_code);
+                    String tag_code = Utils.md5(tag);
+                    param.put("tag_code", tag_code);
+                    param.put("tag_name", tag);
+                    Tag t = blogDao.get("blogTag.selectTag", param);
+                    if (t == null){
+                        blogDao.save("blogTag.addTag", param);
+                    }
+                    blogDao.save("blogTag.insertTagBlog", param);
+                }
+                result.put("code", "201");
+                result.put("msg", "亲！修改成功。");
+                return result;
+            }catch (Exception e){
+                e.printStackTrace();
+                logger.info(e);
+                result.put("code", "501");
+                result.put("msg", "修改失败，服务器内部错误，请查看日志");
+            }
+        }else {
+            result.put("code", "404");
+            result.put("msg", "修改失败，未找到该博客!");
+        }
+
+        return result;
+    }
+
+    @RedisKey(keyTimeOut = 60)
+    public Map<String,Object> test(){
+        Map<String,Object> result = new HashMap<>();
+        result.put("code", 201);
+        return result;
+    }
+
+    private String[] getTags(String str){
+        String[] tags = str.trim().split("\\s+");
+        return tags;
+    }
+
+    private Set<String> compareTags(String[] newTags,String[] oldTags){
+        boolean flag = false;
+
+        Set<String> set = new HashSet<>();
+        Set<String> newSet = new HashSet<>();
+        for (int i = 0;i < oldTags.length;i++){
+            if (!set.contains(oldTags[i])){
+                set.add(oldTags[i]);
+            }
+        }
+        for (int i = 0;i < newTags.length;i++){
+            if (!set.contains(newTags[i])){
+                newSet.add(newTags[i]);
+            }
+        }
+        return newSet;
     }
 }

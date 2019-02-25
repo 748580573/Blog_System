@@ -4,6 +4,7 @@ import com.heng.blog_system.bean.Blog;
 import com.heng.blog_system.bean.User;
 import com.heng.blog_system.db.BlogDao;
 import com.heng.blog_system.db.RedisCache;
+import com.heng.blog_system.service.BlogService;
 import com.heng.blog_system.utils.RequestUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,17 +21,14 @@ public class TestController {
     @Autowired
     RedisCache redisCache;
 
+    @Autowired
+    BlogService blogService;
+
     @RequestMapping(value = {"/test"})
     @ResponseBody
     public Map<String,Object> test(HttpServletRequest request) throws IOException {
-        User user = new User();
-        user.setAge(12);
-        user.setPath("e://aaa");
-        user.setName("uwheng");
-        redisCache.put("me", user);
-        Object object = redisCache.get("me");
+        System.out.println(        blogService.test());
         Map<String,Object> map = RequestUtil.getFormData(request);
-        map.put("user", object);
         return map;
     }
 }

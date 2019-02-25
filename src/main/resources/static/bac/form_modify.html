@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="css/bootstrap.min.css-v=3.3.5.css" rel="stylesheet">
+    <link href="css/font-awesome.min.css-v=4.4.0.css"  rel="stylesheet">
+    <link href="css/plugins/iCheck/custom.css"  rel="stylesheet">
+    <link href="css/animate.min.css"  rel="stylesheet">
+    <link href="css/style.min.css-v=4.0.0.css"  rel="stylesheet"><base target="_blank">
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/fileinput.css">
+
+
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/fileinput.js"></script>
+
+    <!-- include summernote css/js -->
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote.css" rel="stylesheet">
+    <script src="js/summernote.js"></script>
+    <script src="js/summernote-zh-CN.js"></script>
+
+    <style type="text/css">
+        .label:hover{
+            cursor: pointer;
+        }
+
+        .tags{
+            float: left;
+            margin-right: 10px;
+            margin-bottom: 15px
+        }
+
+        #blog_tags{
+            color: #0e9aef;
+        }
+
+        #uploadfile{
+            opacity: 0;
+        }
+
+        #but{
+            font-size: 1.5em;
+            position: absolute;
+            left: 40%;
+        }
+
+
+    </style>
+</head>
+<body>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <form id="fm" method="get" class="form-horizontal" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">博客标题</label>
+                            <div class="col-sm-8">
+                                <input id="blog_title" type="text" name="blog_title" placeholder="博客标题" class="form-control" readonly="readonly">
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">简介</label>
+
+                            <div class="col-sm-8">
+                                <input id="blog_desc" type="text" name="blog_desc"  placeholder="简要描述博客，突出自我个性" class="form-control">
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">博客封面</label>
+                            <div class="col-sm-8">
+                                <img id="tempImg" src="#" hidden>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">标签</label>
+
+                            <div class="col-sm-8">
+                                <input id="blog_tags" name="bolg_tags" type="text" placeholder="博客标签(以空格区分开)" class="form-control">
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="wrapper wrapper-content animated fadeInRight" style="margin-left: 20%;">
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <div class="ibox float-e-margins">
+                                        <div class="ibox-title">
+                                            <h5>可选标签标签</h5>
+                                        </div>
+                                        <div class="ibox-content">
+                                            <p>
+                                                <span class="label label-primary tags" onclick="getTag(this)"></span>
+                                            </p>
+
+                                            <p><span class="label label-primary tags" onclick="getTag(this)">label-primary</span>
+                                            </p>
+                                            <p><span class="label label-info tags" onclick="getTag(this)">label-info</span>
+                                            </p>
+                                            <p><span class="label label-success tags" onclick="getTag(this)">label-success</span>
+                                            </p>
+                                            <p><span class="label label-warning tags" onclick="getTag(this)">label-warning</span>
+                                            </p>
+                                            <p><span class="label label-danger tags" onclick="getTag(this)">label-danger</span>
+                                            </p>
+
+                                            <p><span class="label label-primary tags" onclick="getTag(this)">label-primary</span>
+                                            </p>
+                                            <p><span class="label label-info tags" onclick="getTag(this)">label-info</span>
+                                            </p>
+                                            <p><span class="label label-success tags" onclick="getTag(this)">label-success</span>
+                                            </p>
+                                            <p><span class="label label-warning tags" onclick="getTag(this)">label-warning</span>
+                                            </p>
+                                            <p><span class="label label-danger tags " onclick="getTag(this)">label-danger</span>
+                                            </p>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="hr-line-dashed"></div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div style="margin-left: 10%">
+    <div id="summernote">  </div>
+</div>
+
+<button id="but" class="btn btn-primary" type="button" onclick="update_blog()"><i class="fa fa-check btn-lg"></i>提&nbsp;交</button>
+
+</body>
+
+<script src="../page/js/utils.js"></script>
+<script>
+    $(document).ready(function() {
+        delete_inpuFile();
+        var blog_code = getUrlParam("blogCode");
+        $.ajax({
+            url:"/blog_system//blog/searchBlog",
+            data:{"blog_code":blog_code},
+            type:"POST",
+            success:function (result) {
+                var data = result.data;
+                var tagList = data.tags;
+                var tags = tagList.split(",");
+                var blogCode = data.blogCode;
+                var blogTilte = data.blogTilte;
+                var blogDesc = data.blogDesc;
+                var blogContent = data.blogContent;
+                var createDate = data.createDate;
+                var blog_conver_url = data.blogConverUrl;
+                $("#tempImg").show();
+                $("#tempImg").attr("src",blog_conver_url);
+                set_val("#blog_title",blogTilte);
+                set_val("#blog_desc",blogDesc);
+                set_val("#blog_tags",tags);
+                $("#summernote").summernote('pasteHTML', blogContent);
+            }
+        });
+
+        $("#summernote").summernote({
+            height:500,
+            width:1400,
+            callbacks: {
+                onImageUpload: function(files, editor, $editable) {
+                    sendFile(files, editor, $editable)
+                }
+            }
+        });
+
+        $("#uploadfile").fileinput({
+            language:'zh',
+            uploadUrl:"/blog_system/file/fileUpload",
+            allowedFileExtensions: ['jpg', 'gif', 'png'],
+            uploadAsync: true,
+            showPreview :true, //是否显示预览
+            showUpload:false,
+            showCancel:false,
+            showRemove:false,
+            showCaption:false,//是否显示标题
+            browseClass:"btn btn-primary", //按钮样式    
+            dropZoneEnabled: false,//是否显示拖拽区域
+            minImageWidth: 1, //图片的最小宽度
+            minImageHeight: 1,//图片的最小高度
+            maxImageWidth: 1000,//图片的最大宽度
+            maxImageHeight: 1000,//图片的最大高度
+            maxFileSize:0,//单位为kb，如果为0表示不限制文件大小
+            maxFileCount:100, //表示允许同时上传的最大文件个数
+            enctype:'multipart/form-data',
+            validateInitialCount:true,
+            previewFileIcon: "<iclass='glyphicon glyphicon-king'></i>",
+            msgFilesTooMany: "选择上传的文件数量({n}) 超过允许的最大数值{m}！",
+        });
+
+    });
+
+    /**
+     * 处理富文本编辑器文件上传的路径
+     * @param files
+     * @param editor
+     * @param $editable
+     */
+    function sendFile(files, editor, $editable) {
+        var data = new FormData();
+        data.append("ajaxTaskFile", files[0]);
+        $.ajax({
+            data : data,
+            type : "POST",
+            url : "/blog_system/file/fileUpload", //图片上传出来的url，返回的是图片上传后的路径，http格式
+            uploadAsync:false,
+            cache : false,
+            contentType : false,
+            processData : false,        //这个很有必要
+            dataType : "json",
+            success: function(data) {//data是返回的hash,key之类的值，key是定义的文件名
+                $('#summernote').summernote('insertImage', data.path);
+            },
+            error:function(){
+                alert("上传失败");
+            }
+        });
+    }
+
+    var imgUrl = "";
+
+    var update_blog = function () {
+
+        var file =  document.getElementById("uploadfile").files[0];
+        var data = new FormData();
+        var imgUrl = "";
+        data.append("file", file);
+        $.ajax({
+            url:"/blog_system/file/fileUpload",
+            data:data,
+            type:"post",
+            async:false,
+            uploadAsync:false,
+            cache : false,
+            contentType : false,
+            processData : false,        //这个很有必要
+            dataType : "json",
+            success:function (result) {
+                imgUrl = result.path;
+            }
+        });
+        var blog_title = $("#blog_title").val();
+        var blog_desc = $("#blog_desc").val();
+        var bolg_tags = $("#blog_tags").val();
+        var blog_content = $("#summernote").summernote("code");
+        $.ajax({
+            url:"/blog_system//blog/update",
+            type:"POST",
+            data:{"blog_title":blog_title,"blog_desc":blog_desc,"bolg_tags":bolg_tags,
+                "blog_content":blog_content,"imgUrl":imgUrl},
+            success:function () {
+            }
+        })
+    };
+
+    var getTag = function (obj) {
+        var text = $(obj).text();
+        var val = $("#blog_tags").val();
+        var newValue = val +" " + text;
+        $("#blog_tags").val(newValue);
+    };
+
+    var delete_inpuFile = function () {
+        $(".fileinput-remove").click(function () {
+            alert("hello");
+        });
+    }
+
+
+</script>
+</html>

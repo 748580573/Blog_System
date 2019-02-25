@@ -17,5 +17,31 @@ function getUrlParam(key) {
 
 var view_blog = function (obj) {
     var blog_id = $(obj).attr("data-code");
-    window.location = "/blog_system/page/html/blog.html?blogCode="+blog_id;
+    var href = "/blog_system/page/html/blog.html?blogCode="+blog_id;
+    window.open(href,"_blank")
+};
+
+var dele_blog = function (obj) {
+    var blog_code = $(obj).attr("data-code");
+    //TODO 完成删除栏后天逻辑和Js
+    $(obj).parents("tr").remove();
+
+};
+
+var modify_blog = function (obj) {
+    var blog_id = $(obj).attr("data-code");
+    var href = "/blog_system/bac/form_modify.html?blogCode="+blog_id;
+    window.open(href,"_blank")
+};
+
+var set_text = function (selector,text) {
+    $(selector).text(text);
+};
+
+var set_val =  function (selector,val) {
+    $(selector).val(val);
+};
+
+var set_html = function (selector,html) {
+    $(selector).html(html);
 };

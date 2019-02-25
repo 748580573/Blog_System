@@ -29,7 +29,7 @@ public class RedisCache {
 
         final String keyf = key + "";
         final Object valuef = value;
-        final long liveTime = 86400;
+        final long liveTime = 300;
 
         cacheRedisTemplate.execute(new RedisCallback<Object>() {
             @Override

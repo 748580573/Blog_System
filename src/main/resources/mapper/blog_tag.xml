@@ -140,6 +140,20 @@
         </if>
     </select>
 
+    <select id="selectBlogTotal" resultType="int">
+        SELECT count(blog_code) FROM blog_article;
+    </select>
+
+    <update id="updateBlog" parameterType="map">
+        UPDATE blog_article
+        <trim prefix="set" suffixOverrides=",">
+            <if test="blog_desc != null">blog_desc = #{blog_desc},</if>
+            <if test="blog_desc != null"> blog_conver_url = #{imgUrl},</if>
+            <if test="blog_content">blog_content = #{blog_content},</if>
+        </trim>
+        WHERE  blog_code = #{blog_code}
+    </update>
+
     <!--##############################################################################-->
 
     <resultMap id="tagMap" type="com.heng.blog_system.bean.Tag">
@@ -164,6 +178,22 @@
     <select id="selectAllTag" resultMap="tagMap">
         SELECT *
         FROM tags
+    </select>
+
+    <select id="selecTagsByBlog" parameterType="map" resultType="String">
+        SELECT
+        GROUP_CONCAT( DISTINCT tags.tag_name ) tag_name
+        FROM
+        blog_article,
+        tag_article,
+        tags
+        WHERE
+        tag_article.blog_code = blog_article.blog_code
+        AND tags.tag_code = tag_article.tag_code
+        <if test="blog_code != null">
+            AND tag_article.blog_code = "${blog_code}"
+        </if>
+        GROUP BY tag_article.blog_code
     </select>
 
     <!--################################标签-博客关联表################################################-->

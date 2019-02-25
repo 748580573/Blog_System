@@ -1,0 +1,86 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cn">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<meta name="renderer" content="webkit">
+		<title>拼图后台管理-后台管理</title>
+		<!--
+        	作者：大火兔 1979788761@qq.com
+        	时间：2015-11-17
+        	描述：使用官网CSS/JS同步最新版
+        -->
+		<link rel="stylesheet" href="css/pintuer.css">
+		<link rel="stylesheet" href="css/admin.css">
+		<script src="js/jquery-3.2.1.min.js"></script>
+		<script src="../page/js/vue.js"></script>
+		<script src="../page/js/utils.js"></script>
+		<script src="js/pintuer.js"></script>
+		<script src="js/admin.js"></script>
+		<link type="image/x-icon" href="http://www.pintuer.com/favicon.ico" rel="shortcut icon" />
+		<link href="http://www.pintuer.com/favicon.ico" rel="bookmark icon" />
+	</head>
+
+	<body>
+
+		<div id="blogList">
+			<form method="post">
+				<div class="panel admin-panel">
+					<div class="panel-head"><strong>内容列表</strong></div>
+					<table class="table table-hover">
+						<tr>
+							<th width="90" align="center">选择</th>
+							<th width="300" align="center">分类</th>
+							<th width="*" align="center">名称</th>
+							<th width="200" align="center">时间</th>
+							<th width="200" align="center">操作</th>
+						</tr>
+						<tr>
+							<td>
+								<input type="checkbox" name="id" value="1" />
+							</td>
+							<td>起步</td>
+							<td>下载拼图框架</td>
+							<td>2014-10-1</td>
+							<td>
+								<a class="button border-blue button-little" href="#">编辑</a>
+								<a class="button border-red button-little" href="#">修改</a>
+								<a class="button border-yellow button-little" href="#">详细</a>
+							</td>
+						</tr>
+						<tr v-for="blog in blogs" >
+							<td>
+								<input type="checkbox" name="id" value="1" />
+							</td>
+							<td>{{blog.tags}}</td>
+							<td>{{blog.blogTilte}}</td>
+							<td>{{blog.createDate}}</td>
+							<td>
+								<a class="button border-blue button-little" href="#" onclick="modify_blog(this)" v-bind:data-code="blog.blogCode">编辑</a>
+								<a class="button border-red button-little" href="#" onclick="dele_blog(this)" v-bind:data-code="blog.blogCode">删除</a>
+								<a class="button border-yellow button-little" href="#" onclick="view_blog(this)" v-bind:data-code="blog.blogCode">详细</a>
+							</td>
+						</tr>
+					</table>
+					<div class="panel-foot text-center">
+						<ul class="pagination">
+							<li><a href="#">上一页</a></li>
+						</ul>
+						<ul id="page" class="pagination pagination-group">
+
+						</ul>
+						<ul class="pagination">
+							<li><a href="#">下一页</a></li>
+						</ul>
+					</div>
+				</div>
+			</form>
+			<br />
+			<p class="text-right text-gray">基于<a class="text-gray" target="_blank" href="http://www.pintuer.com">拼图前端框架</a>构建</p>
+		</div>
+	</body>
+	<script src="../page/js/utils.js"></script>
+    <script src="js/content.js"></script>
+</html>
