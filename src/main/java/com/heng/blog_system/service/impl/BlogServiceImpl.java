@@ -1,5 +1,7 @@
 package com.heng.blog_system.service.impl;
 
+import com.heng.blog_system.anno.Permission;
+import com.heng.blog_system.anno.PermissionEnum;
 import com.heng.blog_system.anno.RedisKey;
 import com.heng.blog_system.bean.Blog;
 import com.heng.blog_system.bean.Tag;
@@ -150,6 +152,7 @@ public class BlogServiceImpl implements BlogService {
 
 
     @Transactional
+    @RedisKey
     public Map<String,Object> selectBlogList(Map<String,Object> form){
         Integer page = Utils.getDefaultNumber(form.get("pageNumber"), 1);
         Integer pageSize = Utils.getDefaultNumber(form.get("pageTotal"), 6);
@@ -163,9 +166,9 @@ public class BlogServiceImpl implements BlogService {
                 redisCache.put(redisKey, data);
             }
             int total = blogDao.get("blogTag.selectBlogTotal");
-            result.put("total", (total + pageSize) / pageSize);
+            result.put("total", (total + pageSize - 1) / pageSize);
             result.put("data", data);
-            result.put("data", 201);
+            result.put("code", 201);
             return  result;
         } catch (Exception e) {
             result.put("message", e.getMessage());
@@ -175,7 +178,35 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
+    public Map<String, Object> selevtBlogsOrderByTime(Map<String, Object> form) {
+        Integer page = Utils.getDefaultNumber(form.get("pageNumber"), 1);
+        Integer pageSize = Utils.getDefaultNumber(form.get("pageTotal"), 6);
+        form.put("orderKey", "create_date");
+        form.put("pageNumber", page);
+        String redisKey = "listBlog" + page;
+        Map<String,Object> result = new HashMap<>();
+        List<Blog> data = (List<Blog>) redisCache.get(redisKey);
+        try {
+            if (data == null || data.size() <= 0){
+                data = blogDao.getList("blogTag.selectBlogForSearch",form);
+                redisCache.put(redisKey, data);
+            }
+            int total = blogDao.get("blogTag.selectBlogTotal");
+            result.put("total", (total + pageSize - 1) / pageSize);
+            result.put("data", data);
+            result.put("code", 201);
+            return  result;
+        } catch (Exception e) {
+            result.put("message", e.getMessage());
+            e.printStackTrace();
+        }
+        return result;
+
+    }
+
+    @Override
     @Transactional
+    @RedisKey
     public Map<String, Object> selectHostBlogs(Map<String, Object> form) {
         Map<String, Object> result = new HashMap<>();
 
@@ -258,6 +289,7 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     @Transactional
+    @RedisKey
     public Map<String, Object> selectRecommendBlog(Map<String, Object> form) {
         Map<String,Object> result = new HashMap<>();
         form.put("pageNumber", 1);
@@ -305,14 +337,12 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     @Transactional
+    @RedisKey
     public Map<String, Object> selectBlogForRank(Map<String, Object> form) {
-        List<Blog> data = (List<Blog>) redisCache.get("rank");
         Map<String,Object> result = new HashMap<>();
         try {
-            if (data == null || data.size() <= 0){
-                data = blogDao.getList("blogTag.selectBlogForRank",form);
-                redisCache.put("rank", data);
-            }
+            List<Blog> data = blogDao.getList("blogTag.selectBlogForRank",form);
+            redisCache.put("rank", data);
             result.put("code", 201);
             result.put("data", data);
             result.put("msg", "查询成功");
@@ -329,27 +359,18 @@ public class BlogServiceImpl implements BlogService {
     @Transactional
     public Map<String, Object> selectNewBlogs(Map<String, Object> form) {
         Map<String, Object> result = new HashMap<>();
-
-        List<Blog> data = (List<Blog>) redisCache.get("new");
-
         try {
-            if (data == null || data.size() <= 0){
-                data = blogDao.getList("blogTag.selectBlogForSearch",form);
-                redisCache.put("new", data);
-            }
+            List<Blog> data = blogDao.getList("blogTag.selectBlogForSearch",form);
+            redisCache.put("new", data);
             for (Blog blog : data){
-//                if (Utils.isEmpty(blogCache.getBlog(blog.getBlogCode()))){
                 if (Utils.isEmpty(redisCache.get(blog.getBlogCode()))){
                     String tag = blog.getTags();
                     blog.setTags(tag.replace(",", " "));
                     redisCache.put(blog.getBlogCode(), blog);
-//                    blogCach
-// jjjj
-// e.putBlog(blog.getBlogCode(), blog);
                 }
             }
             result.put("data", data);
-            result.put("code", "201");
+            result.put("code", 201);
             result.put("message", "查询成功");
             return result;
         }catch (Exception e){
@@ -386,7 +407,7 @@ public class BlogServiceImpl implements BlogService {
                     }
                     blogDao.save("blogTag.insertTagBlog", param);
                 }
-                result.put("code", "201");
+                result.put("code", 201);
                 result.put("msg", "亲！修改成功。");
                 return result;
             }catch (Exception e){
@@ -403,11 +424,52 @@ public class BlogServiceImpl implements BlogService {
         return result;
     }
 
-    @RedisKey(keyTimeOut = 60)
-    public Map<String,Object> test(){
+    @Override
+    @Transactional
+    public Map<String, Object> deleteBlog(Map<String, Object> form) {
         Map<String,Object> result = new HashMap<>();
-        result.put("code", 201);
+        String blog_code = MapUtils.getString(form, "blog_code");
+        Blog blog = blogDao.get("blogTag.selectBlogForShow",form);
+        if (blog_code != null && blog != null){
+            try {
+                blogDao.delete("blogTag.deleteBlog", form);
+                blogDao.delete("blogTag.deleteTagBlog", form);
+                result.put("code", 201);
+                result.put("msg", "删除指定博客成功");
+                logger.info("删除博客,blog_code = " + blog_code + "," +
+                        "\n" + Utils.objectToJson(blog));
+
+                //TODO 处理es的删除
+                String indexName = ESUtils.getEsIndexNameFromClazz(Blog.class);
+                String type = ESUtils.getEsTypeFromClazz(Blog.class);
+
+                SearchResponse response = esClient.preciseSearch(indexName, type, "blogCode", blog_code);
+                SearchHits hits = response.getHits();
+                if (hits.getTotalHits() == 1){
+                    SearchHit hit = hits.getHits()[0];
+                    String id = hit.getId();
+                    esClient.deleteDocument(indexName, type, id);
+                    logger.info("从es中删除数据: indexName = " + indexName + ",type = " + type  + ",Id = " + id + "\n " + hit.toString());
+                }
+                return result;
+            }catch (Exception e){
+                e.printStackTrace();
+                logger.info(e);
+                result.put("code", 501);
+                result.put("msg", "服务器内部错误，请查看日志");
+            }
+        }else {
+            result.put("code", 401);
+            result.put("msg", "删除博客失败，不存在该博客");
+        }
         return result;
+    }
+
+    @Override
+    @Permission(value = {PermissionEnum.SELECT})
+    public Map<String, Object> test(Map<String, Object> form) {
+        System.out.println("test");
+        return form;
     }
 
     private String[] getTags(String str){

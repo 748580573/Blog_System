@@ -7,6 +7,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * 博客系统的数据源
+ */
 @Component
 public class BlogDao extends SqlSessionDaoSupport {
 

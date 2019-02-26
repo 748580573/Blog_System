@@ -8,4 +8,5 @@ import java.lang.annotation.*;
 public @interface RedisKey {
 
     int keyTimeOut() default 600;                //key超时，默认为600秒
+
 }

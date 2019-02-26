@@ -6,33 +6,63 @@ public class User implements Serializable {
 
     private static final long serialVersionUID = -5809782578272943999L;
 
-    private String name;
+    private String account;
 
-    private int age;
+    private String password;
 
-    private String path;
+    private String roleCode;
 
-    public String getName() {
-        return name;
+    private String roleName;
+
+    private String permissionCode;
+
+    private String permission;
+
+    public String getAccount() {
+        return account;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setAccount(String account) {
+        this.account = account;
     }
 
-    public int getAge() {
-        return age;
+    public String getPassword() {
+        return password;
     }
 
-    public void setAge(int age) {
-        this.age = age;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public String getPath() {
-        return path;
+    public String getRoleCode() {
+        return roleCode;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setRoleCode(String roleCode) {
+        this.roleCode = roleCode;
+    }
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
+    }
+
+    public String getPermissionCode() {
+        return permissionCode;
+    }
+
+    public void setPermissionCode(String permissionCode) {
+        this.permissionCode = permissionCode;
+    }
+
+    public String getPermission() {
+        return permission;
+    }
+
+    public void setPermission(String permission) {
+        this.permission = permission;
     }
 }

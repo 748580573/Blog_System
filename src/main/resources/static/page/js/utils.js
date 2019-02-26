@@ -24,7 +24,19 @@ var view_blog = function (obj) {
 var dele_blog = function (obj) {
     var blog_code = $(obj).attr("data-code");
     //TODO 完成删除栏后天逻辑和Js
-    $(obj).parents("tr").remove();
+    $.ajax({
+        url:"/blog_system/blog/delete",
+        data:{"blog_code":blog_code},
+        type:"POST",
+        success:function (result) {
+            var code = result.code;
+            if (code ==  201){
+                $(obj).parents("tr").remove();
+            } else {
+                alert("删除失败," + result.msg);
+            }
+        }
+    })
 
 };
 

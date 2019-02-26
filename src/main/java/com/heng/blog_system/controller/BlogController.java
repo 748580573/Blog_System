@@ -5,6 +5,7 @@ import com.heng.blog_system.service.BlogService;
 import com.heng.blog_system.utils.RequestUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -44,6 +45,15 @@ public class BlogController {
         Map<String,Object> form = RequestUtil.getFormData(request);
         form.put("pageTotal", 10);                    //限制页面内容数
         result = blogService.selectBlogList(form);
+        return result;
+    }
+
+    @RequestMapping(value = "/blogListByTime")
+    public Map<String,Object> searchBlogOrderByTime(HttpServletRequest request){
+        Map<String,Object> result = null;
+        Map<String,Object> form = RequestUtil.getFormData(request);
+        form.put("pageTotal", 10);                    //限制页面内容数
+        result = blogService.selevtBlogsOrderByTime(form);
         return result;
     }
 
@@ -115,6 +125,19 @@ public class BlogController {
         Map<String,Object> result = null;
         Map<String,Object> form = RequestUtil.getFormData(request);
         result = blogService.updateBlog(form);
+        return result;
+    }
+
+    /**
+     * 删除博客
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/delete")
+    public Map<String,Object> deleteBlog(HttpServletRequest request){
+        Map<String,Object> result = null;
+        Map<String,Object> form = RequestUtil.getFormData(request);
+        result = blogService.deleteBlog(form);
         return result;
     }
 

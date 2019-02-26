@@ -102,6 +102,9 @@
         GROUP BY tag_article.blog_code
         ) tagresult
         WHERE tagresult.blog_code = blog_article.blog_code
+        <if test="orderKey != null">
+            ORDER BY #{orderKey}
+        </if>
         <if test="pageNumber != null">
             limit ${(pageNumber - 1) * pageTotal} ,${pageNumber * pageTotal}
         </if>
@@ -154,6 +157,10 @@
         WHERE  blog_code = #{blog_code}
     </update>
 
+    <delete id="deleteBlog" parameterType="map">
+        DELETE FROM blog_article WHERE blog_code = #{blog_code};
+    </delete>
+
     <!--##############################################################################-->
 
     <resultMap id="tagMap" type="com.heng.blog_system.bean.Tag">
@@ -201,5 +208,8 @@
     <insert id="insertTagBlog" parameterType="map">
         INSERT INTO tag_article(blog_code,tag_code) values (#{blog_code},#{tag_code})
     </insert>
+    <delete id="deleteTagBlog" parameterType="map">
+        DELETE FROM tag_article WHERE  blog_code = #{blog_code};
+    </delete>
 </mapper>
 

@@ -60,14 +60,17 @@ public class Utils {
      * @return
      */
     public static String objectToJson(Object object){
-        try {
-            String json = mapper.writeValueAsString(object);
-            return json;
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            logger.info("json数据转换失败:" + object.getClass());
-            return null;
+        if (object != null){
+            try {
+                String json = mapper.writeValueAsString(object);
+                return json;
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+                logger.info("json数据转换失败:" + object.getClass());
+            }
         }
+        return "";
+
     }
 
     public static String obtainCurrentTime(){
@@ -203,4 +206,5 @@ public class Utils {
         }
         return bytes;
     }
+
 }

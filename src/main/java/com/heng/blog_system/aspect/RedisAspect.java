@@ -14,7 +14,6 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Map;
 
@@ -40,6 +39,8 @@ public class RedisAspect {
             if (cache != null){
                 return cache;
             }
+        }else {
+            return jp.proceed();
         }
 
 

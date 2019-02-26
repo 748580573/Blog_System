@@ -5,6 +5,8 @@ import com.heng.blog_system.bean.User;
 import com.heng.blog_system.db.BlogDao;
 import com.heng.blog_system.db.RedisCache;
 import com.heng.blog_system.service.BlogService;
+import com.heng.blog_system.service.UserService;
+import com.heng.blog_system.service.impl.UserServiceImpl;
 import com.heng.blog_system.utils.RequestUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,11 +26,15 @@ public class TestController {
     @Autowired
     BlogService blogService;
 
+    @Autowired
+    UserService userService;
+
     @RequestMapping(value = {"/test"})
     @ResponseBody
     public Map<String,Object> test(HttpServletRequest request) throws IOException {
-        System.out.println(        blogService.test());
         Map<String,Object> map = RequestUtil.getFormData(request);
+        Object object = blogService.test(map);
+        System.out.println("hello");
         return map;
     }
 }

@@ -49,14 +49,32 @@ public interface BlogService {
     public Map<String,Object> selectBlogForRank(Map<String,Object> form);
 
     /**
+     * 按时间顺序查询博客列表
+     * @param form
+     * @return
+     */
+    public Map<String,Object> selevtBlogsOrderByTime(Map<String,Object> form);
+
+
+    /**
      * 修改博客
      * @param form
      * @return
      */
     public Map<String,Object> updateBlog(Map<String,Object> form);
 
+    /**
+     * 删除博客
+     * @param form
+     * @return
+     */
+    public Map<String,Object> deleteBlog(Map<String,Object> form);
 
-    public Map<String,Object> test();
-
+    /**
+     * 测试用接口
+     * @param form
+     * @return
+     */
+    public Map<String,Object> test(Map<String,Object> form);
 
 }

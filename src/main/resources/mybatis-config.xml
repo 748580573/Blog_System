@@ -11,10 +11,10 @@
     </settings>
 
     <mappers>
-        <mapper resource="mapper/nicheInsightNew.xml"/>
         <mapper resource="mapper/blog.xml"/>
         <mapper resource="mapper/tags.xml"/>
         <mapper resource="mapper/blog_tag.xml"/>
+        <mapper resource="mapper/permissionAuth.xml"/>
 
 
     </mappers>
