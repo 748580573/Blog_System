@@ -1,23 +1,27 @@
 package com.heng.blog_system.service.impl;
 
+import com.heng.blog_system.bean.Permission;
+import com.heng.blog_system.bean.Role;
 import com.heng.blog_system.bean.User;
-import com.heng.blog_system.db.PermissionAuthDAO;
+import com.heng.blog_system.db.impl.PermissionAuth;
 import com.heng.blog_system.service.UserService;
+import com.heng.blog_system.utils.MapUtils;
+import com.heng.blog_system.utils.Utils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-/**
- * 该接口不对外开发
- */
+
 @Service
 public class UserServiceImpl implements UserService {
 
+    private static final Logger logger = Logger.getLogger(UserServiceImpl.class);
+
     @Autowired
-    private PermissionAuthDAO dao;
+    private PermissionAuth dao;
 
     @Override
     public User isExistUser(Map<String, Object> form) {
@@ -51,5 +55,64 @@ public class UserServiceImpl implements UserService {
         }
 
         return false;
+    }
+
+    @Override
+    public Map<String,Object> selectRoles(Map<String, Object> form) {
+        Map<String,Object> result = new HashMap<>();
+        List<Role> list = dao.selectRoles(form);
+        if (list != null){
+            result.put("code", 201);
+            result.put("msg", "查询成功");
+            result.put("data", list);
+        }else {
+            result.put("code", 500);
+            result.put("msg", "查询成功");
+        }
+        return result;
+    }
+
+    public Map<String,Object> selectPermissions(Map<String,Object> form){
+        Map<String,Object> result = new HashMap<>();
+        List<Permission> list = dao.selectPermission(form);
+        if (list != null){
+            result.put("code", 201);
+            result.put("msg", "查询成功");
+            result.put("data", list);
+        }else {
+            result.put("code", 500);
+            result.put("msg", "查询成功");
+        }
+        return result;
+    }
+
+    @Override
+    @Transactional
+    public Map<String, Object> addRole(Map<String, Object> form) {
+        Map<String,Object> result = new HashMap<>();
+        String roleName = MapUtils.getString(form, "roleName");
+        String roleCole = Utils.md5(roleName);
+        form.put("roleCode", roleCole);
+        User user = dao.selectUserByAccount(form);
+        if (user == null){
+            try {
+                dao.addUser(form);
+                if (dao.selectRoleByRoleCode(form) == null){
+                    dao.addRole(form);
+                }
+                dao.addUserRole(form);
+                result.put("code", 201);
+                result.put("msg", "添加成功");
+            } catch (Exception e) {
+                logger.info(e);
+                e.printStackTrace();
+                result.put("code", 500);
+                result.put("msg", "服务器内部错误！添加角色失败");
+            }
+        }else {
+            result.put("code", 404);
+            result.put("msg", "存在该账号");
+        }
+        return result;
     }
 }

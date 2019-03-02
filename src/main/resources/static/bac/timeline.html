@@ -83,6 +83,12 @@
     <script>
         $(document).ready(function(){$("#lightVersion").click(function(event){event.preventDefault();$("#ibox-content").removeClass("ibox-content");$("#vertical-timeline").removeClass("dark-timeline");$("#vertical-timeline").addClass("light-timeline")});$("#darkVersion").click(function(event){event.preventDefault();$("#ibox-content").addClass("ibox-content");$("#vertical-timeline").removeClass("light-timeline");$("#vertical-timeline").addClass("dark-timeline")});$("#leftVersion").click(function(event){event.preventDefault();$("#vertical-timeline").toggleClass("center-orientation")})});
 
+        var hotBlog = new Vue({
+            el: "#ibox-content",
+            data: {
+                blogs: null
+            }
+        });
         $(function () {
 
             var pageNumber = getUrlParam("pageNumber");
@@ -98,12 +104,7 @@
                     var data = result.data;
                     var total = result.total;
                     init_pageNumber(total);
-                    var hotBlog = new Vue({
-                        el: "#ibox-content",
-                        data: {
-                            blogs: data
-                        }
-                    })
+                    setVueData(hotBlog,data);
                 }
             })
         });
@@ -119,8 +120,22 @@
         var turnPage = function (obj) {
             var key = getUrlParam("key");
             var pageNumber = $(obj).text();
-            window.location = "/blog_system/bac/timeline.html?pageNumber="+pageNumber;
+            $.ajax({
+                url:"/blog_system/blog/blogListByTime",
+                type:"POST",
+                data:{"pageNumber":pageNumber},
+                success:function (result) {
+                    var data = result.data;
+                    var total = result.total;
+                    init_pageNumber(total);
+                    setVueData(hotBlog,data);
+                }
+            })
         };
+
+        var setVueData = function (vue,data) {
+            vue.blogs = data;
+        }
     </script>
     <script src="../page/js/utils.js"></script>
 </body>

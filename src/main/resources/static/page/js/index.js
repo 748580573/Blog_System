@@ -1,11 +1,40 @@
+$.fakeLoader({
+    timeToHide:4000,
+    spinner:"spinner4",
 
+});
+var hotBlog = new Vue({
+    el: "#rank",
+    data: {
+        blogs: null
+    }
+});
+
+var newBlog = new Vue({
+    el: "#newBlog",
+    data: {
+        blogs: null
+    }
+});
+
+var recommendBlog = new Vue({
+    el:"#recommendBlog",
+    data:{
+        blogs:null
+    }
+});
+
+var rankBlog = new Vue({
+    el:"#hot",
+    data:{
+        blogs:null
+    }
+});
 
 // var img_width;
 // var img_height;
 $(function () {
-
-
-        compentent_reset(".Carousel_content", ".Carousel_content_li img");
+    compentent_reset(".Carousel_content", ".Carousel_content_li img");
         compentent_reset(".recommend_blog_ul_li", ".recommend_blog_ul_li img");
         compentent_reset(".knowledge_theme_ul_li", ".knowledge_theme_ul_li img");
         $(window).resize(function () {
@@ -28,18 +57,15 @@ $(function () {
  * 初始化热门博客
  */
 var init_hotBlog = function () {
+    $("#rand_load").show();
     $.ajax({
         url: "/blog_system/blog/searchHotBlog",
         type: "POST",
         data: {},
         success: function (result) {
+            $("#rand_load").hide();
             var data = result.data;
-            var hotBlog = new Vue({
-                el: "#rank",
-                data: {
-                    blogs: data
-                }
-            })
+            hotBlog.blogs = data;
         }
     })
 };
@@ -51,12 +77,7 @@ var init_newBlog = function () {
         data: {},
         success: function (result) {
             var data = result.data;
-            var hotBlog = new Vue({
-                el: "#newBlog",
-                data: {
-                    blogs: data
-                }
-            })
+            newBlog.blogs = data;
         }
     })
 };
@@ -68,12 +89,7 @@ var init_recommendBlog = function () {
         type:"POST",
         success:function (result) {
             var data = result.data;
-            var recommendBlog = new Vue({
-                el:"#recommendBlog",
-                data:{
-                    blogs:data
-                }
-            })
+            recommendBlog.blogs = data;
         }
     })
 };
@@ -84,12 +100,7 @@ var init_rankBlog = function () {
         type:"POST",
         success:function (result) {
             var data = result.data;
-            var rankBlog = new Vue({
-                el:"#hot",
-                data:{
-                    blogs:data
-                }
-            })
+            rankBlog.blogs = data;
         }
     })
 };

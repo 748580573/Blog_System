@@ -52,7 +52,7 @@ public class BlogController {
     public Map<String,Object> searchBlogOrderByTime(HttpServletRequest request){
         Map<String,Object> result = null;
         Map<String,Object> form = RequestUtil.getFormData(request);
-        form.put("pageTotal", 10);                    //限制页面内容数
+        form.put("pageTotal", 5);                    //限制页面内容数
         result = blogService.selevtBlogsOrderByTime(form);
         return result;
     }

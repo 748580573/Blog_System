@@ -206,7 +206,7 @@
     <!--################################标签-博客关联表################################################-->
 
     <insert id="insertTagBlog" parameterType="map">
-        INSERT INTO tag_article(blog_code,tag_code) values (#{blog_code},#{tag_code})
+          tag_article(blog_code,tag_code) values (#{blog_code},#{tag_code})
     </insert>
     <delete id="deleteTagBlog" parameterType="map">
         DELETE FROM tag_article WHERE  blog_code = #{blog_code};

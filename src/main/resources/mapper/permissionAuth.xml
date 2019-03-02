@@ -28,7 +28,7 @@
 			role.role_name
 		FROM
 			account LEFT JOIN user_role ON user_role.user_account = account.account
-			LEFT JOIN role ON role.role_code = user_role.role_cole
+			LEFT JOIN role ON role.roe_code = user_role.role_cole
 		WHERE  account.account = #{account}
 		) a,
 		role_permission,
@@ -39,5 +39,66 @@
 	GROUP BY
 		account
     </select>
+
+	<insert id="addUser" parameterType="map">
+		INSERT INTO account
+		<trim suffixOverrides="," prefix="set">
+			<if test="account != null">
+				account = #{account},
+			</if>
+			<if test="password">
+				password = #{password},
+			</if>
+		</trim>
+	</insert>
+	
+	<insert id="addUserRole" parameterType="map">
+		INSERT INTO user_role
+		<trim suffixOverrides="," prefix="set">
+			<if test="account != null">
+				user_account = #{account},
+			</if>
+			<if test="roleCode != null">
+				role_code = #{roleCode}
+			</if>
+		</trim>
+	</insert>
+	
+	<!--###################################### Role #####################################-->
+	<resultMap id="roleMap" type="com.heng.blog_system.bean.Role">
+		<result property="roleCode" column="role_code"/>
+		<result property="roleName" column="role_name"/>
+	</resultMap>
+
+	<select id="selectRoles" resultMap="roleMap">
+		SELECT role_code,role_name FROM role;
+	</select>
+
+	<select id="selectRoleByRoleCode" resultMap="roleMap" parameterType="map">
+		SELECT role_code,role_name FROM role where role_code = #{roleCode}
+	</select>
+	
+	<insert id="addRole" parameterType="map">
+		INSERT INTO role
+		<trim suffixOverrides="," prefix="set">
+			<if test="roleCode != null">
+				role_code = #{roleCode},
+			</if>
+			<if test="roleName != null">
+				role_name = #{roleName}
+			</if>
+		</trim>
+	</insert>
+
+	<!--############################################Permission#######################################-->
+
+	<resultMap id="permissionMap" type="com.heng.blog_system.bean.Permission">
+		<result property="permissionCode" column="permission_code"/>
+		<result property="permission" column="permission"/>
+	</resultMap>
+
+	<select id="selectPermissions" resultMap="permissionMap">
+		SELECT permission_code,permission FROM permission;
+	</select>
 </mapper>
 

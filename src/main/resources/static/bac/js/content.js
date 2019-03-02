@@ -1,3 +1,10 @@
+var dataList= new Vue({
+    el:"#blogList",
+    data:{
+        blogs:null
+    }
+});
+
 $(function () {
     var pageNo = getUrlParam("pageNo");
     if (pageNo == null || pageNo == ""){
@@ -16,15 +23,15 @@ var listBlog = function (pageNo) {
             var total = result.total;
             var pageHtml = "";
             for (var i = 1;i <= total;i++ ){
-                pageHtml += "<li><a href=\"#\">" + i + "</a></li>";
+                pageHtml += "<li><a href=\"javascript:void(0)\" onclick=\"turnPage(this)\"> " + i+"</a></li>";
             }
             $("#page").html(pageHtml);
-            var dataList= new Vue({
-                el:"#blogList",
-                data:{
-                    blogs:data
-                }
-            })
+            dataList.blogs = data;
         }
     })
+};
+
+var turnPage = function (obj) {
+    var pageNumber = $(obj).text();
+    listBlog(pageNumber);
 };

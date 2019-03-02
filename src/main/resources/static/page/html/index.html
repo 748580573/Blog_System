@@ -5,13 +5,15 @@
     <title>首页</title>
     <script src="../js/jquery-3.2.1.min.js"></script>
     <script src="../js/vue.js"></script>
+    <script src="../js/fakeLoader.min.js"></script>
 
     <link href="../css/Common.css" type="text/css" rel="stylesheet">
     <link href="../css/index.css" type="text/css" rel="stylesheet">
+    <link href="../css/fakeLoader.min.css" type="text/css" rel="stylesheet">
 
 </head>
 <body>
-
+<div class="fakeLoader"></div>
 <div id="nav" class="header">
     <div class="decoration"></div>
     <div class="header-content">
@@ -236,6 +238,7 @@
 
         <div id="recommendBlog" class="special_recommend_content">
             <ul>
+
                 <li class="special_recommend_content_li" v-for="blog in blogs" >
                     <div class="special_recommen_detail">
                         <div style="width: 369px;overflow: hidden">

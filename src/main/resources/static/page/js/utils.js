@@ -57,3 +57,4 @@ var set_val =  function (selector,val) {
 var set_html = function (selector,html) {
     $(selector).html(html);
 };
+

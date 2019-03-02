@@ -1,3 +1,13 @@
+var blogContent = new Vue({
+    el:"#blog",
+    data:{
+        tags:null,
+        blogCode:null,
+        blogTilte:null,
+        blogDesc:null,
+        createDate:null
+    }
+});
 
 $(document).ready(function () {
     var blogCode =  getUrlParam("blogCode");
@@ -15,17 +25,12 @@ $(document).ready(function () {
             var blogContent = data.blogContent;
             var createDate = data.createDate;
             $("#blog_content").html(blogContent);
+            blogContent.tags = tags;
+            blogContent.blogCode = blogCode;
+            blogContent.blogTilte = blogTilte;
+            blogContent.blogDesc = blogDesc;
+            blogContent.createDate = createDate;
 
-            var blogContent = new Vue({
-                el:"#blog",
-                data:{
-                    tags:tags,
-                    blogCode:blogCode,
-                    blogTilte:blogTilte,
-                    blogDesc:blogDesc,
-                    createDate:createDate
-                }
-            });
         }
     })
 });
