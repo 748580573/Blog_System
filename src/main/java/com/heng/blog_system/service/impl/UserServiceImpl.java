@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService {
             result.put("data", list);
         }else {
             result.put("code", 500);
-            result.put("msg", "查询成功");
+            result.put("msg", "查询失败！");
         }
         return result;
     }
@@ -81,14 +81,14 @@ public class UserServiceImpl implements UserService {
             result.put("data", list);
         }else {
             result.put("code", 500);
-            result.put("msg", "查询成功");
+            result.put("msg", "查询失败！");
         }
         return result;
     }
 
     @Override
     @Transactional
-    public Map<String, Object> addRole(Map<String, Object> form) {
+    public Map<String, Object> addUser(Map<String, Object> form) {
         Map<String,Object> result = new HashMap<>();
         String roleName = MapUtils.getString(form, "roleName");
         String roleCole = Utils.md5(roleName);
@@ -112,6 +112,42 @@ public class UserServiceImpl implements UserService {
         }else {
             result.put("code", 404);
             result.put("msg", "存在该账号");
+        }
+        return result;
+    }
+
+
+    @Override
+    @Transactional
+    public Map<String, Object> addRole(Map<String, Object> form) {
+        Map<String,Object> result = new HashMap<>();
+        Map<String,Object> param = new HashMap<>();
+        String roleName = MapUtils.getString(form, "name");
+        String roleCode = Utils.md5(roleName);
+        param.put("roleCode", roleCode);
+        param.put("roleName", roleName);
+        Role role = dao.selectRoleByRoleCode(param);
+        try {
+            if (role != null){
+                result.put("code", 404);
+                result.put("msg", "该角色已存在");
+            }else {
+                dao.addRole(param);
+                for(Map.Entry entry : form.entrySet()){
+                    if (!"name".equals(entry.getKey())){
+                        String key = entry.getKey().toString();
+                        param.put("permissionCode", key);
+                        dao.addRolePermission(param);
+                    }
+                }
+            }
+            result.put("code", 201);
+            result.put("msg", "添加成功");
+        }catch (Exception e){
+            logger.info(e);
+            e.printStackTrace();
+            result.put("code", 500);
+            result.put("msg", "服务器内部错误，请查看日志");
         }
         return result;
     }

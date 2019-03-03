@@ -43,5 +43,6 @@ public interface PermissionAuth {
 
     public Role selectRoleByRoleCode(Map<String,Object> param);
 
+    public void addRolePermission(Map<String,Object> param) throws Exception;
 
 }

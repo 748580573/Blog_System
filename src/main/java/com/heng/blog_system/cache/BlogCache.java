@@ -58,7 +58,7 @@ public class BlogCache {
      */
     private LoadingCache<String, Blog> blogs = CacheBuilder.newBuilder()
             .maximumSize(100)
-            .expireAfterAccess(5, TimeUnit.MINUTES)
+            .expireAfterAccess(60, TimeUnit.MINUTES)
             .build(
                     new CacheLoader<String, Blog>() {
                         @Override

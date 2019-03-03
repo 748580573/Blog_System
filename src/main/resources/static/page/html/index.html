@@ -6,6 +6,8 @@
     <script src="../js/jquery-3.2.1.min.js"></script>
     <script src="../js/vue.js"></script>
     <script src="../js/fakeLoader.min.js"></script>
+    <!--<script src="https://unpkg.com/vue-lazyload/vue-lazyload.js"></script>-->
+    <script src="../js/vue-lazyload.js"></script>
 
     <link href="../css/Common.css" type="text/css" rel="stylesheet">
     <link href="../css/index.css" type="text/css" rel="stylesheet">
@@ -242,12 +244,12 @@
                 <li class="special_recommend_content_li" v-for="blog in blogs" >
                     <div class="special_recommen_detail">
                         <div style="width: 369px;overflow: hidden">
-                            <img  class="special_recommen_detail_img" v-bind:src="blog.blogConverUrl">
+                            <img  class="special_recommen_detail_img" v-lazy="blog.blogConverUrl">
                         </div>
                         <div>{{blog.blogTilte}}</div>
                         <div class="separateLine_h"></div>
                         <div><p class="special_recommen_detail_desc text_overflow">{{blog.blogDesc}}</p></div>
-                        <div class="separateLine_h"></div>
+                        <div class= "separateLine_h"></div>
                         <div>+<a href="#" class="special_recommen_detail_a" v-bind:data-code="blog.blogCode" onclick="view_blog(this)">阅读全文</a></div>
                     </div>
                 </li>
@@ -279,7 +281,7 @@
                     <h3><a href="#">{{blog.blogTilte}}</a></h3>
                     <div class="new_article_content_tail">
                         <div class="new_article_content_tail_left">
-                            <img v-bind:src="blog.blogConverUrl" width="367px" height="300px">
+                            <img v-lazy="blog.blogConverUrl" width="367px" height="300px">
                         </div>
                         <div class="new_article_content_tail_right">
                             <p class="text_overflow">{{blog.blogDesc}}</p>
@@ -355,7 +357,7 @@
                 <p class="rank_ul_li_p text_overflow text_indentation">{{blog.blogTilte}}</p>
                 <div class="rank_ul_li_div">
                     <div class="rank_ul_li_div_img">
-                        <img v-bind:src="blog.blogConverUrl" width="150px" height="120px">
+                        <img v-lazy="blog.blogConverUrl" width="150px" height="120px">
                     </div>
                     <div class="rank_ul_li_span text_overflow">{{blog.blogDesc}}</div>
                 </div>

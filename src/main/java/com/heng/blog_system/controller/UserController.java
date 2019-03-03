@@ -32,7 +32,15 @@ public class UserController {
     @RequestMapping(value = "/addUser")
     public Map<String,Object> addUser(HttpServletRequest request){
         Map<String,Object> form = RequestUtil.getFormData(request);
-        Map<String,Object> result = userService.addRole(form);
+        Map<String,Object> result = userService.addUser(form);
         return result;
+    }
+
+    //TODO 完成添加角色功能
+    @RequestMapping(value = "/addRole")
+    public Map<String,Object> addRole(HttpServletRequest request){
+        Map<String,Object> form = RequestUtil.getFormData(request);
+        Map<String,Object> result = userService.addRole(form);
+        return form;
     }
 }

@@ -85,4 +85,9 @@ public class PermissionAuthImp implements PermissionAuth {
             return null;
         }
     }
+
+    @Override
+    public void addRolePermission(Map<String, Object> param) throws Exception {
+        blogDao.save("permissionAuth.addRolePermission", param);
+    }
 }

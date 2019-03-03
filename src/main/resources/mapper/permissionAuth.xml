@@ -90,6 +90,15 @@
 		</trim>
 	</insert>
 
+	<insert id="addRolePermission" parameterType="map">
+		INSERT INTO role_permission
+		<trim suffixOverrides="," prefix="set">
+			<if test="roleCode != null and permissionCode != null">
+				role_code = #{roleCode},permission_code = #{permissionCode}
+			</if>
+		</trim>
+	</insert>
+
 	<!--############################################Permission#######################################-->
 
 	<resultMap id="permissionMap" type="com.heng.blog_system.bean.Permission">

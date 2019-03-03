@@ -37,5 +37,7 @@ public interface UserService {
      */
     public Map<String,Object> selectPermissions(Map<String,Object> form);
 
-    public Map<String,Object> addRole(Map<String,Object> from);
+    public Map<String,Object> addUser(Map<String,Object> form);
+
+    public Map<String,Object> addRole(Map<String,Object> form);
 }

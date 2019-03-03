@@ -3,6 +3,14 @@ $.fakeLoader({
     spinner:"spinner4",
 
 });
+
+Vue.use(VueLazyload,{
+    preLoad: 1.3,
+    error: '../img/error.jpg',
+    loading: '../img/jiazai.png',
+    attempt: 1
+});
+
 var hotBlog = new Vue({
     el: "#rank",
     data: {
@@ -49,15 +57,57 @@ $(function () {
         setTimeout(init_newBlog(),0);
         setTimeout(init_recommendBlog(),0);
         setTimeout(init_rankBlog,0);
-
+        init_page();
     }
 );
+
+var init_page = function () {
+
+    $.ajax({
+        url:"/blog_system/blog/searchRecommendBlog",
+        type:"POST",
+        success:function (result) {
+            var data = result.data;
+            recommendBlog.blogs = data;
+        }
+    });
+
+    $.ajax({
+        url: "/blog_system/blog/searchHotBlog",
+        type: "POST",
+        data: {},
+        success: function (result) {
+            $("#rand_load").hide();
+            var data = result.data;
+            hotBlog.blogs = data;
+        }
+    });
+
+    $.ajax({
+        url: "/blog_system/blog/searchNewBlog",
+        type: "POST",
+        data: {},
+        success: function (result) {
+            var data = result.data;
+            newBlog.blogs = data;
+        }
+    });
+
+
+    $.ajax({
+        url:"/blog_system/blog/rank",
+        type:"POST",
+        success:function (result) {
+            var data = result.data;
+            rankBlog.blogs = data;
+        }
+    })
+};
 
 /**
  * 初始化热门博客
  */
 var init_hotBlog = function () {
-    $("#rand_load").show();
     $.ajax({
         url: "/blog_system/blog/searchHotBlog",
         type: "POST",
