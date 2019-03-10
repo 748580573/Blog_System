@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="visitor">
+    <resultMap id="visitorMap" type="com.heng.blog_system.bean.Visitor">
+        <result property="flag" column="flag"/>
+        <result property="ip" column="ip"/>
+        <result property="address" column="address"/>
+        <result property="os" column="os"/>
+        <result property="chrome" column="chrome"/>
+        <result property="date" column="date"/>
+    </resultMap>
+
+    <insert id="addVisitor" parameterType="com.heng.blog_system.bean.Visitor">
+        INSERT INTO visitor
+        <trim prefix="set" suffixOverrides=",">
+            <if test="flag != null">
+                flag = #{flag},
+            </if>
+            <if test="ip != null">
+                ip = #{ip},
+            </if>
+            <if test="address != null">
+                address = #{address},
+            </if>
+            <if test="os != null">
+                os = #{os},
+            </if>
+            <if test="chrome != null">
+                chrome = #{chrome},
+            </if>
+            <if test="date != null">
+                date = #{date},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="selectVisitorByFlag" resultMap="visitorMap" parameterType="map">
+        SELECT * FROM visitor WHERE 1 = 1
+        <if test="flag != null">
+           AND flag = #{flag}
+        </if>
+        order by `date` DESC
+        limit 0,1;
+    </select>
+
+    <select id="selectVisitors" resultMap="visitorMap" parameterType="map">
+        SELECT flag,ip,address,os,chrome,`date`
+        FROM visitor
+        where 1 = 1
+        <if test="orderKey != null">
+            ORDER BY #{orderKey}
+        </if>
+        <if test="pageNumber != null">
+            limit ${(pageNumber - 1) * pageSize} ,${pageNumber * pageSize}
+        </if>
+    </select>
+
+</mapper>
+

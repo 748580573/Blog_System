@@ -2,10 +2,8 @@ package com.heng.blog_system.aspect;
 
 import com.heng.blog_system.anno.Permission;
 import com.heng.blog_system.bean.User;
-import com.heng.blog_system.db.impl.PermissionAuth;
 import com.heng.blog_system.service.impl.UserServiceImpl;
 import com.heng.blog_system.utils.ReflectUtlis;
-import com.heng.blog_system.utils.Utils;
 import org.apache.http.HttpStatus;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
@@ -16,7 +14,11 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -43,7 +45,9 @@ public class PermissionAspect {
             Permission permission = targetMethod.getAnnotation(Permission.class);
             Map<String,Object> form = (Map<String, Object>) jp.getArgs()[0];
             String[] values = permission.value();
-            User user = userService.isExistUser(form);
+            HttpServletRequest request =((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+            HttpSession session = request.getSession();
+            User user = (User) session.getAttribute("user");
             if (user != null){
                 if (!userService.hasPermission(user, values)){
                     Map<String,Object> result = new HashMap<>();

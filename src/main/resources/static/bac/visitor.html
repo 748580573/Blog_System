@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+
+    <title>H+ 后台主题UI框架 - FooTable</title>
+    <meta name="keywords" content="H+后台主题,后台bootstrap框架,会员中心主题,后台HTML,响应式后台">
+    <meta name="description" content="H+是一个完全响应式，基于Bootstrap3最新版本开发的扁平化主题，她采用了主流的左右两栏式布局，使用了Html5+CSS3等现代技术">
+
+    <link href="css/bootstrap.min.css-v=3.3.5.css" tppabs="http://www.zi-han.net/theme/hplus/css/bootstrap.min.css?v=3.3.5" rel="stylesheet">
+
+    <link href="css/style.min.css-v=4.0.0.css"  rel="stylesheet"><base target="_blank">
+    <script src="../page/js/vue.js"></script>
+
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="ibox float-e-margins">
+
+                        <div class="ibox-title">
+                            <div class="btn-group-sm hidden-xs" role="group">
+                                <a class="btn btn-danger btn-del" onclick="$.operate.deleteAll()">
+                                    <i class="fa fa-remove"></i> 删除
+                                </a>
+                                <a class="btn btn-danger" onclick="$.operate.clean()">
+                                    <i class="fa fa-trash"></i> 清空
+                                </a>
+                            </div>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                    <i class="fa fa-wrench"></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-user">
+                                    <li><a href="#">选项 01</a>
+                                    </li>
+                                    <li><a href="#">选项 02</a>
+                                    </li>
+                                </ul>
+                                <a class="close-link">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="ibox-content" id="visitor">
+
+                            <table class="footable table table-stripped toggle-arrow-tiny table-hover" data-page-size="8">
+                                <thead>
+                                <tr>
+                                    <th data-toggle="true"></th>
+                                    <th data-toggle="true">标识</th>
+                                    <th>主机</th>
+                                    <th data-hide="all">操作地点</th>
+                                    <th data-hide="all">操作系统</th>
+                                    <th data-hide="all">浏览器</th>
+                                    <th data-hide="all">访问时间</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr class="gradeA even" v-for="visitor in data">
+                                    <td><input type="checkbox"></td>
+                                    <td>{{visitor.flag}}</td>
+                                    <td>{{visitor.ip}}</td>
+                                    <td>{{visitor.address}}</td>
+                                    <td>{{visitor.os}}</td>
+                                    <td>{{visitor.chrome}}</td>
+                                    <td>{{visitor.date}}</td>
+                                </tr>
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <td colspan="5">
+                                        <ul class="pagination pull-right"></ul>
+                                    </td>
+                                </tr>
+                                </tfoot>
+                            </table>
+                            <div class="row"><div class="col-sm-6"><div class="dataTables_info" id="DataTables_Table_0_info" role="alert" aria-live="polite" aria-relevant="all">显示 1 到 10 项，共 57 项</div></div><div class="col-sm-6"><div class="dataTables_paginate paging_simple_numbers" id="DataTables_Table_0_paginate"><ul class="pagination"><li class="paginate_button previous disabled" aria-controls="DataTables_Table_0" tabindex="0" id="DataTables_Table_0_previous"><a href="#">上一页</a></li><li class="paginate_button active" aria-controls="DataTables_Table_0" tabindex="0"><a href="#">1</a></li><li class="paginate_button " aria-controls="DataTables_Table_0" tabindex="0"><a href="#">2</a></li><li class="paginate_button " aria-controls="DataTables_Table_0" tabindex="0"><a href="#">3</a></li><li class="paginate_button " aria-controls="DataTables_Table_0" tabindex="0"><a href="#">4</a></li><li class="paginate_button " aria-controls="DataTables_Table_0" tabindex="0"><a href="#">5</a></li><li class="paginate_button " aria-controls="DataTables_Table_0" tabindex="0"><a href="#">6</a></li><li class="paginate_button next" aria-controls="DataTables_Table_0" tabindex="0" id="DataTables_Table_0_next"><a href="#">下一页</a></li></ul></div></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <script src="js/jquery.min.js-v=2.1.4" tppabs="http://www.zi-han.net/theme/hplus/js/jquery.min.js?v=2.1.4"></script>
+    <script src="js/bootstrap.min.js-v=3.3.5" tppabs="http://www.zi-han.net/theme/hplus/js/bootstrap.min.js?v=3.3.5"></script>
+    <script>
+        var visitors = new Vue({
+            el:"#visitor",
+            data:{
+                data:null
+            }
+        });
+        $(function () {
+            turn_page(1);
+        });
+        var turn_page = function (pageNumber) {
+            $.ajax({
+                url:"/blog_system/visitors",
+                data:{"pageNumber":pageNumber},
+                type: "POST",
+                success:function (result) {
+                    var data = result.data;
+                    visitors.data = data;
+                }
+            })
+        }
+    </script>
+</body>
+
+</html>

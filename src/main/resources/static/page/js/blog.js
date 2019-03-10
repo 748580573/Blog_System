@@ -1,4 +1,4 @@
-var blogContent = new Vue({
+var blog = new Vue({
     el:"#blog",
     data:{
         tags:null,
@@ -25,11 +25,11 @@ $(document).ready(function () {
             var blogContent = data.blogContent;
             var createDate = data.createDate;
             $("#blog_content").html(blogContent);
-            blogContent.tags = tags;
-            blogContent.blogCode = blogCode;
-            blogContent.blogTilte = blogTilte;
-            blogContent.blogDesc = blogDesc;
-            blogContent.createDate = createDate;
+            blog.tags = tags;
+            blog.blogCode = blogCode;
+            blog.blogTilte = blogTilte;
+            blog.blogDesc = blogDesc;
+            blog.createDate = createDate;
 
         }
     })

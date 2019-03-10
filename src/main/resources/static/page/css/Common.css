@@ -47,6 +47,7 @@ ul{
     display:-webkit-box;
     -webkit-line-clamp:4;
     -webkit-box-orient:vertical;
+    height: 65%;
 }
 
 .text_indentation{
@@ -85,4 +86,8 @@ ul{
     -moz-animation: rotation 3s linear infinite;
     -webkit-animation: rotation 3s linear infinite;
     -o-animation: rotation 3s linear infinite;
+}
+
+.hidden{
+    display: none;
 }

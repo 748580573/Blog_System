@@ -15,6 +15,7 @@
         <mapper resource="mapper/tags.xml"/>
         <mapper resource="mapper/blog_tag.xml"/>
         <mapper resource="mapper/permissionAuth.xml"/>
+        <mapper resource="mapper/visitor.xml"/>
 
 
     </mappers>

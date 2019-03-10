@@ -39,7 +39,7 @@ var addRole = function () {
     }
 
     $.ajax({
-        url:"/blog_system/addRole",
+        url:"/blog_system/login.html",
         type:"POST",
         data:form,
         processData: false,

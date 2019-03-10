@@ -1,4 +1,4 @@
-package com.heng.blog_system.db.impl;
+package com.heng.blog_system.db;
 
 import com.heng.blog_system.bean.Permission;
 import com.heng.blog_system.bean.Role;

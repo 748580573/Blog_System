@@ -1,3 +1,9 @@
+var advs  = new Vue({
+    el: "#adv",
+    data:{
+        advBlogs:null
+    }
+});
 $.fakeLoader({
     timeToHide:4000,
     spinner:"spinner4",
@@ -62,6 +68,15 @@ $(function () {
 );
 
 var init_page = function () {
+
+    $.ajax({
+        url:"/blog_system/blog/advs",
+        type:"POST",
+        success:function (result) {
+            var data = result.data;
+            advs.advBlogs = data;
+        }
+    });
 
     $.ajax({
         url:"/blog_system/blog/searchRecommendBlog",

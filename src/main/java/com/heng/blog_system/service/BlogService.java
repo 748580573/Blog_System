@@ -55,6 +55,8 @@ public interface BlogService {
      */
     public Map<String,Object> selevtBlogsOrderByTime(Map<String,Object> form);
 
+    public Map<String,Object> selectAdvBlogs(Map<String,Object> from);
+
 
     /**
      * 修改博客

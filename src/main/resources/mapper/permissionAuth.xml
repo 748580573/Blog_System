@@ -6,7 +6,7 @@
     <resultMap id="userMap" type="com.heng.blog_system.bean.User">
         <result property="account" column="account"/>
         <result property="password" column="password"/>
-        <result property="roleCode" column="role_cole"/>
+        <result property="roleCode" column="role_code"/>
         <result property="roleName" column="role_name"/>
         <result property="permissionCode" column="permission_code"/>
         <result property="permission" column="permission"/>
@@ -15,7 +15,7 @@
 	SELECT
 		a.account,
 		a.password,
-		a.role_cole role_cole,
+		a.role_code role_code,
 		a.role_name role_name,
 		permission.permission_code permission_code,
 		GROUP_CONCAT( DISTINCT permission.permission ) permission
@@ -24,18 +24,18 @@
 		SELECT
 			account.account,
 			account.password,
-			user_role.role_cole,
+			user_role.role_code,
 			role.role_name
 		FROM
 			account LEFT JOIN user_role ON user_role.user_account = account.account
-			LEFT JOIN role ON role.roe_code = user_role.role_cole
+			LEFT JOIN role ON role.role_code = user_role.role_code
 		WHERE  account.account = #{account}
 		) a,
 		role_permission,
 		permission
 	WHERE
 		permission.permission_code = role_permission.permission_code
-		AND role_permission.role_code = a.role_cole
+		AND role_permission.role_code = a.role_code
 	GROUP BY
 		account
     </select>

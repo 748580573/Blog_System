@@ -7,7 +7,9 @@ import com.heng.blog_system.bean.Blog;
 import com.heng.blog_system.bean.Tag;
 import com.heng.blog_system.cache.BlogCache;
 import com.heng.blog_system.db.BlogDao;
+import com.heng.blog_system.db.CommonDao;
 import com.heng.blog_system.db.RedisCache;
+import com.heng.blog_system.db.ESService;
 import com.heng.blog_system.service.BlogService;
 import com.heng.blog_system.utils.MapUtils;
 import com.heng.blog_system.utils.Utils;
@@ -20,11 +22,9 @@ import org.elasticsearch.rest.RestStatus;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.text.TabExpander;
 import java.io.IOException;
 import java.util.*;
 
@@ -43,7 +43,10 @@ public class BlogServiceImpl implements BlogService {
     private ESClient esClient;
 
     @Autowired
-    private BlogDao blogDao;
+    private CommonDao commonDao;
+
+    @Autowired
+    private ESService esService;
 
     @Override
     @Transactional
@@ -64,11 +67,13 @@ public class BlogServiceImpl implements BlogService {
         Blog bl = null;
 //        bl = blogCache.getBlog(blogCode);
 
-        bl = (Blog) redisCache.get(blogCode);
+        if(redisCache.get(blogCode) != null){
+            bl = (Blog) redisCache.get(blogCode);
+        }
 
 
         if (Utils.isEmpty(bl)){
-            bl = blogDao.get("blogTag.selectBlogForIndex", map);
+            bl = commonDao.get("blogTag.selectBlogForIndex", map);
             if (Utils.isEmpty(bl)){
                 bl = Blog.mapToBlog(map);
                 String createDate = Utils.obtainCurrentTime();
@@ -76,7 +81,7 @@ public class BlogServiceImpl implements BlogService {
                 bl.setCreateDate(createDate);
                 redisCache.put(blogCode, bl);
 //                blogCache.putBlog(blogCode, bl);
-                blogDao.save("blogTag.addBlog", map);
+                commonDao.save("blogTag.addBlog", map);
             }
         }
 
@@ -96,9 +101,9 @@ public class BlogServiceImpl implements BlogService {
             Tag tag = (Tag) redisCache.get(tag_code);
 
             if (Utils.isEmpty(tag)) {
-                Tag ta = blogDao.get("blogTag.selectTag",param);
+                Tag ta = commonDao.get("blogTag.selectTag",param);
                 if (Utils.isEmpty(ta)){
-                    blogDao.save("blogTag.addTag", param);
+                    commonDao.save("blogTag.addTag", param);
                     redisCache.put(tag_code, Tag.mapToTag(param));
 
                 }
@@ -106,7 +111,7 @@ public class BlogServiceImpl implements BlogService {
             Map<String,Object> tagBlog = new HashMap<>();                 //关联tag与blog
             tagBlog.put("blog_code", blogCode);
             tagBlog.put("tag_code", tag_code);
-            blogDao.save("blogTag.insertTagBlog", tagBlog);
+            commonDao.save("blogTag.insertTagBlog", tagBlog);
         }
 
 
@@ -162,10 +167,10 @@ public class BlogServiceImpl implements BlogService {
         List<Blog> data = (List<Blog>) redisCache.get(redisKey);
         try {
             if (data == null || data.size() <= 0){
-                data = blogDao.getList("blogTag.selectBlogForSearch",form);
+                data = commonDao.getList("blogTag.selectBlogForSearch",form);
                 redisCache.put(redisKey, data);
             }
-            int total = blogDao.get("blogTag.selectBlogTotal");
+            int total = commonDao.get("blogTag.selectBlogTotal");
             result.put("total", (total + pageSize - 1) / pageSize);
             result.put("data", data);
             result.put("code", 201);
@@ -188,10 +193,10 @@ public class BlogServiceImpl implements BlogService {
         List<Blog> data = (List<Blog>) redisCache.get(redisKey);
         try {
             if (data == null || data.size() <= 0){
-                data = blogDao.getList("blogTag.selectBlogForSearch",form);
+                data = commonDao.getList("blogTag.selectBlogForSearch",form);
                 redisCache.put(redisKey, data);
             }
-            int total = blogDao.get("blogTag.selectBlogTotal");
+            int total = commonDao.get("blogTag.selectBlogTotal");
             result.put("total", (total + pageSize - 1) / pageSize);
             result.put("data", data);
             result.put("code", 201);
@@ -214,7 +219,7 @@ public class BlogServiceImpl implements BlogService {
 
         try {
             if (data == null || data.size() <= 0){
-                data = blogDao.getList("blogTag.selectBlogForSearch",form);
+                data = commonDao.getList("blogTag.selectBlogForSearch",form);
                 redisCache.put("host", data);
             }
             for (Blog blog : data){
@@ -268,7 +273,7 @@ public class BlogServiceImpl implements BlogService {
                 if (blog == null){
                     Map<String,Object> tempParam = new HashMap<>();
                     tempParam.put("blog_code", blogCode);
-                    blog = blogDao.get("blogTag.selectBlogForIndex",tempParam);
+                    blog = commonDao.get("blogTag.selectBlogForIndex",tempParam);
 //                    blogCache.putBlog(blogCode, blog);
                     redisCache.put(blogCode, blog);
                 }
@@ -297,7 +302,7 @@ public class BlogServiceImpl implements BlogService {
         List<Blog> list = (List<Blog>) redisCache.get("recommend");
         try {
             if (list == null || list.size() <= 0){
-                list = blogDao.getList("blogTag.selectBlogForRecommend",form);
+                list = commonDao.getList("blogTag.selectBlogForRecommend",form);
                 redisCache.put("recommend", list);
             }
             result.put("data", list);
@@ -318,7 +323,7 @@ public class BlogServiceImpl implements BlogService {
         if (!Utils.isEmpty(form.get("blog_code"))){
             String blogCode = form.get("blog_code").toString();
             try {
-                Blog blog = blogDao.get("blogTag.selectBlogForShow",form);
+                Blog blog = commonDao.get("blogTag.selectBlogForShow",form);
                 result.put("code",201 );
                 result.put("msg", "查询成功");
                 result.put("data", blog);
@@ -341,7 +346,7 @@ public class BlogServiceImpl implements BlogService {
     public Map<String, Object> selectBlogForRank(Map<String, Object> form) {
         Map<String,Object> result = new HashMap<>();
         try {
-            List<Blog> data = blogDao.getList("blogTag.selectBlogForRank",form);
+            List<Blog> data = commonDao.getList("blogTag.selectBlogForRank",form);
             redisCache.put("rank", data);
             result.put("code", 201);
             result.put("data", data);
@@ -360,7 +365,7 @@ public class BlogServiceImpl implements BlogService {
     public Map<String, Object> selectNewBlogs(Map<String, Object> form) {
         Map<String, Object> result = new HashMap<>();
         try {
-            List<Blog> data = blogDao.getList("blogTag.selectBlogForSearch",form);
+            List<Blog> data = commonDao.getList("blogTag.selectBlogForSearch",form);
             redisCache.put("new", data);
             for (Blog blog : data){
                 if (Utils.isEmpty(redisCache.get(blog.getBlogCode()))){
@@ -392,8 +397,8 @@ public class BlogServiceImpl implements BlogService {
 
         if (blog_code != null){
             try {
-                blogDao.update("blogTag.updateBlog", form);               //更新blog
-                String oldTag = blogDao.get("blogTag.selecTagsByBlog",form);
+                commonDao.update("blogTag.updateBlog", form);               //更新blog
+                String oldTag = commonDao.get("blogTag.selecTagsByBlog",form);
                 Set<String> newTags = compareTags(getTags(newTag), getTags(oldTag));
                 for (String tag : newTags){
                     Map<String, Object> param = new HashMap<>();
@@ -401,11 +406,11 @@ public class BlogServiceImpl implements BlogService {
                     String tag_code = Utils.md5(tag);
                     param.put("tag_code", tag_code);
                     param.put("tag_name", tag);
-                    Tag t = blogDao.get("blogTag.selectTag", param);
+                    Tag t = commonDao.get("blogTag.selectTag", param);
                     if (t == null){
-                        blogDao.save("blogTag.addTag", param);
+                        commonDao.save("blogTag.addTag", param);
                     }
-                    blogDao.save("blogTag.insertTagBlog", param);
+                    commonDao.save("blogTag.insertTagBlog", param);
                 }
                 result.put("code", 201);
                 result.put("msg", "亲！修改成功。");
@@ -429,11 +434,11 @@ public class BlogServiceImpl implements BlogService {
     public Map<String, Object> deleteBlog(Map<String, Object> form) {
         Map<String,Object> result = new HashMap<>();
         String blog_code = MapUtils.getString(form, "blog_code");
-        Blog blog = blogDao.get("blogTag.selectBlogForShow",form);
+        Blog blog = commonDao.get("blogTag.selectBlogForShow",form);
         if (blog_code != null && blog != null){
             try {
-                blogDao.delete("blogTag.deleteBlog", form);
-                blogDao.delete("blogTag.deleteTagBlog", form);
+                commonDao.delete("blogTag.deleteBlog", form);
+                commonDao.delete("blogTag.deleteTagBlog", form);
                 result.put("code", 201);
                 result.put("msg", "删除指定博客成功");
                 logger.info("删除博客,blog_code = " + blog_code + "," +
@@ -462,6 +467,25 @@ public class BlogServiceImpl implements BlogService {
             result.put("code", 401);
             result.put("msg", "删除博客失败，不存在该博客");
         }
+        return result;
+    }
+
+    @Override
+    public Map<String, Object> selectAdvBlogs(Map<String, Object> from) {
+        Map<String,Object> result = new HashMap<>();
+        String key = "Java";
+        Map<String,Object> param = new HashMap<>();
+        param.put("blogTilte",key );
+        param.put("tags", key);
+        List<List<Blog>> advs = new ArrayList<>();
+        List<Blog> list1 = esService.fuzzySearch(param, 1, 4);
+        advs.add(list1);
+        key = "linux";
+        param.put("blogTilte",key );
+        param.put("tags", key);
+        List<Blog> list2 = esService.fuzzySearch(param, 1, 4);
+        advs.add(list2);
+        result.put("data", advs);
         return result;
     }
 

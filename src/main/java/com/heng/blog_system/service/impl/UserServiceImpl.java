@@ -3,7 +3,7 @@ package com.heng.blog_system.service.impl;
 import com.heng.blog_system.bean.Permission;
 import com.heng.blog_system.bean.Role;
 import com.heng.blog_system.bean.User;
-import com.heng.blog_system.db.impl.PermissionAuth;
+import com.heng.blog_system.db.PermissionAuth;
 import com.heng.blog_system.service.UserService;
 import com.heng.blog_system.utils.MapUtils;
 import com.heng.blog_system.utils.Utils;
@@ -25,12 +25,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User isExistUser(Map<String, Object> form) {
-        User user = dao.selectUserByAccount(form);
-        if (user != null){
-            String permission = user.getPermission();
-            String[] tags = permission.trim().split(",");
-        }
-        return user;
+        return dao.selectUserByAccount(form);
     }
 
     @Override

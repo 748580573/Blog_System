@@ -372,7 +372,6 @@ body{
 
 
 .description{
-    text-overflow: ellipsis;
     font-size: 1.5em;
 }
 
@@ -688,6 +687,7 @@ body{
 }
 
 .rank_ul_li_p{
+    height: 35px;
     font-size: 1.4em;
     font-weight: 800;
     -webkit-line-clamp:1;

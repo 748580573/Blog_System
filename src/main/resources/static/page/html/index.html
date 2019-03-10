@@ -99,10 +99,8 @@
         <div class="knowledge_theme_nav">
             <div style="height: 100%">
                 <ul class="knowledge_theme_nav_ul">
-                    <li class="knowledge_theme_nav_ul_li" onclick="click_title(this)" style="border-bottom:2px solid black" data-sign="1">栏目一</li>
-                    <li class="knowledge_theme_nav_ul_li" onclick="click_title(this)" data-sign="2">栏目二</li>
-                    <li class="knowledge_theme_nav_ul_li" onclick="click_title(this)" data-sign="3">栏目三</li>
-                    <li class="knowledge_theme_nav_ul_li" onclick="click_title(this)" data-sign="4">  栏目四</li>
+                    <li class="knowledge_theme_nav_ul_li" onclick="click_title(this)" style="border-bottom:2px solid black" data-sign="1">Java</li>
+                    <li class="knowledge_theme_nav_ul_li" onclick="click_title(this)" data-sign="2">linux</li>
                 </ul>
             </div>
         </div>
@@ -141,88 +139,25 @@
 
             <div class="separateLine_v"></div>
 
-            <div class="knowledge_theme_content_right">
-                <ul data-sign="1">
-                    <li style="height: 40%;background-color: #d4d4d4;" onmouseover="changeLi(this)">
-                        <i>1</i>
-                        <a  href="">标题</a>
-                        <p class="description">asd</p>
-                    </li>
-                    <li onmouseover="changeLi(this)">
-                        <i>1</i>
-                        <a  href="">标题</a>
-                        <p class="description" hidden>asd</p>
-                    </li>
-                    <li onmouseover="changeLi(this)">
-                        <i>1</i>
-                        <a  href="">标题</a>
-                        <p class="description" hidden>asd</p>
-                    </li>
-                    <li onmouseover="changeLi(this)">
-                        <i>1</i>
-                        <a  href="">标题</a>
-                        <p class="description" hidden>asd</p>
-                    </li>
-                    <li onmouseover="changeLi(this)">
-                        <i>1</i>
-                        <a  href="">标题</a>
-                        <p class="description" hidden>asd</p>
-                    </li>
-                </ul>
-                <ul data-sign="2" hidden>
-                    <li style="height: 40%;background-color: #d4d4d4;" onmouseover="changeLi(this)">
-                        <i>1</i>
-                        <a  href="">暂无数据</a>
-                        <p class="description">asd</p>
-                    </li>
-                    <li onmouseover="changeLi(this)">
-                        <i>1</i>
-                        <a  href="">暂无数据</a>
-                        <p class="description" hidden>asd</p>
-                    </li>
-                    <li onmouseover="changeLi(this)">
-                        <i>1</i>
-                        <a  href="">暂无数据</a>
-                        <p class="description" hidden>asd</p>
-                    </li>
-                    <li onmouseover="changeLi(this)">
-                        <i>1</i>
-                        <a  href="">暂无数据</a>
-                        <p class="description" hidden>asd</p>
-                    </li>
-                    <li onmouseover="changeLi(this)">
-                        <i>1</i>
-                        <a  href="">暂无数据</a>
-                        <p class="description" hidden>asd</p>
-                    </li>
-                </ul>
-                <ul data-sign="3" hidden>
-                    <li style="height: 40%;background-color: #d4d4d4;" onmouseover="changeLi(this)">
-                        <i>1</i>
-                        <a  href="">java</a>
-                        <p class="description">java教程</p>
-                    </li>
-                    <li onmouseover="changeLi(this)">
-                        <i>1</i>
-                        <a  href="">标题2</a>
-                        <p class="description" hidden>asd</p>
-                    </li>
-                    <li onmouseover="changeLi(this)">
-                        <i>1</i>
-                        <a  href="">标题3</a>
-                        <p class="description" hidden>asd</p>
-                    </li>
-                    <li onmouseover="changeLi(this)">
-                        <i>1</i>
-                        <a  href="">标题4</a>
-                        <p class="description" hidden>asd</p>
-                    </li>
-                    <li onmouseover="changeLi(this)">
-                        <i>1</i>
-                        <a  href="">标题5</a>
-                        <p class="description" hidden>asd</p>
-                    </li>
-                </ul>
+            <div  id="adv" class="knowledge_theme_content_right">
+                <template v-for="adv,index in advBlogs" v-if="index > 0 ">
+                    <ul v-bind:data-sign="index + 1" hidden>
+                        <li  v-for="blog,index in adv" onmouseover="changeLi(this)">
+                            <i>{{index}}</i>
+                            <a  href="javascript:void(0)" v-bind:data-code="blog.blogCode" onclick="view_blog(this)">{{blog.blogTilte}}</a>
+                            <p class="text_overflow description hidden">{{blog.blogDesc}}</p>
+                        </li>
+                    </ul>
+                </template>
+                <template v-else>
+                    <ul  v-bind:data-sign="index + 1" >
+                        <li  v-for="blog,index in adv" onmouseover="changeLi(this)">
+                            <i>{{index}}</i>
+                            <a href="javascript:void(0)" v-bind:data-code="blog.blogCode" onclick="view_blog(this)">{{blog.blogTilte}}</a>
+                            <p class="text_overflow description hidden">{{blog.blogDesc}}</p>
+                        </li>
+                    </ul>
+                </template>
             </div>
         </div>
     </div>
@@ -240,7 +175,6 @@
 
         <div id="recommendBlog" class="special_recommend_content">
             <ul>
-
                 <li class="special_recommend_content_li" v-for="blog in blogs" >
                     <div class="special_recommen_detail">
                         <div style="width: 369px;overflow: hidden">

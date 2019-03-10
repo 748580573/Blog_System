@@ -115,6 +115,13 @@ public class BlogController {
         return result;
     }
 
+    @RequestMapping(value = "/advs")
+    public Map<String,Object> selectAdvs(HttpServletRequest request){
+        Map<String,Object> map = RequestUtil.getFormData(request);
+        Map<String,Object> result = blogService.selectAdvBlogs(map);
+        return result;
+    }
+
     /**
      * 跟新博客
      * @param request

@@ -1,13 +1,19 @@
 package com.heng.blog_system.utils;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONException;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import org.apache.log4j.Logger;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.*;
 
 public class RequestUtil {
@@ -37,11 +43,28 @@ public class RequestUtil {
     }
 
     /**
+     * 获取操作系统
+     * @param request
+     * @return
+     */
+    public static String getOS(HttpServletRequest request){
+        String info = request.getHeader("User-Agent");
+        String[] strings = info.split("\\)");
+        return strings[0].split("\\(")[1];
+    }
+
+    public static String getChrome(HttpServletRequest request){
+        String info = request.getHeader("User-Agent");
+        String[] strings = info.split("\\)");
+        return strings[2].split("/")[0];
+    }
+
+    /**
      * 获取IP地址
      * @param request
      * @return
      */
-    public String getIpAddr(HttpServletRequest request) {
+    public static String getIpAddr(HttpServletRequest request) {
         String ip = request.getHeader("x-forwarded-for");
         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getHeader("Proxy-Client-IP");
@@ -53,6 +76,42 @@ public class RequestUtil {
             ip = request.getRemoteAddr();
         }
         return ip;
+    }
+
+    /**
+     * 获取ips所在地址
+     * @param strIP
+     * @return
+     */
+    public static String getAddressByIP(String strIP) {
+        try {
+            URL url = new URL("http://api.map.baidu.com/location/ip?ak=F454f8a5efe5e577997931cc01de3974&ip="+strIP);
+            URLConnection conn = url.openConnection();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"));
+            String line = null;
+            StringBuffer result = new StringBuffer();
+            while ((line = reader.readLine()) != null) {
+                result.append(line);
+            }
+            reader.close();
+            String ipAddr = result.toString();
+            try {
+                JSONObject obj1= JSON.parseObject(ipAddr);
+                if("0".equals(obj1.get("status").toString())){
+                    JSONObject obj2= JSON.parseObject(obj1.get("content").toString());
+                    JSONObject obj3= JSON.parseObject(obj2.get("address_detail").toString());
+                    return obj3.get("city").toString();
+                }else{
+                    return "读取失败";
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return "读取失败";
+            }
+
+        } catch (IOException e) {
+            return "读取失败";
+        }
     }
 
     /**
@@ -91,5 +150,13 @@ public class RequestUtil {
             logger.info("图片上传失败");
         }
         return filePath;
+    }
+
+    public static void setResponse(HttpServletResponse response,Map<String,Object> map) throws IOException {
+        response.setCharacterEncoding("utf-8");
+        response.setContentType("application/json; charset=utf-8");
+        PrintWriter out = response.getWriter();
+        String json = JSON.toJSONString(map, SerializerFeature.DisableCircularReferenceDetect);
+        out.append(json);
     }
 }

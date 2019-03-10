@@ -19,4 +19,12 @@ public class MapUtils {
             return null;
         }
     }
+
+    public static String getString(Map map, String key,String defaultValue){
+        if (map.get(key) !=  null){
+            return (String) map.get(key);
+        }else {
+            return defaultValue;
+        }
+    }
 }
