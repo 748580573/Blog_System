@@ -6,27 +6,27 @@ var dataList= new Vue({
 });
 
 $(function () {
-    var pageNo = getUrlParam("pageNo");
-    if (pageNo == null || pageNo == ""){
-        pageNo = 1;
+    var pageNumber = getUrlParam("pageNumber");
+    if (pageNumber == null || pageNumber == ""){
+        pageNumber = 1;
     }
-    listBlog(pageNo);
+    listBlog(pageNumber);
 });
 
-var listBlog = function (pageNo) {
+var listBlog = function (pageNumber) {
     $.ajax({
         url:"/blog_system/blog/blogList",
-        data:{"pageNumber":pageNo},
+        data:{"pageNumber":pageNumber},
         type:"POST",
         success:function (result) {
             var data = result.data;
             var total = result.total;
             var pageHtml = "";
+            dataList.blogs = data;
             for (var i = 1;i <= total;i++ ){
                 pageHtml += "<li><a href=\"javascript:void(0)\" onclick=\"turnPage(this)\"> " + i+"</a></li>";
             }
             $("#page").html(pageHtml);
-            dataList.blogs = data;
         }
     })
 };

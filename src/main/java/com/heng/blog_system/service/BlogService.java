@@ -73,10 +73,18 @@ public interface BlogService {
     public Map<String,Object> deleteBlog(Map<String,Object> form);
 
     /**
+     * 查询所有Tag
+     * @param
+     * @return
+     */
+    public Map<String,Object> selectTags();
+
+    /**
      * 测试用接口
      * @param form
      * @return
      */
+
     public Map<String,Object> test(Map<String,Object> form);
 
 }

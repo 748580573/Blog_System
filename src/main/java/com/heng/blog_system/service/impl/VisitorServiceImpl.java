@@ -1,7 +1,7 @@
 package com.heng.blog_system.service.impl;
 
 import com.heng.blog_system.bean.Visitor;
-import com.heng.blog_system.db.VisitorDao;
+import com.heng.blog_system.dao.VisitorDao;
 import com.heng.blog_system.service.VisitorService;
 import com.heng.blog_system.utils.DateUtil;
 import com.heng.blog_system.utils.MapUtils;
@@ -80,6 +80,10 @@ public class VisitorServiceImpl implements VisitorService {
         param.put("orderKey", "date");
         List<Visitor> list = visitorDao.selectVisitors(param);
         if (list != null){
+            int total = visitorDao.visitorTotal();
+            int pageTatol = (total + pageSize - 1) / pageSize;
+            result.put("pageTatol", pageTatol);
+            result.put("pageNumber", pageNumber);
             result.put("code", 200);
             result.put("data", list);
         }else {

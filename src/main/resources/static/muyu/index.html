@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>比丘特之剑的博客</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/nprogress.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+    <link rel="apple-touch-icon-precomposed" href="images/icon.png">
+    <link rel="shortcut icon" href="images/favicon.ico">
+
+    <script src="js/jquery-3.2.1.min.js"> </script>
+    <script src="js/vue.js"></script>
+    <script src="js/vue-lazyload.js"></script>
+
+</head>
+<body class="user-select" style="background-color: #f0f8d0">
+<div style="height: 6px;background: linear-gradient(90deg, #ff00c3, #41bd3c);"></div>
+<header class="header">
+    <nav class="navbar navbar-default" id="navbar" style="background-color: #0f0f0f">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#header-navbar" aria-expanded="false"> <span class="sr-only"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+                <h1 class="logo hvr-bounce-in"><a href="index.html" title=""><img src="img/motto.png" alt=""></a></h1>
+            </div>
+            <div class="collapse navbar-collapse" id="header-navbar">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a data-cont="" title="" href="index.html">首页</a></li>
+                    <li><a data-cont="java" title="java" href="javascript:void(0)" onclick="lookTag(this)" value="源码分享">java</a></li>
+                    <li><a data-cont="源码分享" title="源码分享" href="javascript:void(0)" onclick="lookTag(this)" value="源码分享">源码分享</a></li>
+                    <li><a data-cont="IT技术笔记" title="IT技术笔记" href="javascript:void(0)" onclick="lookTag(this)" value="IT技术笔记">IT技术笔记</a></li>
+                    <li><a data-cont="资讯分享" title="资讯分享" href="javascript:void(0)" onclick="lookTag(this)" value="资讯分享">资讯分享</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+<section class="container">
+  <div class="content-wrap">
+    <div class="content">
+      <div id="focusslide" class="carousel slide" data-ride="carousel">
+        <ol class="carousel-indicators">
+          <li data-target="#focusslide" data-slide-to="0" class="active"></li>
+          <li data-target="#focusslide" data-slide-to="1"></li>
+          <li data-target="#focusslide" data-slide-to="2"></li>
+        </ol>
+          <!--###########################轮播#####################################-->
+        <div class="carousel-inner" role="listbox">
+          <div class="item active">
+          <a href="index.html" target="_blank" title="源码" >
+          <img src="img/asd.jpg" alt="源码" class="img-responsive"></a>
+          </div>
+          <div class="item">
+          <a href="index.html" target="_blank"  >
+          <img src="img/banner_01.jpg" alt="专业网站建设" class="img-responsive"></a>
+          </div>
+          <div class="item">
+              <a href="index.html" target="_blank" >
+                <img src="img/banner_02.jpg" alt="专业网站建设" class="img-responsive"></a>
+          </div>
+        </div>
+        <a class="left carousel-control" href="#focusslide" role="button" data-slide="prev" rel="nofollow"> <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> <span class="sr-only">上一个</span> </a> <a class="right carousel-control" href="#focusslide" role="button" data-slide="next" rel="nofollow"> <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span> <span class="sr-only">下一个</span> </a> </div>
+          <!--##################################推荐########################################-->
+        <article class="excerpt-minic excerpt-minic-index">
+            <h2><span class="red">【推荐】</span><a target="_blank" href="http://www.muzhuangnet.com/show/269.html" title="" ></a>
+            </h2>
+            <p class="note">，采用DTcms V4.0正式版（MSSQL）。开发环境：SQL2008R2+VS2010。DTcms V4.0正式版功能修复和优化：1、favicon.ico图标后台上传。（解决要换图标时要连FTP或者开服务器的麻烦）</p>
+        </article>
+      <div class="title">
+        <h3>最新发布</h3>
+
+      </div>
+          <div id="newList">
+              <article class="excerpt" v-for="blog in blogs">
+                  <a class="focus" href="javascript:void (0)" v-bind:data-code="blog.blogCode" onclick="view_blog(this)"   target="_blank" >
+                      <img class="thumb"  v-lazy="blog.blogConverUrl"  style="display: inline;">
+                  </a>
+                  <header>
+                      <a class="cat" href="http://www.muzhuangnet.com/list/mznetblog/" title="MZ-NetBlog主题" >标题<i></i></a>
+                      <h2><a href="javascript:void (0)" v-bind:data-code="blog.blogCode" onclick="view_blog(this)"  target="_blank" >{{blog.blogTilte}}</a>
+                      </h2>
+                  </header>
+                  <p class="meta">
+                      <time class="time"><i class="glyphicon glyphicon-time"></i> {{blog.createDate}}</time>
+                      <span class="views"><i class="glyphicon glyphicon-eye-open"></i> 216</span>
+                      <a class="comment" href="javascript:void (0)" v-bind:data-code="blog.blogCode" onclick="view_blog(this)" title="评论" target="_blank" >
+                          <i class="glyphicon glyphicon-comment"></i> 4</a>
+                  </p>
+                  <p class="note">{{blog.blogDesc}}</p>
+              </article>
+          </div>
+
+      <div id="load" class="ias_loader" style="display: none"><div class="pagination-loading"><img src="images/loading.gif"></div></div>
+      <nav id="page" class="pagination" style="display: none">
+        <ul>
+          <li id="pageNumber" class="prev-page" data-page="1" data-total=""></li>
+        </ul>
+      </nav>
+
+      <div id="end" class="note" style="text-align: center;display: none">已经到底啦!!</div>
+    </div>
+  </div>
+
+
+
+
+        <!--=========================================================以上为左边，以下为右边======================================-->
+  <aside class="sidebar">
+    <div class="fixed">
+      <div class="widget widget-tabs">
+        <ul class="nav nav-tabs" role="tablist">
+          <li role="presentation" class="active"><a href="#notice" aria-controls="notice" role="tab" data-toggle="tab" >统计信息</a></li>
+          <li role="presentation"><a href="#contact" aria-controls="contact" role="tab" data-toggle="tab" >联系站长</a></li>
+        </ul>
+        <div class="tab-content">
+          <div role="tabpanel" class="tab-pane contact active" id="notice">
+            <h2>日志总数:
+                  12篇
+              </h2>
+              <h2>网站运行:
+              <span id="sitetime">30天 </span></h2>
+          </div>
+            <div role="tabpanel" class="tab-pane contact" id="contact">
+              <h2>QQ:
+                  <a href="http://wpa.qq.com/msgrd?v=3&amp;uin=748580573&amp;site=qq&amp;menu=yes" target="_blank" rel="nofollow" data-toggle="tooltip" >748580573</a>
+              </h2>
+              <h2>Email:
+              <a href="mailto:748580573@qq.com" target="_blank" data-toggle="tooltip" rel="nofollow" data-placement="bottom" title=""  data-original-title="Email:577211782@qq.com">748580573@qq.com</a></h2>
+          </div>
+        </div>
+      </div>
+      <div class="widget">
+          <div class="input-group">
+              <input type="text" id="key" class="form-control" size="45" placeholder="请输入关键字" maxlength="15" autocomplete="off">
+              <span class="input-group-btn">
+            <button class="btn btn-default btn-search"  type="button" onclick="look()">搜索</button>
+            </span>
+          </div>
+      </div>
+    </div>
+    <div class="widget widget_hot">
+          <h3>点击排行</h3>
+          <ul id="rank">
+                <li v-for="blog in blogs">
+                    <a title="" href="javascript:void(0)"  v-bind:data-code="blog.blogCode" onclick="view_blog(this)">
+                    <span class="thumbnail">
+                        <img class="thumb" v-lazy="blog.blogConverUrl" alt=""  style="display: block;">
+                    </span>
+                        <span class="text">{{blog.blogTilte}}</span>
+                        <span class="muted">
+                            <i class="glyphicon glyphicon-time"></i>
+                            {{blog.createDate}}
+                        </span>
+                    <span class="muted"><i class="glyphicon glyphicon-eye-open"></i>88</span></a>
+                </li>
+          </ul>
+     </div>
+     <div class="widget widget_sentence">
+        <a href="#" target="_blank" rel="nofollow" title="暂时还没想好干嘛" >
+        <img style="width: 100%" src="img/xinfeng.png" alt="暂时还没想好干嘛" ></a>
+     </div>
+     <div class="widget widget_sentence">
+        <a href="#" target="_blank" rel="nofollow" title="MZ-NetBlog主题" >
+        <img style="width: 100%" src="img/banner_01.jpg" alt="MZ-NetBlog主题" ></a>
+     </div>
+    <div class="widget widget_sentence">
+      <h3>友情链接</h3>
+      <div class="widget-sentence-link">
+        <a href="http://web.muzhuangnet.com" title="网站建设" target="_blank" >网站建设</a>&nbsp;&nbsp;&nbsp;
+      </div>
+    </div>
+  </aside>
+</section>
+    <footer class="footer">
+  <div class="container">
+    <p>本站[<a href="http://www.muzhuangnet.com/" ></a>]的部分内容来源于网络，若侵犯到您的利益，请联系站长删除！谢谢！Powered By [<a href="http://www.dtcms.net/" target="_blank" rel="nofollow" >DTcms</a>] Version 4.0 &nbsp;<a href="http://www.miitbeian.gov.cn/" target="_blank" rel="nofollow" >闽ICP备00000000号-1</a> &nbsp; <a href="http://www.muzhuangnet.com/sitemap.xml" target="_blank" class="sitemap" >网站地图</a></p>
+  </div>
+  <div id="gotop"><a class="gotop"></a></div>
+</footer>
+</body>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/jquery.ias.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/index.js"></script>
+
+</html>

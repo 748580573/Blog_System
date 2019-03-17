@@ -2,7 +2,7 @@ package com.heng.blog_system.aspect;
 
 
 import com.heng.blog_system.anno.RedisKey;
-import com.heng.blog_system.db.RedisCache;
+import com.heng.blog_system.dao.RedisCache;
 import com.heng.blog_system.utils.MapUtils;
 import com.heng.blog_system.utils.ReflectUtlis;
 import org.aspectj.lang.ProceedingJoinPoint;

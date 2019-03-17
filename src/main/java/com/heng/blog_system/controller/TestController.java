@@ -1,6 +1,7 @@
 package com.heng.blog_system.controller;
 
-import com.heng.blog_system.db.RedisCache;
+import com.heng.blog_system.dao.BlogDao;
+import com.heng.blog_system.dao.RedisCache;
 import com.heng.blog_system.service.BlogService;
 import com.heng.blog_system.service.UserService;
 import com.heng.blog_system.utils.RequestUtil;
@@ -25,11 +26,14 @@ public class TestController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    BlogDao blogDao;
+
     @RequestMapping(value = {"/test"})
     @ResponseBody
     public Map<String,Object> test(HttpServletRequest request) throws IOException {
         Map<String,Object> map = RequestUtil.getFormData(request);
-        Map<String,Object> result = blogService.selectAdvBlogs(map);
+        Map<String,Object> result = blogService.selectTags();
         return result;
     }
 }

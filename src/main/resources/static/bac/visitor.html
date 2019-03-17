@@ -85,7 +85,18 @@
                                 </tr>
                                 </tfoot>
                             </table>
-                            <div class="row"><div class="col-sm-6"><div class="dataTables_info" id="DataTables_Table_0_info" role="alert" aria-live="polite" aria-relevant="all">显示 1 到 10 项，共 57 项</div></div><div class="col-sm-6"><div class="dataTables_paginate paging_simple_numbers" id="DataTables_Table_0_paginate"><ul class="pagination"><li class="paginate_button previous disabled" aria-controls="DataTables_Table_0" tabindex="0" id="DataTables_Table_0_previous"><a href="#">上一页</a></li><li class="paginate_button active" aria-controls="DataTables_Table_0" tabindex="0"><a href="#">1</a></li><li class="paginate_button " aria-controls="DataTables_Table_0" tabindex="0"><a href="#">2</a></li><li class="paginate_button " aria-controls="DataTables_Table_0" tabindex="0"><a href="#">3</a></li><li class="paginate_button " aria-controls="DataTables_Table_0" tabindex="0"><a href="#">4</a></li><li class="paginate_button " aria-controls="DataTables_Table_0" tabindex="0"><a href="#">5</a></li><li class="paginate_button " aria-controls="DataTables_Table_0" tabindex="0"><a href="#">6</a></li><li class="paginate_button next" aria-controls="DataTables_Table_0" tabindex="0" id="DataTables_Table_0_next"><a href="#">下一页</a></li></ul></div></div></div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="dataTables_info" id="DataTables_Table_0_info" role="alert" aria-live="polite" aria-relevant="all">显示 1 到 10 项，共 57 项</div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="dataTables_paginate paging_simple_numbers" id="DataTables_Table_0_paginate">
+                                        <ul class="pagination" id="page">
+
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -101,16 +112,62 @@
             }
         });
         $(function () {
-            turn_page(1);
-        });
-        var turn_page = function (pageNumber) {
             $.ajax({
                 url:"/blog_system/visitors",
-                data:{"pageNumber":pageNumber},
-                type: "POST",
+                data:{"pageNumber":1},
+                type:"POST",
                 success:function (result) {
                     var data = result.data;
                     visitors.data = data;
+                    generatePage(result.pageNumber,result.pageTatol)
+                }
+            })
+        });
+
+        var generatePage = function (start,total) {
+            var data;
+            var html = "";
+            if(start > 1){
+                html +=  "<li class=\"paginate_button previous \" aria-controls=\"DataTables_Table_0\"  id=\"up\"\"><a href=\"javascript:void(0)\" onclick='upAndDown(this)' data-page=\""+(start -1) + "\">上一页</a></li>";
+
+            }
+            for (var i = 0;i < 6 ;i++){
+                if(start + i <= total){
+                    html += "<li class=\"paginate_button \" aria-controls=\"DataTables_Table_0\" tabindex=\"0\"><a href=\"javascript:void(0)\" onclick=\"turn_page(this)\">" + (start + i) + "</a></li>"
+                }else {
+                    break;
+                }
+            }
+            if (start + 1 <= total){
+                html += "<li class=\"paginate_button next\" aria-controls=\"DataTables_Table_0\"><a href=\"javascript:void(0)\" onclick='upAndDown(this)' data-page=\""+ (start + 1)+"\">下一页</a></li>";
+            }
+            $("#page").html(html);
+        };
+
+        var turn_page = function (obj) {
+            var pageNumber = $(obj).text();
+            $.ajax({
+                url:"/blog_system/visitors",
+                data:{"pageNumber":pageNumber},
+                type:"POST",
+                success:function (result) {
+                    var data = result.data;
+                    visitors.data = data;
+                    generatePage(result.pageNumber,result.pageTatol)
+                }
+            })
+        };
+
+        var upAndDown = function (obj) {
+            var pageNumber = $(obj).attr("data-page");
+            $.ajax({
+                url:"/blog_system/visitors",
+                data:{"pageNumber":pageNumber},
+                type:"POST",
+                success:function (result) {
+                    var data = result.data;
+                    visitors.data = data;
+                    generatePage(result.pageNumber,result.pageTatol)
                 }
             })
         }

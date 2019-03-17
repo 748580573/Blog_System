@@ -106,7 +106,7 @@
             ORDER BY #{orderKey}
         </if>
         <if test="pageNumber != null">
-            limit ${(pageNumber - 1) * pageTotal} ,${pageNumber * pageTotal}
+            limit ${(pageNumber - 1) * pageSize} ,${pageNumber * pageSize}
         </if>
     </select>
 
@@ -130,7 +130,7 @@
         WHERE tagresult.blog_code = blog_article.blog_code
         ORDER BY click_number,create_date
         <if test="pageNumber != null">
-            limit ${(pageNumber - 1) * pageTotal} ,${pageNumber * pageTotal}
+            limit ${(pageNumber - 1) * pageSize} ,${pageNumber * pageSize}
         </if>
     </select>
 
@@ -139,7 +139,7 @@
         FROM blog_article
         ORDER BY click_number,create_date DESC
         <if test="pageNumber != null">
-            limit ${(pageNumber - 1) * pageTotal} ,${pageNumber * pageTotal}
+            limit ${(pageNumber - 1) * pageSize} ,${pageNumber * pageSize}
         </if>
     </select>
 
@@ -161,7 +161,7 @@
         DELETE FROM blog_article WHERE blog_code = #{blog_code};
     </delete>
 
-    <!--##############################################################################-->
+    <!--##################################Tag############################################-->
 
     <resultMap id="tagMap" type="com.heng.blog_system.bean.Tag">
         <result property="tagCode" column="tag_code"/>
@@ -183,8 +183,7 @@
     </select>
 
     <select id="selectAllTag" resultMap="tagMap">
-        SELECT *
-        FROM tags
+        SELECT DISTINCT(tags.tag_name) FROM tags;
     </select>
 
     <select id="selecTagsByBlog" parameterType="map" resultType="String">

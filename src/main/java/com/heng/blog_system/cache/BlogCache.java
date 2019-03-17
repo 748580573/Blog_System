@@ -5,7 +5,7 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.heng.blog_system.bean.Blog;
 import com.heng.blog_system.bean.Tag;
-import com.heng.blog_system.db.CommonDao;
+import com.heng.blog_system.dao.CommonDao;
 import com.heng.blog_system.utils.Utils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

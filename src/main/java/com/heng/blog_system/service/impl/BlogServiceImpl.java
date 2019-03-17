@@ -6,10 +6,10 @@ import com.heng.blog_system.anno.RedisKey;
 import com.heng.blog_system.bean.Blog;
 import com.heng.blog_system.bean.Tag;
 import com.heng.blog_system.cache.BlogCache;
-import com.heng.blog_system.db.BlogDao;
-import com.heng.blog_system.db.CommonDao;
-import com.heng.blog_system.db.RedisCache;
-import com.heng.blog_system.db.ESService;
+import com.heng.blog_system.dao.BlogDao;
+import com.heng.blog_system.dao.CommonDao;
+import com.heng.blog_system.dao.RedisCache;
+import com.heng.blog_system.dao.ESService;
 import com.heng.blog_system.service.BlogService;
 import com.heng.blog_system.utils.MapUtils;
 import com.heng.blog_system.utils.Utils;
@@ -42,11 +42,15 @@ public class BlogServiceImpl implements BlogService {
     @Autowired
     private ESClient esClient;
 
+    //TODO 完成BlogDao后一处该Bean
     @Autowired
     private CommonDao commonDao;
 
     @Autowired
     private ESService esService;
+
+    @Autowired
+    private BlogDao blogDao;
 
     @Override
     @Transactional
@@ -160,7 +164,7 @@ public class BlogServiceImpl implements BlogService {
     @RedisKey
     public Map<String,Object> selectBlogList(Map<String,Object> form){
         Integer page = Utils.getDefaultNumber(form.get("pageNumber"), 1);
-        Integer pageSize = Utils.getDefaultNumber(form.get("pageTotal"), 6);
+        Integer pageSize = Utils.getDefaultNumber(form.get("pageSize"), 6);
         form.put("pageNumber", page);
         String redisKey = "listBlog" + page;
         Map<String,Object> result = new HashMap<>();
@@ -185,7 +189,7 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public Map<String, Object> selevtBlogsOrderByTime(Map<String, Object> form) {
         Integer page = Utils.getDefaultNumber(form.get("pageNumber"), 1);
-        Integer pageSize = Utils.getDefaultNumber(form.get("pageTotal"), 6);
+        Integer pageSize = Utils.getDefaultNumber(form.get("pageSize"), 6);
         form.put("orderKey", "create_date");
         form.put("pageNumber", page);
         String redisKey = "listBlog" + page;
@@ -246,8 +250,8 @@ public class BlogServiceImpl implements BlogService {
     @Override
     @Transactional
     public Map<String, Object> fuzzySearch(Map<String, Object> form,Class<?> clazz) {
-        Integer pageNo = Utils.getDefaultNumber(form.get("pageNo"),1);
-        Integer pageSize = Utils.getDefaultNumber(form.get("pageSize"), 3);
+        Integer pageNumber = Integer.valueOf(MapUtils.getString(form,"pageNumber","1"));
+        Integer pageSize = Integer.valueOf(MapUtils.getString(form,"pageSize","9"));
         String key = null;
         String indexName = ESUtils.getEsIndexNameFromClazz(clazz);
         String indexType = ESUtils.getEsTypeFromClazz(clazz);
@@ -259,7 +263,7 @@ public class BlogServiceImpl implements BlogService {
         param.put("blogTilte",key );
         param.put("tags", key);
         try {
-            SearchResponse response =esClient.boolMulitSearchForShould(indexName, indexType, param,pageNo,pageSize);
+            SearchResponse response =esClient.boolMulitSearchForShould(indexName, indexType, param,pageNumber,pageSize);
             logger.info("站内搜索到的数据：" + response);
             SearchHits hits = response.getHits();
             result.put("total", (hits.totalHits + pageSize) / pageSize);
@@ -280,8 +284,12 @@ public class BlogServiceImpl implements BlogService {
                 list.add(blog);
 
             }
+            response = esClient.boolMulitSearchForShould(indexName, indexType, param);
+            int total = (int) response.getHits().totalHits;
+            result.put("pageTotal", (total + pageSize - 1) / pageSize);
             result.put("data", list);
             result.put("code", 201);
+            result.put("pageNumber",pageNumber);
             return result;
         } catch (IOException e) {
             logger.info(e);
@@ -294,17 +302,21 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     @Transactional
-    @RedisKey
     public Map<String, Object> selectRecommendBlog(Map<String, Object> form) {
         Map<String,Object> result = new HashMap<>();
-        form.put("pageNumber", 1);
-        form.put("pageTotal", 6);
-        List<Blog> list = (List<Blog>) redisCache.get("recommend");
+        Integer pageNumber = Integer.valueOf(MapUtils.getString(form, "pageNumber","1"));
+        Integer pageSize = Integer.valueOf(MapUtils.getString(form, "pageSize","9"));
+        form.put("pageNumber", pageNumber);
+        form.put("pageSize", pageSize);
+        List<Blog> list = (List<Blog>) redisCache.get("recommend" + pageNumber);
         try {
             if (list == null || list.size() <= 0){
                 list = commonDao.getList("blogTag.selectBlogForRecommend",form);
-                redisCache.put("recommend", list);
+                redisCache.put("recommend" + pageNumber, list);
             }
+            int pageTotal = commonDao.get("blogTag.selectBlogTotal");
+            result.put("pageNumber", pageNumber);
+            result.put("pageTotal", (pageTotal + pageSize - 1) / pageSize);
             result.put("data", list);
             result.put("code", 201);
             result.put("msg", "查询成功");
@@ -344,6 +356,10 @@ public class BlogServiceImpl implements BlogService {
     @Transactional
     @RedisKey
     public Map<String, Object> selectBlogForRank(Map<String, Object> form) {
+        Integer pageNumber = Integer.valueOf(MapUtils.getString(form,"pageNumber","1"));
+        Integer pageSize = Integer.valueOf(MapUtils.getString(form,"pageSize","9"));
+        form.put("pageNumber", pageNumber);
+        form.put("pageSize", pageSize);
         Map<String,Object> result = new HashMap<>();
         try {
             List<Blog> data = commonDao.getList("blogTag.selectBlogForRank",form);
@@ -486,6 +502,20 @@ public class BlogServiceImpl implements BlogService {
         List<Blog> list2 = esService.fuzzySearch(param, 1, 4);
         advs.add(list2);
         result.put("data", advs);
+        return result;
+    }
+
+    @Override
+    public Map<String, Object> selectTags() {
+        Map<String,Object> result = new HashMap<>();
+        try {
+            List<Tag> list = blogDao.selectTags();
+            result.put("data", list);
+            result.put("code", 201);
+        }catch (Exception e){
+            e.printStackTrace();
+            logger.info(e);
+        }
         return result;
     }
 

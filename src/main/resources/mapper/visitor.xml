@@ -50,11 +50,15 @@
         FROM visitor
         where 1 = 1
         <if test="orderKey != null">
-            ORDER BY #{orderKey}
+            ORDER BY ${orderKey} DESC
         </if>
         <if test="pageNumber != null">
             limit ${(pageNumber - 1) * pageSize} ,${pageNumber * pageSize}
         </if>
+    </select>
+
+    <select id="selectVisitorTotal" resultType="int">
+        SELECT count(*) FROM visitor;
     </select>
 
 </mapper>

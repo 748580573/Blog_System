@@ -6,9 +6,11 @@ import com.heng.blog_system.utils.RequestUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.Map;
 
 @RestController
@@ -43,7 +45,7 @@ public class BlogController {
     public Map<String,Object> searchBlog(HttpServletRequest request){
         Map<String,Object> result = null;
         Map<String,Object> form = RequestUtil.getFormData(request);
-        form.put("pageTotal", 10);                    //限制页面内容数
+        form.put("pageSize", 10);                    //限制页面内容数
         result = blogService.selectBlogList(form);
         return result;
     }
@@ -52,7 +54,7 @@ public class BlogController {
     public Map<String,Object> searchBlogOrderByTime(HttpServletRequest request){
         Map<String,Object> result = null;
         Map<String,Object> form = RequestUtil.getFormData(request);
-        form.put("pageTotal", 5);                    //限制页面内容数
+        form.put("pageSize", 5);                    //限制页面内容数
         result = blogService.selevtBlogsOrderByTime(form);
         return result;
     }
@@ -63,7 +65,7 @@ public class BlogController {
         Map<String,Object> form = RequestUtil.getFormData(request);
         form.put("clickNumber", true);                   //开启按点击量查询
         form.put("pageNumber", 1);
-        form.put("pageTotal", 4);
+        form.put("pageSize", 4);
         result = blogService.selectHostBlogs(form);
         return result;
     }
@@ -74,7 +76,7 @@ public class BlogController {
         Map<String,Object> form = RequestUtil.getFormData(request);
         form.put("newBlog", true);                   //开启按点击量查询
         form.put("pageNumber", 1);
-        form.put("pageTotal", 6);
+        form.put("pageSize", 6);
         result = blogService.selectNewBlogs(form);
         return result;
     }
@@ -109,8 +111,6 @@ public class BlogController {
     public Map<String,Object> searchBlogForRank(HttpServletRequest request){
         Map<String,Object> result = null;
         Map<String,Object> form = RequestUtil.getFormData(request);
-        form.put("pageNumber", 1);
-        form.put("pageTotal", 5);
         result = blogService.selectBlogForRank(form);
         return result;
     }
@@ -145,6 +145,14 @@ public class BlogController {
         Map<String,Object> result = null;
         Map<String,Object> form = RequestUtil.getFormData(request);
         result = blogService.deleteBlog(form);
+        return result;
+    }
+
+    @RequestMapping(value = {"/tags"})
+    @ResponseBody
+    public Map<String,Object> test(HttpServletRequest request) throws IOException {
+        Map<String,Object> map = RequestUtil.getFormData(request);
+        Map<String,Object> result = blogService.selectTags();
         return result;
     }
 
