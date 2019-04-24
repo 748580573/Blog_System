@@ -33,12 +33,17 @@ public class BlogDaoImpl  implements BlogDao {
     }
 
     @Override
-    public int selectBlogTotal() throws Exception {
-        return 0;
+    public int selectBlogTotal(Map<String, Object> param) throws Exception {
+        return commonDao.get("blogTag.selectBlogTotal", param);
     }
 
     @Override
     public List<Tag> selectTags() {
         return commonDao.getList("blogTag.selectAllTag");
+    }
+
+    @Override
+    public List<Blog> selectBlogForDBFuzzy(Map<String, Object> param) throws Exception{
+        return commonDao.getList("blogTag.selectBlogForSearch",param);
     }
 }

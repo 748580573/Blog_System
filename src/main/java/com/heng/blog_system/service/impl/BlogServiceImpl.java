@@ -5,7 +5,6 @@ import com.heng.blog_system.anno.PermissionEnum;
 import com.heng.blog_system.anno.RedisKey;
 import com.heng.blog_system.bean.Blog;
 import com.heng.blog_system.bean.Tag;
-import com.heng.blog_system.cache.BlogCache;
 import com.heng.blog_system.dao.BlogDao;
 import com.heng.blog_system.dao.CommonDao;
 import com.heng.blog_system.dao.RedisCache;
@@ -36,13 +35,10 @@ public class BlogServiceImpl implements BlogService {
     @Autowired
     private RedisCache redisCache;
 
-    @Autowired
-    private BlogCache blogCache;
 
     @Autowired
     private ESClient esClient;
 
-    //TODO 完成BlogDao后一处该Bean
     @Autowired
     private CommonDao commonDao;
 
@@ -68,25 +64,13 @@ public class BlogServiceImpl implements BlogService {
             map.put("blog_code", blogCode);
         }
 
-        Blog bl = null;
-//        bl = blogCache.getBlog(blogCode);
-
-        if(redisCache.get(blogCode) != null){
-            bl = (Blog) redisCache.get(blogCode);
-        }
-
-
+        Blog bl = commonDao.get("blogTag.selectBlogForIndex", map);
         if (Utils.isEmpty(bl)){
-            bl = commonDao.get("blogTag.selectBlogForIndex", map);
-            if (Utils.isEmpty(bl)){
-                bl = Blog.mapToBlog(map);
-                String createDate = Utils.obtainCurrentTime();
-                map.put("create_date", createDate);
-                bl.setCreateDate(createDate);
-                redisCache.put(blogCode, bl);
-//                blogCache.putBlog(blogCode, bl);
-                commonDao.save("blogTag.addBlog", map);
-            }
+            bl = Blog.mapToBlog(map);
+            String createDate = Utils.obtainCurrentTime();
+            map.put("create_date", createDate);
+            bl.setCreateDate(createDate);
+            commonDao.save("blogTag.addBlog", map);
         }
 
         if (map.get("bolg_tags") != null) {
@@ -161,21 +145,19 @@ public class BlogServiceImpl implements BlogService {
 
 
     @Transactional
-    @RedisKey
+//    @RedisKey
     public Map<String,Object> selectBlogList(Map<String,Object> form){
-        Integer page = Utils.getDefaultNumber(form.get("pageNumber"), 1);
-        Integer pageSize = Utils.getDefaultNumber(form.get("pageSize"), 6);
-        form.put("pageNumber", page);
-        String redisKey = "listBlog" + page;
+        Integer pageNumber = MapUtils.getInteger(form,"pageNumber" , 1);
+        Integer pageSize = MapUtils.getInteger(form,"pageSize" , 10);
+        form.put("pageNumber", pageNumber);
+        form.put("pageSize", pageSize);
+        String redisKey = "listBlog" + pageNumber;
         Map<String,Object> result = new HashMap<>();
-        List<Blog> data = (List<Blog>) redisCache.get(redisKey);
+        List<Blog> data = commonDao.getList("blogTag.selectBlogForSearch",form);
         try {
-            if (data == null || data.size() <= 0){
-                data = commonDao.getList("blogTag.selectBlogForSearch",form);
-                redisCache.put(redisKey, data);
-            }
             int total = commonDao.get("blogTag.selectBlogTotal");
             result.put("total", (total + pageSize - 1) / pageSize);
+            result.put("pageNumber", pageNumber);
             result.put("data", data);
             result.put("code", 201);
             return  result;
@@ -295,6 +277,30 @@ public class BlogServiceImpl implements BlogService {
             logger.info(e);
             result.put("code", "401");
             result.put("msg", "es查询异常");
+        }
+
+        return result;
+    }
+
+    @Override
+    public Map<String, Object> fuzzySearchByDB(Map<String, Object> form) {
+        Map<String,Object> result = new HashMap<>();
+        Integer pageNumber = MapUtils.getInteger(form,"pageNumber" , 1);
+        Integer pageSize = MapUtils.getInteger(form,"pageSize" , 10);
+        form.put("pageNumber", pageNumber);
+        form.put("pageSize", pageSize);
+
+        try {
+            List<Blog> data = blogDao.selectBlogForDBFuzzy(form);
+            int total = blogDao.selectBlogTotal(form);
+            result.put("data",data);
+            result.put("pageNumber",pageNumber);
+            result.put("total",(total + pageSize - 1)/pageSize );
+            MapUtils.setSuccess(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.info(e);
+            MapUtils.setFail(result);
         }
 
         return result;
@@ -460,7 +466,6 @@ public class BlogServiceImpl implements BlogService {
                 logger.info("删除博客,blog_code = " + blog_code + "," +
                         "\n" + Utils.objectToJson(blog));
 
-                //TODO 处理es的删除
                 String indexName = ESUtils.getEsIndexNameFromClazz(Blog.class);
                 String type = ESUtils.getEsTypeFromClazz(Blog.class);
 

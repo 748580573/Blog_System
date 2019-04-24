@@ -32,6 +32,12 @@ public interface BlogService {
      */
     public Map<String,Object> fuzzySearch(Map<String,Object> form,Class<?> clazz);
 
+    /**
+     * 通过数据库进行模糊查询
+     * @return
+     */
+    public Map<String,Object> fuzzySearchByDB(Map<String, Object> form);
+
     public Map<String,Object> selectRecommendBlog(Map<String,Object> form);
 
     /**

@@ -6,80 +6,115 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 		<meta name="renderer" content="webkit">
-		<title>拼图后台管理-后台管理</title>
-		<!--
-        	作者：大火兔 1979788761@qq.com
-        	时间：2015-11-17
-        	描述：使用官网CSS/JS同步最新版
-        -->
-		<link rel="stylesheet" href="css/pintuer.css">
-		<link rel="stylesheet" href="css/admin.css">
+		<title>博客管理</title>
 		<script src="js/jquery-3.2.1.min.js"></script>
-		<script src="../page/js/vue.js"></script>
-		<script src="../page/js/utils.js"></script>
-		<script src="js/pintuer.js"></script>
-		<script src="js/admin.js"></script>
-		<link type="image/x-icon" href="http://www.pintuer.com/favicon.ico" rel="shortcut icon" />
-		<link href="http://www.pintuer.com/favicon.ico" rel="bookmark icon" />
-	</head>
+		<script src="js/bootstrap.min.js-v=3.3.5"></script>
 
+		<link rel="stylesheet" href="css/bootstrap.min.css-v=3.3.5.css">
+		<style type="text/css">
+			td{
+				word-break:keep-all;
+				white-space:nowrap;
+				overflow:hidden;
+				text-overflow:ellipsis;
+			}
+			.demo-input{padding-left: 10px; height: 35px; min-width: 200px; line-height: 38px; border: 1px solid #e6e6e6;  background-color: #fff;  border-radius: 2px;}
+
+		</style>
+	</head>
 	<body>
 
-		<div id="blogList">
-			<form method="post">
-				<div class="panel admin-panel">
-					<div class="panel-head"><strong>内容列表</strong></div>
-					<table class="table table-hover">
-						<tr>
-							<th width="90" align="center">选择</th>
-							<th width="300" align="center">分类</th>
-							<th width="*" align="center">名称</th>
-							<th width="200" align="center">时间</th>
-							<th width="200" align="center">操作</th>
-						</tr>
-						<tr>
-							<td>
-								<input type="checkbox" name="id" value="1" />
-							</td>
-							<td>起步</td>
-							<td>下载拼图框架</td>
-							<td>2014-10-1</td>
-							<td>
-								<a class="button border-blue button-little" href="#">编辑</a>
-								<a class="button border-red button-little" href="#">修改</a>
-								<a class="button border-yellow button-little" href="#">详细</a>
-							</td>
-						</tr>
-						<tr v-for="blog in blogs" >
-							<td>
-								<input type="checkbox" name="id" value="1" />
-							</td>
-							<td>{{blog.tags}}</td>
-							<td>{{blog.blogTilte}}</td>
-							<td>{{blog.createDate}}</td>
-							<td>
-								<a class="button border-blue button-little" href="#" onclick="modify_blog(this)" v-bind:data-code="blog.blogCode">编辑</a>
-								<a class="button border-red button-little" href="#" onclick="dele_blog(this)" v-bind:data-code="blog.blogCode">删除</a>
-								<a class="button border-yellow button-little" href="#" onclick="view_blog(this)" v-bind:data-code="blog.blogCode">详细</a>
-							</td>
-						</tr>
-					</table>
-					<div class="panel-foot text-center">
-						<ul class="pagination">
-							<li><a href="#">上一页</a></li>
-						</ul>
-						<ul id="page" class="pagination pagination-group">
+	<div style="height: 30px"></div>
 
-						</ul>
-						<ul class="pagination">
-							<li><a href="#">下一页</a></li>
-						</ul>
-					</div>
-				</div>
-			</form>
-			<br />
+	<div class="container white-bg" style="width: 85%;box-shadow:0 0 2px #000 inset;height: 65px;padding-top: 12px">
+		<form id="query">
+			<ul >
+				<li style="display: inline-block;margin-right: 5px;">
+					<label for="blogTitle">博客标题：</label>
+					<input id="blogTitle" name="blogTitle" class="demo-input" placeholder="博客标题">
+				</li>
+				<li style="display: inline-block;margin-right: 5px;">
+					<label for="start">创建时间：</label> <input type="text" class="demo-input" name="start" placeholder="请选择日期" id="start" autocomplete="off"> &nbsp;-&nbsp;
+					<input type="text" class="demo-input" placeholder="请选择日期" id="end" name="end" autocomplete="off">
+				</li>
+				<li style="display: inline-block;margin-right: 5px;">
+					<a class="btn btn-primary btn-rounded btn-sm" style="border-radius:25px;" onclick="fuzzyByDB()"><span class="glyphicon glyphicon-search"></span></i>&nbsp;搜索</a>
+				</li>
+			</ul>
+		</form>
+	</div>
+	<div id="queryParam" data-param=""></div>
+
+	<div style="height: 20px"></div>
+
+	<div class="panel panel-default container" style="width: 85%;box-shadow:0 0 1px #000 inset;">
+		<div class="panel-heading">
+			<h3 class="panel-title">
+				博客管理
+			</h3>
 		</div>
+		<div id="blogList" class="panel-body">
+			<table class="table table-hover table-striped table-bordered">
+				<thead>
+				<tr  class="btn-lg text-center">
+					<td><b>选择</b></td>
+					<td><b>标题</b></td>
+					<td><b>分类</b></td>
+					<td><b>简介</b></td>
+					<td><b>时间</b></td>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>操作</b><span class="glyphicon glyphicon-cog"></span></td>
+				</tr>
+				</thead>
+
+				<tbody>
+				<tr class="text-center" v-for="obj in blogs">
+					<td>
+						<label>
+							<input type="checkbox" v-bind:data-code="obj.roomId">
+						</label>
+					</td>
+					<td>{{obj.blogTilte}}</td>
+					<td>{{obj.tags}}</td>
+					<td width="20px"><p style="width: 30em;overflow:hidden;text-overflow:ellipsis;">{{obj.blogDesc}}</p></td>
+					<td>{{obj.createDate}}</td>
+					<td>
+						<button type="button" class="btn btn-default btn-sm btn-primary" onclick="modify_blog(this)" v-bind:data-code="obj.blogCode"><span class="glyphicon glyphicon-pencil"></span>编辑</button>
+						<button type="button" class="btn btn-default btn-sm btn-danger" onclick="dele_blog(this)" v-bind:data-code="obj.blogCode"><span class="glyphicon glyphicon-remove"></span>删除</button>
+						<button type="button" class="btn btn-default btn-sm btn-warning" onclick="view_blog(this)" v-bind:data-code="obj.blogCode"><span class="glyphicon glyphicon-search"></span>查看</button>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+
+			<div class="container" style="text-align: center">
+				<nav aria-label="Page navigation">
+					<ul id="pagination" class="pagination">
+
+						<li><a href="javascript:void(0)" data-page="">上一页</a></li>
+						<li><a href="#" data-page="">1</a></li>
+						<li><a href="#" data-page="">下一页</a></li>
+					</ul>
+				</nav>
+			</div>
+		</div>
+	</div>
+
 	</body>
+
+	<script src="../bac/js/vue.js"></script>
 	<script src="../page/js/utils.js"></script>
-    <script src="js/content.js"></script>
+	<script src="js/content.js"></script>
+    <script src="js/laydate/laydate.js"></script>
+    <script>
+        laydate.render({
+            elem: '#start', //指定元素
+            type:"date"
+        });
+        laydate.render({
+            elem: '#end', //指定元素
+            type:"date"
+        });
+
+
+	</script>
 </html>

@@ -18,12 +18,14 @@ public interface BlogDao {
 
     public Blog selectBlogByCode(Map<String,Object> param);
 
-    public int selectBlogTotal() throws Exception;
+    public int selectBlogTotal(Map<String,Object> param) throws Exception;
 
     /**
      * 查询所有tags
      * @return
      */
     public List<Tag> selectTags();
+
+    public List<Blog> selectBlogForDBFuzzy(Map<String,Object> param) throws Exception;
 
 }

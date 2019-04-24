@@ -111,6 +111,7 @@ var init_page = function () {
 
     $.ajax({
         url:"/blog_system/blog/rank",
+        date:{"pageSize":4},
         type:"POST",
         success:function (result) {
             var data = result.data;

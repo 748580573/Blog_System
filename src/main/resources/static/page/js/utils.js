@@ -15,30 +15,6 @@ function getUrlParam(key) {
     return result ? decodeURIComponent(result[2]) : null;
 }
 
-var view_blog = function (obj) {
-    var blog_id = $(obj).attr("data-code");
-    var href = "/blog_system/page/html/blog.html?blogCode="+blog_id;
-    window.open(href,"_blank")
-};
-
-var dele_blog = function (obj) {
-    var blog_code = $(obj).attr("data-code");
-    //TODO 完成删除栏后天逻辑和Js
-    $.ajax({
-        url:"/blog_system/blog/delete",
-        data:{"blog_code":blog_code},
-        type:"POST",
-        success:function (result) {
-            var code = result.code;
-            if (code ==  201){
-                $(obj).parents("tr").remove();
-            } else {
-                alert("删除失败," + result.msg);
-            }
-        }
-    })
-
-};
 
 var modify_blog = function (obj) {
     var blog_id = $(obj).attr("data-code");
@@ -56,5 +32,11 @@ var set_val =  function (selector,val) {
 
 var set_html = function (selector,html) {
     $(selector).html(html);
+};
+
+
+var serializeFormAddParam = function (url, key, val) {
+    url += "&"+key+"="+val;
+    return url;
 };
 

@@ -80,7 +80,6 @@
         WHERE tagresult.blog_code = blog_article.blog_code
     </select>
 
-
     <select id="selectBlogForSearch" parameterType="map" resultMap="blogMapForIndex">
         SELECT
         *
@@ -102,11 +101,20 @@
         GROUP BY tag_article.blog_code
         ) tagresult
         WHERE tagresult.blog_code = blog_article.blog_code
+        <if test="start != null">
+            and create_date &gt;= #{start}
+        </if>
+        <if test="end != null">
+            and create_date &lt;= #{end}
+        </if>
+        <if test="blogTitle != null">
+            and blog_title like "%${blogTitle}%"
+        </if>
         <if test="orderKey != null">
             ORDER BY #{orderKey}
         </if>
         <if test="pageNumber != null">
-            limit ${(pageNumber - 1) * pageSize} ,${pageNumber * pageSize}
+            limit ${(pageNumber - 1) * pageSize} ,${pageSize}
         </if>
     </select>
 
@@ -128,7 +136,7 @@
         GROUP BY tag_article.blog_code
         ) tagresult
         WHERE tagresult.blog_code = blog_article.blog_code
-        ORDER BY click_number,create_date
+        ORDER BY click_number,create_date DESC
         <if test="pageNumber != null">
             limit ${(pageNumber - 1) * pageSize} ,${pageNumber * pageSize}
         </if>
@@ -144,7 +152,19 @@
     </select>
 
     <select id="selectBlogTotal" resultType="int">
-        SELECT count(blog_code) FROM blog_article;
+        SELECT count(blog_code)
+        FROM blog_article
+        WHERE 1 = 1
+        <if test="start != null">
+            and create_date &gt;= #{start}
+        </if>
+        <if test="end != null">
+            and create_date &lt;= #{end}
+        </if>
+        <if test="blogTitle != null">
+            and blog_title like "%${blogTitle}%"
+        </if>
+        ;
     </select>
 
     <update id="updateBlog" parameterType="map">

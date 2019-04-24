@@ -41,11 +41,17 @@ public class BlogController {
         return result;
     }
 
+
+    @RequestMapping(value = "/fuzzyByDB")
+    public Map<String,Object> fuzzySearchByDB(HttpServletRequest request){
+        Map<String,Object> form = RequestUtil.getFormData(request);
+        return blogService.fuzzySearchByDB(form);
+    }
+
     @RequestMapping(value = "/blogList")
     public Map<String,Object> searchBlog(HttpServletRequest request){
         Map<String,Object> result = null;
         Map<String,Object> form = RequestUtil.getFormData(request);
-        form.put("pageSize", 10);                    //限制页面内容数
         result = blogService.selectBlogList(form);
         return result;
     }
