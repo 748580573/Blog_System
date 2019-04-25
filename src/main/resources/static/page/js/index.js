@@ -176,7 +176,7 @@ var init_rankBlog = function () {
  */
 var view_blog = function (obj) {
     var blog_id = $(obj).attr("data-code");
-    window.location = "/blog_system/page/html/blog.html?blogCode="+blog_id;
+    window.location = "/blog_system/muyu/blog.html?blogCode="+blog_id;
 };
 
 /**

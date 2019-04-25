@@ -46,7 +46,7 @@ public class RedisCache {
     }
 
     public Object get(Object key){
-        final String keyf = (String)key;
+        final String keyf = key.toString();
         Object object;
         object = cacheRedisTemplate.execute(new RedisCallback<Object>() {
             @Override

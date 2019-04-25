@@ -9,7 +9,7 @@ public class Blog implements Serializable {
 
     private static final long serialVersionUID = -5809782578272943999L;
 
-    private String blogCode;                             //博客编码
+    private Integer blogCode;                             //博客编码
 
     private String blogTilte;                         //博客标题
 
@@ -25,11 +25,11 @@ public class Blog implements Serializable {
 
     private String createDate;                      //博客创建日期
 
-    public String getBlogCode() {
+    public Integer getBlogCode() {
         return blogCode;
     }
 
-    public void setBlogCode(String blogCode) {
+    public void setBlogCode(Integer blogCode) {
         this.blogCode = blogCode;
     }
 
@@ -97,7 +97,7 @@ public class Blog implements Serializable {
     public static Blog mapToBlog(Map<String,Object> map){
         Blog blog = new Blog();
         if (!Utils.isEmpty(map.get("blog_code"))){
-            blog.blogCode = map.get("blog_code").toString();
+            blog.blogCode = Integer.valueOf(map.get("blog_code").toString());
         }
         if (!Utils.isEmpty(map.get("blog_title"))){
             blog.blogTilte = map.get("blog_title").toString();

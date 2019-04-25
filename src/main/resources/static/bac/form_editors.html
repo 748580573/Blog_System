@@ -190,9 +190,28 @@
     });
 
 
+    var imgUrl = "";
+
     var sub_form = function () {
+
         var file =  document.getElementById("uploadfile").files[0];
+        var data = new FormData();
         var imgUrl = "";
+        data.append("file", file);
+        $.ajax({
+            url:"/blog_system/file/fileUpload",
+            data:data,
+            type:"post",
+            async:false,
+            uploadAsync:false,
+            cache : false,
+            contentType : false,
+            processData : false,        //这个很有必要
+            dataType : "json",
+            success:function (result) {
+                imgUrl = result.data[0];
+            }
+        });
         var blog_title = $("#blog_title").val();
         var blog_desc = $("#blog_desc").val();
         var bolg_tags = $("#blog_tags").val();
@@ -200,8 +219,8 @@
         $.ajax({
             url:"/blog_system//blog/editBlog",
             type:"POST",
-            data:{"blog_title":blog_title,"blog_desc":blog_desc,"bolg_tags":bolg_tags,
-                "blog_content":blog_content,"imgUrl":imgUrl},
+            data:{"blogTilte":blog_title,"blogDesc":blog_desc,"tagName":bolg_tags,
+                "blogContent":blog_content,"blogConverUrl":imgUrl},
             success:function () {
             }
         })

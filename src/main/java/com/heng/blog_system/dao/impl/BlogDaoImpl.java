@@ -5,8 +5,10 @@ import com.heng.blog_system.bean.Tag;
 import com.heng.blog_system.dao.BlogDao;
 import com.heng.blog_system.dao.CommonDao;
 import com.heng.blog_system.service.BlogService;
+import com.heng.blog_system.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -18,8 +20,11 @@ public class BlogDaoImpl  implements BlogDao {
     private CommonDao commonDao;
 
     @Override
-    public void addBlog(Map<String, Object> param) throws Exception {
-
+    public Blog addBlog(Map<String, Object> param) throws Exception {
+        String json = Utils.objectToJson(param);
+        Blog blog = Utils.jsonToObject(json, Blog.class);
+        commonDao.save("blogTag.addBlog", blog);
+        return blog;
     }
 
     @Override

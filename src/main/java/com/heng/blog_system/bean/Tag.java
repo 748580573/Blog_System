@@ -10,15 +10,15 @@ public class Tag implements Serializable {
     private static final long serialVersionUID = -5809782578272943999L;
 
 
-    private String tagCode;                 //标签编码
+    private Integer tagCode;                 //标签编码
 
     private String tagName;                //标签名
 
-    public String getTagCode() {
+    public Integer getTagCode() {
         return tagCode;
     }
 
-    public void setTagCode(String tagCode) {
+    public void setTagCode(Integer tagCode) {
         this.tagCode = tagCode;
     }
 
@@ -33,7 +33,7 @@ public class Tag implements Serializable {
     public static Tag mapToTag(Map<String,Object> map){
         Tag tag = new Tag();
         if (!Utils.isEmpty(map.get("tag_code").toString())){
-            tag.setTagCode(map.get("tag_code").toString());
+            tag.setTagCode(Integer.valueOf(map.get("tag_code").toString()));
         }
         if (!Utils.isEmpty(map.get("tag_name"))){
             tag.setTagName(map.get("tag_name").toString());

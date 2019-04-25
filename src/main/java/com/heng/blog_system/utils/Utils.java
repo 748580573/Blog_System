@@ -1,6 +1,7 @@
 package com.heng.blog_system.utils;
 
 
+import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.log4j.Logger;
@@ -71,6 +72,15 @@ public class Utils {
         }
         return "";
 
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T>T jsonToObject(String json,Class<T> clazz){
+        if (json != null){
+            return JSON.parseObject(json, clazz);
+        }else {
+            return null;
+        }
     }
 
     public static String obtainCurrentTime(){

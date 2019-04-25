@@ -27,9 +27,25 @@
 
 
 
-    <insert id="addBlog" parameterType="map">
-        INSERT INTO blog_article(blog_code,blog_title,blog_desc,blog_content,blog_conver_url,create_date)
-        VALUES (#{blog_code},#{blog_title},#{blog_desc},#{blog_content},#{imgUrl},#{create_date});
+    <insert id="addBlog" useGeneratedKeys="true" keyProperty="blogCode" parameterType="com.heng.blog_system.bean.Blog">
+        INSERT INTO blog_article
+        <trim suffixOverrides="," prefix="set">
+            <if test="blogTilte != null">
+                blog_title = #{blogTilte},
+            </if>
+            <if test="blogDesc != null">
+                blog_desc = #{blogDesc},
+            </if>
+            <if test="blogContent != null">
+                blog_content = #{blogContent},
+            </if>
+            <if test="blogConverUrl != null">
+                blog_conver_url = #{blogConverUrl},
+            </if>
+            <if test="createDate != null">
+                create_date = #{createDate},
+            </if>
+        </trim>
     </insert>
 
     <!--用于首页-->
@@ -48,8 +64,8 @@
         WHERE
         tag_article.blog_code = blog_article.blog_code
         AND tags.tag_code = tag_article.tag_code
-        <if test="blog_code != null">
-            AND tag_article.blog_code = "${blog_code}"
+        <if test="blogCode != null">
+            AND tag_article.blog_code = "${blogCode}"
         </if>
         GROUP BY tag_article.blog_code
         ) tagresult
@@ -188,17 +204,20 @@
         <result property="tagName" column="tag_name"/>
     </resultMap>
 
-    <insert id="addTag" parameterType="map">
-        INSERT INTO tags(tag_code,tag_name)
-        VALUES (#{tag_code},#{tag_name})
+    <insert id="addTag" parameterType="com.heng.blog_system.bean.Tag" useGeneratedKeys="true" keyProperty="tagCode">
+        INSERT INTO tags(tag_name)
+        VALUES (#{tagName})
     </insert>
 
     <select id="selectTag" resultMap="tagMap" parameterType="map">
         SELECT *
         FROM tags
         WHERE 1 = 1
-        <if test="tag_code != null">
-            AND tag_code = #{tag_code}
+        <if test="tagCode != null">
+            AND tag_code = #{tagCode}
+        </if>
+        <if test="tagName != null">
+            AND tag_name = #{tagName}
         </if>
     </select>
 

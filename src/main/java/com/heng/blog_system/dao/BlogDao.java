@@ -12,7 +12,7 @@ public interface BlogDao {
      * 添加博客
      * @param map
      */
-    public void addBlog(Map<String,Object> param) throws Exception;
+    public Blog addBlog(Map<String,Object> param) throws Exception;
 
     public List<Blog> selectBlogForSearch(Map<String,Object> param) throws Exception;
 

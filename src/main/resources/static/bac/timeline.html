@@ -136,8 +136,18 @@
         var setVueData = function (vue,data) {
             vue.blogs = data;
         }
+
+        /**
+         * 查看某片博客
+         * @param obj
+         */
+        var view_blog = function (obj) {
+            var blog_id = $(obj).attr("data-code");
+            var url = "/blog_system/muyu/blog.html?blogCode="+blog_id;
+            window.open(url);
+        };
+
     </script>
     <script src="../page/js/utils.js"></script>
 </body>
-
 </html>
