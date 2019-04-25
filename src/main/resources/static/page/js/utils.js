@@ -35,8 +35,28 @@ var set_html = function (selector,html) {
 };
 
 
-var serializeFormAddParam = function (url, key, val) {
-    url += "&"+key+"="+val;
-    return url;
+var serializeFormPutParam = function (url, key, val) {
+    var arr = url.split("&");
+    if (arr.length <= 0){
+        return key+"="+val;
+    }
+    var flag = false;
+    var result = "";
+    for (var i = 0;i < arr.length;i++){
+        if (arr[i].indexOf(key) >= 0){
+            flag = true;
+            var oldVal = arr[i].substring(arr[i].indexOf("=")+1);
+            if (oldVal.length <= 0) {
+                arr[i] += val;
+            }else {
+                arr[i] = arr[i].replace(oldVal,val);
+            }
+        }
+        result += arr[i] + "&";
+    }
+    result = result.substring(0,result.length - 1);
+    if (!flag){
+        result += "&"+key+"="+val;
+    }
+    return result;
 };
-

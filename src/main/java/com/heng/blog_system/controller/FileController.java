@@ -6,7 +6,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -26,7 +28,10 @@ public class FileController {
             path = "/home/F/img/";
         }
         String paths = RequestUtil.fileUpLoad(request,path).get(0);
-        map.put("path", request.getContextPath() + "/" + paths);
+        map.put("errno", 0);
+        List<String> list = new ArrayList<>();
+        list.add(request.getContextPath() + "/" + paths);
+        map.put("data",list);
         return map;
     }
 }

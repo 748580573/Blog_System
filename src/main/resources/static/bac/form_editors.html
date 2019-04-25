@@ -17,11 +17,7 @@
     <script src="js/bootstrap.js"></script>
     <script src="js/fileinput.js"></script>
 
-    <!-- include summernote css/js -->
-    <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote.css" rel="stylesheet">
-    <script src="js/summernote.js"></script>
-    <script src="js/summernote-zh-CN.js"></script>
-
+    <script src="js/wangEditor.js"></script>
     <style type="text/css">
         .label:hover{
             cursor: pointer;
@@ -45,6 +41,12 @@
             font-size: 1.5em;
             position: absolute;
             left: 40%;
+        }
+
+        .text {
+            border: 1px solid #ccc;
+            height: 600px;
+            width: 68%;
         }
 
 
@@ -144,8 +146,10 @@
 </div>
 
 
-<div style="margin-left: 10%">
-    <div id="summernote">summernote 1</div>
+<div style="left: 15%;position: relative;">
+    <div id="toolbar"></div>
+    <div id="editor" class="text">
+    </div>
 </div>
 
 <button id="but" class="btn btn-primary" type="button" onclick="sub_form()"><i class="fa fa-check btn-lg"></i>提&nbsp;交</button>
@@ -153,16 +157,13 @@
 </body>
 
 <script>
+
+    var E = window.wangEditor;
+    var editor = new E('#toolbar','#editor');
+    editor.customConfig.uploadImgServer = '/blog_system/file/fileUpload';//配置上传到服务器地址
+    editor.create();
+
     $(document).ready(function() {
-        $("#summernote").summernote({
-            height:500,
-            width:1400,
-            callbacks: {
-                onImageUpload: function(files, editor, $editable) {
-                    sendFile(files, editor, $editable)
-                }
-            }
-        });
 
         $("#uploadfile").fileinput({
             language:'zh',
@@ -188,59 +189,14 @@
 
     });
 
-    /**
-     * 处理富文本编辑器文件上传的路径
-     * @param files
-     * @param editor
-     * @param $editable
-     */
-    function sendFile(files, editor, $editable) {
-        var data = new FormData();
-        data.append("ajaxTaskFile", files[0]);
-        $.ajax({
-            data : data,
-            type : "POST",
-            url : "/blog_system/file/fileUpload", //图片上传出来的url，返回的是图片上传后的路径，http格式
-            uploadAsync:false,
-            cache : false,
-            contentType : false,
-            processData : false,        //这个很有必要
-            dataType : "json",
-            success: function(data) {//data是返回的hash,key之类的值，key是定义的文件名
-                $('#summernote').summernote('insertImage', data.path);
-            },
-            error:function(){
-                alert("上传失败");
-            }
-        });
-    }
-
-    var imgUrl = "";
 
     var sub_form = function () {
-
         var file =  document.getElementById("uploadfile").files[0];
-        var data = new FormData();
         var imgUrl = "";
-        data.append("file", file);
-        $.ajax({
-            url:"/blog_system/file/fileUpload",
-            data:data,
-            type:"post",
-            async:false,
-            uploadAsync:false,
-            cache : false,
-            contentType : false,
-            processData : false,        //这个很有必要
-            dataType : "json",
-            success:function (result) {
-                imgUrl = result.path;
-            }
-        });
         var blog_title = $("#blog_title").val();
         var blog_desc = $("#blog_desc").val();
         var bolg_tags = $("#blog_tags").val();
-        var blog_content = $("#summernote").summernote("code");
+        var blog_content = editor.txt.html();
         $.ajax({
             url:"/blog_system//blog/editBlog",
             type:"POST",

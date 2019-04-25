@@ -151,7 +151,7 @@
         </if>
     </select>
 
-    <select id="selectBlogTotal" resultType="int">
+    <select id="selectBlogTotal" resultType="int" parameterType="map">
         SELECT count(blog_code)
         FROM blog_article
         WHERE 1 = 1

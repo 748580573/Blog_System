@@ -49,9 +49,11 @@ var generatePage = function (pageNumber,total) {
 
 var previousPage = function (obj) {
     var pageNumber = parseInt($(obj).attr("data-page")) - 1;
+    var param = $("#queryParam").attr("data-param");
+    param = serializeFormPutParam(param,"pageNumber",pageNumber);
     $.ajax({
         url:"/blog_system/blog/blogList",
-        data:{"pageNumber":pageNumber,"pageSize":10},
+        data:param,
         type:"POST",
         success:function (result) {
             var msg = result.msg;
@@ -65,9 +67,11 @@ var previousPage = function (obj) {
 
 var nextPage = function (obj) {
     var pageNumber = parseInt($(obj).attr("data-page")) + 1;
+    var param = $("#queryParam").attr("data-param");
+    param = serializeFormPutParam(param,"pageNumber",pageNumber);
     $.ajax({
         url:"/blog_system/blog/blogList",
-        data:{"pageNumber":pageNumber,"pageSize":10},
+        data:param,
         type:"POST",
         success:function (result) {
             var msg = result.msg;
@@ -81,9 +85,11 @@ var nextPage = function (obj) {
 
 var turnPage = function (obj) {
     var pageNumber = parseInt($(obj).attr("data-page")) ;
+    var param = $("#queryParam").attr("data-param");
+    param = serializeFormPutParam(param,"pageNumber",pageNumber);
     $.ajax({
         url:"/blog_system/blog/blogList",
-        data:{"pageNumber":pageNumber,"pageSize":10},
+        data:param,
         type:"POST",
         success:function (result) {
             var msg = result.msg;
@@ -95,17 +101,24 @@ var turnPage = function (obj) {
     })
 };
 
+//todo 完成ajax请求后的流程  替换符文布
+
 var fuzzyByDB = function () {
     var form =  $("#query").serialize();
-    form = serializeFormAddParam(form,"pageNumber",1);
-    form = serializeFormAddParam(form,"pageSize",10);
+    form = serializeFormPutParam(form,"pageNumber",1);
+    form = serializeFormPutParam(form,"pageSize",10);
     $.ajax({
-        url:"/blog_system/blog/fuzzyByDB",
+        url:"/blog_system/blog/blogList",
         data:form,
         type: 'POST',
         success:function (result) {
             if (result.code == 200){
-                $("#queryParam").attr();
+                $("#queryParam").attr("data-param",form);
+                var msg = result.msg;
+                dataList.blogs = result.data;
+                var pageNumber = result.pageNumber;
+                var total = result.total;
+                generatePage(pageNumber,total);
             }
         }
     })
@@ -117,7 +130,6 @@ var view_blog = function (obj) {
     window.open(href,"_blank")
 };
 
-//todo 完成ajax请求后的流程  替换符文布
 var dele_blog = function (obj) {
     var blog_code = $(obj).attr("data-code");
     $.ajax({

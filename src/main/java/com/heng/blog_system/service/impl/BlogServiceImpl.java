@@ -151,15 +151,14 @@ public class BlogServiceImpl implements BlogService {
         Integer pageSize = MapUtils.getInteger(form,"pageSize" , 10);
         form.put("pageNumber", pageNumber);
         form.put("pageSize", pageSize);
-        String redisKey = "listBlog" + pageNumber;
         Map<String,Object> result = new HashMap<>();
-        List<Blog> data = commonDao.getList("blogTag.selectBlogForSearch",form);
         try {
-            int total = commonDao.get("blogTag.selectBlogTotal");
+            List<Blog> data = commonDao.getList("blogTag.selectBlogForSearch",form);
+            int total = commonDao.get("blogTag.selectBlogTotal",form);
             result.put("total", (total + pageSize - 1) / pageSize);
             result.put("pageNumber", pageNumber);
             result.put("data", data);
-            result.put("code", 201);
+            result.put("code", 200);
             return  result;
         } catch (Exception e) {
             result.put("message", e.getMessage());
