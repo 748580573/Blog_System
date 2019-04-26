@@ -1,18 +1,18 @@
 package com.heng.blog_system.bean;
 
-public class Comment {
+public class Reply {
 
     private Integer id;
 
-    private Integer userId;
+    private Integer commentId;
 
-    private Integer blogCode;
+    private Integer replyType;
+
+    private Integer userId;
 
     private String content;
 
     private String time;
-
-    private String userName;
 
     public Integer getId() {
         return id;
@@ -20,6 +20,22 @@ public class Comment {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getCommentId() {
+        return commentId;
+    }
+
+    public void setCommentId(Integer commentId) {
+        this.commentId = commentId;
+    }
+
+    public Integer getReplyType() {
+        return replyType;
+    }
+
+    public void setReplyType(Integer replyType) {
+        this.replyType = replyType;
     }
 
     public Integer getUserId() {
@@ -44,21 +60,5 @@ public class Comment {
 
     public void setTime(String time) {
         this.time = time;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public Integer getBlogCode() {
-        return blogCode;
-    }
-
-    public void setBlogCode(Integer blogCode) {
-        this.blogCode = blogCode;
     }
 }

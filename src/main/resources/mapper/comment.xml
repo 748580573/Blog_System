@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="comment">
+
+    <resultMap id="commentMapper" type="com.heng.blog_system.bean.Comment">
+        <result property="id" column="id"/>
+        <result property="content" column="content"/>
+        <result property="time" column="time"/>
+        <result property="userId"  column="userId"/>
+        <result property="blogCode" column="blog_code"/>
+    </resultMap>
+
+    <insert id="addComment" useGeneratedKeys="true" keyProperty="id" parameterType="com.heng.blog_system.bean.Comment">
+        insert into comment
+        <trim prefix="set" suffixOverrides=",">
+            <if test="content != null">
+                content = #{content},
+            </if>
+            <if test="time != null">
+                time = #{time},
+            </if>
+            <if test="userId != null">
+                userId = #{userId},
+            </if>
+            <if test="blogCode != null">
+                blog_code = #{blogCode}
+            </if>
+        </trim>
+    </insert>
+
+
+    <resultMap id="replyMapper" type="com.heng.blog_system.bean.Reply">
+        <result property="id" column="id"/>
+        <result property="commentId" column="commentId"/>
+        <result property="replyType" column="replyType"/>
+        <result property="userId" column="userId"/>
+        <result property="content" column="content"/>
+        <result property="time" column="time"/>
+    </resultMap>
+
+    <insert id="addReply" useGeneratedKeys="true" keyProperty="id" parameterType="com.heng.blog_system.bean.Reply">
+        insert into reply
+        <trim prefix="set" suffixOverrides=",">
+            <if test="commentId != null">
+                commentId = #{commentId},
+            </if>
+            <if test="replyType != null">
+                replyType = #{replyType},
+            </if>
+            <if test="userId != null">
+                userId = #{userId},
+            </if>
+            <if test="content != null">
+                content = #{content},
+            </if>
+            <if test="time != null">
+                time = #{time},
+            </if>
+        </trim>
+    </insert>
+
+</mapper>
+

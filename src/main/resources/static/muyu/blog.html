@@ -19,6 +19,47 @@
     <script src="js/bootstrap.min.js"></script>
     <script src="js/vue.js"></script>
     <script src="js/vue-lazyload.js"></script>
+    <style>
+        .comment-content:hover{
+            opacity: 1.0;
+            cursor: default;
+        }
+
+        .reply>span:hover{
+            color: red;
+            cursor: pointer ;
+        }
+
+
+        .comment-ctrl{
+            margin-right: -4px;
+        }
+
+        .comment-submit{
+            margin-left: 3px;
+            display: inline-block;
+            float: right;
+            right: -2px;
+            bottom: -2px;
+            background: #3399CC;
+            border: none;
+            border: 2px solid;
+            border-color: #3399CC;
+            border-left: none;
+            border-top: none;
+            padding: 0px;
+            width: 100px;
+            height: 38px;
+            color: #FFF;
+            outline: 0;
+            border-radius: 0 0 2px 0;
+            font-size: 16px;
+            z-index: 6;
+        }
+        .commentTextArea{
+            border: none;
+        }
+    </style>
 </head>
 <body class="user-select" >
 <div style="height: 6px;background: linear-gradient(90deg, #ff00c3, #41bd3c);"></div>
@@ -66,30 +107,40 @@
       <div class="article-tags">标签：
           <a v-for="tag in tags" href="javascript:void(0)" >{{tag}}</a>
         </div>
-      <div class="title" id="comment">
+      <div class="title">
         <h3>评论</h3>
       </div>
-      <div id="respond">
-            <form id="comment-form" name="comment-form" action="" method="POST">
+      <div id="comment">
+            <form name="comment-form">
                 <div class="comment">
-                    <input name="" id="" class="form-control" size="22" placeholder="您的昵称（必填）" maxlength="15" autocomplete="off" tabindex="1" type="text">
-                    <input name=""  class="form-control" size="22" placeholder="您的网址或邮箱（非必填）" maxlength="58" autocomplete="off" tabindex="2" type="text">
                     <div class="comment-box">
                         <textarea placeholder="您的评论或留言（必填）" name="comment-textarea" id="comment-textarea" cols="100%" rows="3" tabindex="3"></textarea>
                         <div class="comment-ctrl">
-                            <div class="comment-prompt" style="display: none;"> <i class="fa fa-spin fa-circle-o-notch"></i> <span class="comment-prompt-text">评论正在提交中...请稍后</span> </div>
-                            <div class="comment-success" style="display: none;"> <i class="fa fa-check"></i> <span class="comment-prompt-text">评论提交成功...</span> </div>
-                            <button type="submit" name="comment-submit" id="comment-submit" tabindex="4">评论</button>
+                            <button type="button" name="comment-submit" id="comment-submit" tabindex="4" onclick="addComment(this)">评论</button>
                         </div>
                     </div>
                 </div>
             </form>
-            
         </div>
       <div id="postcomments">
-        <ol id="comment_list" class="commentlist">        
-        <li class="comment-content"><span class="comment-f">#2</span><div class="comment-main"><p><a class="address" href="http://www.muzhuangnet.com/" rel="nofollow" target="_blank">比丘特之剑</a><span class="time">(2019/01/28 11:41:03)</span><br>不错的网站主题，看着相当舒服</p></div></li>
-        <li class="comment-content"><span class="comment-f">#1</span><div class="comment-main"><p><a class="address" href="http://www.muzhuangnet.com/" rel="nofollow" target="_blank">比丘特之剑</a><span class="time">(2019/03/14 21:02:39)</span><br>博客做得好漂亮哦！</p></div></li></ol>
+        <ol id="commentList" class="commentlist">
+        <li class="comment-content">
+            <span class="comment-f"></span>
+            <div class="comment-main">
+                <p><a class="address" href="http://www.muzhuangnet.com/" rel="nofollow" target="_blank">比丘特之剑</a><span class="time">(2019/01/28 11:41:03)</span><br>不错的网站主题，看着相当舒服</p>
+                <div class="reply"><span class="glyphicon glyphicon-comment" data-id="1" onclick="addFirstReply(this)">回复</span></div>
+            </div>
+            <ol class="commentlist replyList" style="margin-left: 4%">
+                <li class="comment-content">
+                    <span class="comment-f"></span>
+                    <div class="comment-main">
+                        <p><a class="address" href="http://www.muzhuangnet.com/" rel="nofollow" target="_blank">比丘特之剑</a><span class="time">(2019/01/28 11:41:03)</span><br>不错的网站主题，看着相当舒服</p>
+                        <div class="reply"><span class="glyphicon glyphicon-comment" data-id="10" onclick="addReply(this)">回复</span></div>
+                    </div>
+                </li>
+            </ol>
+        </li>
+        </ol>
       </div>
     </div>
   </div>
@@ -147,7 +198,7 @@
 </section>
     <footer class="footer">
   <div class="container">
-     <p>本站[<a href="/" >比丘特之剑</a>]的部分内容来源于网络，若侵犯到您的利益，请联系站长删除！谢谢！Powered By [<a href="http://www.dtcms.net/" target="_blank" rel="nofollow" >DTcms</a>] Version 4.0 </p>
+     <p>本站[<a href="/" >比丘特之剑</a>]的部分内容来源于网络，若侵犯到您的利益，请联系站长删除！谢谢！ </p>
   </div>
   <div id="gotop"><a class="gotop"></a></div>
 </footer>
