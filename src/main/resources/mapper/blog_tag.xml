@@ -187,10 +187,9 @@
         UPDATE blog_article
         <trim prefix="set" suffixOverrides=",">
             <if test="blog_desc != null">blog_desc = #{blog_desc},</if>
-            <if test="blog_desc != null"> blog_conver_url = #{imgUrl},</if>
-            <if test="blog_content">blog_content = #{blog_content},</if>
+            <if test="blog_content != null">blog_content = #{blog_content},</if>
         </trim>
-        WHERE  blog_code = #{blog_code}
+        WHERE  blog_code = #{blogCode}
     </update>
 
     <delete id="deleteBlog" parameterType="map">
@@ -244,10 +243,25 @@
     <!--################################标签-博客关联表################################################-->
 
     <insert id="insertTagBlog" parameterType="map">
-          insert into tag_article(blog_code,tag_code) values (#{blog_code},#{tag_code})
+          insert into tag_article(blog_code,tag_code) values (#{blogCode},#{tagCode})
     </insert>
     <delete id="deleteTagBlog" parameterType="map">
         DELETE FROM tag_article WHERE  blog_code = #{blog_code};
     </delete>
+    
+    <select id="selectTagBlog" parameterType="map" resultType="map">
+        select
+        *
+        from tag_article
+        where
+        <trim prefixOverrides="and">
+            <if test="tagCode != null">
+                and tag_code = #{tagCode}
+            </if>
+            <if test="blogCode != null">
+                and blog_code = #{blogCode}
+            </if>
+        </trim>
+    </select>
 </mapper>
 

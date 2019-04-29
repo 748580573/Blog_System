@@ -20,6 +20,8 @@ public interface BlogDao {
 
     public int selectBlogTotal(Map<String,Object> param) throws Exception;
 
+    public int updateBlog(Map<String,Object> param) throws Exception;
+
     /**
      * 查询所有tags
      * @return
@@ -27,5 +29,11 @@ public interface BlogDao {
     public List<Tag> selectTags();
 
     public List<Blog> selectBlogForDBFuzzy(Map<String,Object> param) throws Exception;
+
+    public Tag addTag(Map<String,Object> param) throws Exception;
+
+    public int addBlogAndTag(Map<String,Object> param) throws Exception;
+
+    public Map<String,Object> selectTagBlog(Map<String,Object> param) throws Exception;
 
 }

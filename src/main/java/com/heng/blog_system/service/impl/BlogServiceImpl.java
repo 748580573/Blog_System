@@ -78,9 +78,10 @@ public class BlogServiceImpl implements BlogService {
                     tag = tagDao.addTag(param);
                 }
                 Map<String,Object> tagBlog = new HashMap<>();                 //关联tag与blog
-                tagBlog.put("blog_code", blog.getBlogCode());
-                tagBlog.put("tag_code", tag.getTagCode());
-                commonDao.save("blogTag.insertTagBlog", tagBlog);
+                tagBlog.put("blogCode", blog.getBlogCode());
+                tagBlog.put("tagCode", tag.getTagCode());
+//                commonDao.save("blogTag.insertTagBlog", tagBlog);
+                blogDao.addBlogAndTag(tagBlog);
             }
 
             //存入ES（el中不存博客内容）
@@ -382,26 +383,29 @@ public class BlogServiceImpl implements BlogService {
     public Map<String, Object> updateBlog(Map<String, Object> form) {
         Map<String,Object> result = new HashMap<>();
         String blog_title= MapUtils.getString(form, "blog_title");
-        String blog_code = Utils.md5(blog_title);
-        form.put("blog_code", blog_code);
+        String blogCode = MapUtils.getString(form, "blogCode",null);
         String newTag = MapUtils.getString(form, "bolg_tags");
 
-        if (blog_code != null){
+        if (blogCode != null){
             try {
-                commonDao.update("blogTag.updateBlog", form);               //更新blog
+                blogDao.updateBlog(form);
+//                commonDao.update("blogTag.updateBlog", form);               //更新blog
                 String oldTag = commonDao.get("blogTag.selecTagsByBlog",form);
                 Set<String> newTags = compareTags(getTags(newTag), getTags(oldTag));
                 for (String tag : newTags){
                     Map<String, Object> param = new HashMap<>();
-                    param.put("blog_code", blog_code);
-                    String tag_code = Utils.md5(tag);
-                    param.put("tag_code", tag_code);
-                    param.put("tag_name", tag);
+                    param.put("tagName", tag);
                     Tag t = commonDao.get("blogTag.selectTag", param);
                     if (t == null){
-                        commonDao.save("blogTag.addTag", param);
+                        t = blogDao.addTag(param);
+//                        commonDao.save("blogTag.addTag", param);
                     }
-                    commonDao.save("blogTag.insertTagBlog", param);
+                    param.put("blogCode", blogCode);
+                    param.put("tagCode",t.getTagCode());
+                    if (null == blogDao.selectTagBlog(param)){
+                        blogDao.addBlogAndTag(param);
+                    }
+//                    commonDao.save("blogTag.insertTagBlog", param);
                 }
                 result.put("code", 201);
                 result.put("msg", "亲！修改成功。");
@@ -501,6 +505,9 @@ public class BlogServiceImpl implements BlogService {
     }
 
     private String[] getTags(String str){
+        if (null == str){
+            return  null;
+        }
         String[] tags = str.trim().split("\\s+");
         return tags;
     }
@@ -510,14 +517,18 @@ public class BlogServiceImpl implements BlogService {
 
         Set<String> set = new HashSet<>();
         Set<String> newSet = new HashSet<>();
-        for (int i = 0;i < oldTags.length;i++){
-            if (!set.contains(oldTags[i])){
-                set.add(oldTags[i]);
+        if (null != oldTags){
+            for (int i = 0;i < oldTags.length;i++){
+                if (!set.contains(oldTags[i])){
+                    set.add(oldTags[i]);
+                }
             }
         }
-        for (int i = 0;i < newTags.length;i++){
-            if (!set.contains(newTags[i])){
-                newSet.add(newTags[i]);
+        if (null != newTags){
+            for (int i = 0;i < newTags.length;i++){
+                if (!set.contains(newTags[i])){
+                    newSet.add(newTags[i]);
+                }
             }
         }
         return newSet;

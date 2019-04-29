@@ -51,4 +51,27 @@ public class BlogDaoImpl  implements BlogDao {
     public List<Blog> selectBlogForDBFuzzy(Map<String, Object> param) throws Exception{
         return commonDao.getList("blogTag.selectBlogForSearch",param);
     }
+
+    @Override
+    public Tag addTag(Map<String, Object> param) throws Exception {
+        String json = Utils.objectToJson(param);
+        Tag tag = Utils.jsonToObject(json,Tag.class);
+        commonDao.save("blogTag.addTag", param);
+        return tag;
+    }
+
+    @Override
+    public int addBlogAndTag(Map<String, Object> param) throws Exception {
+        return commonDao.save("blogTag.insertTagBlog", param);
+    }
+
+    @Override
+    public Map<String, Object> selectTagBlog(Map<String, Object> param) throws Exception {
+        return commonDao.get("blogTag.selectTagBlog", param);
+    }
+
+    @Override
+    public int updateBlog(Map<String, Object> param) throws Exception {
+        return commonDao.update("blogTag.updateBlog", param);
+    }
 }
