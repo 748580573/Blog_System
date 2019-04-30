@@ -25,4 +25,9 @@ public class CommentController {
     public Map<String,Object> addReply(HttpServletRequest request){
         return commentService.addReply(request);
     }
+
+    @RequestMapping(value = "/searchComment.html")
+    public Map<String,Object> selectCommentsById(HttpServletRequest request){
+        return commentService.selectCommentsById(request);
+    }
 }

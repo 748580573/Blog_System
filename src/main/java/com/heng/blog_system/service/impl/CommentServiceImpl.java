@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -64,5 +65,33 @@ public class CommentServiceImpl implements CommentService {
             MapUtils.setFail(result);
         }
         return result;
+    }
+
+    @Override
+    public Map<String, Object> selectCommentsById(HttpServletRequest request) {
+        Map<String,Object> resulet = new HashMap<>();
+        Map<String,Object> form = RequestUtil.getFormData(request);
+        try {
+            List<Comment> list = commentDao.selectComments(form);
+            if (list != null && list.size() > 0){
+                for (Comment comment : list){
+                    Map<String,Object> param = new HashMap<>();
+                    param.put("commentId", comment.getId());
+                    List<Reply> replies = commentDao.selectReplys(param);
+                    for (Reply reply : replies){
+                        reply.setUserName("游客");
+                    }
+                    comment.setReplies(replies);
+                    comment.setUserName("游客");
+                }
+            }
+            resulet.put("data",list);
+            MapUtils.setSuccess(resulet);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.info(e);
+            MapUtils.setFail(resulet);
+        }
+        return resulet;
     }
 }

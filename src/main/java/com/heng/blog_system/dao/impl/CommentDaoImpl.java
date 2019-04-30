@@ -8,6 +8,7 @@ import com.heng.blog_system.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Map;
 
 @Repository
@@ -30,5 +31,15 @@ public class CommentDaoImpl implements CommentDao {
         Reply reply =Utils.jsonToObject(json,Reply.class);
         commonDao.save("comment.addReply", reply);
         return reply;
+    }
+
+    @Override
+    public List<Comment> selectComments(Map<String, Object> param) throws Exception {
+        return commonDao.getList("comment.selectComment", param);
+    }
+
+    @Override
+    public List<Reply> selectReplys(Map<String, Object> param) throws Exception {
+        return commonDao.getList("comment.selectReply",param);
     }
 }

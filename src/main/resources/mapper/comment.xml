@@ -30,6 +30,21 @@
         </trim>
     </insert>
 
+    <select id="selectComment" resultMap="commentMapper" parameterType="map">
+        select *
+        from comment
+        where 1 = 1
+        <if test="id != null">
+            and id = #{id}
+        </if>
+        <if test="blogCode != null">
+            and blog_code = #{blogCode}
+        </if>
+        <if test="userId != null">
+            and userId = #{userId}
+        </if>
+    </select>
+
 
     <resultMap id="replyMapper" type="com.heng.blog_system.bean.Reply">
         <result property="id" column="id"/>
@@ -60,6 +75,22 @@
             </if>
         </trim>
     </insert>
+
+    <select id="selectReply" resultMap="replyMapper" parameterType="map">
+        select *
+        from reply
+        where 1 = 1
+        <if test="id != null">
+            and id = #{id}
+        </if>
+        <if test="commentId != null">
+            and commentId = #{commentId}
+        </if>
+        <if test="userId != null">
+            and userId = #{userId}
+        </if>
+        order by time 
+    </select>
 
 </mapper>
 

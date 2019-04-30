@@ -83,12 +83,11 @@
     </nav>
 </header>
 
-
     <!--##############################内容##################################-->
  <section class="container">
-  <div id="blog" class="content-wrap">
-    <div class="content">
-      <header class="article-header">
+  <div class="content-wrap">
+    <div id="" class="content">
+      <header id="blog" class="article-header">
         <h1 class="article-title"><a href="javascript:void(0)">{{blogTilte}}</a></h1>
         <div class="article-meta">
           <span class="item article-meta-time">
@@ -124,18 +123,18 @@
         </div>
       <div id="postcomments">
         <ol id="commentList" class="commentlist">
-        <li class="comment-content">
+        <li class="comment-content" v-for="comment in comments">
             <span class="comment-f"></span>
             <div class="comment-main">
-                <p><a class="address" href="http://www.muzhuangnet.com/" rel="nofollow" target="_blank">比丘特之剑</a><span class="time">(2019/01/28 11:41:03)</span><br>不错的网站主题，看着相当舒服</p>
-                <div class="reply"><span class="glyphicon glyphicon-comment" data-id="1" onclick="addFirstReply(this)">回复</span></div>
+                <p><a class="address" href="javascript:void(0)" rel="nofollow" target="_blank">{{comment.userName}}</a><span class="time">{{comment.time}}</span><br>{{comment.content}}</p>
+                <div class="reply"><span class="glyphicon glyphicon-comment" v-bind:data-id="comment.id" onclick="addFirstReply(this)">回复</span></div>
             </div>
             <ol class="commentlist replyList" style="margin-left: 4%">
-                <li class="comment-content">
+                <li class="comment-content" v-for="reply in comment.replies">
                     <span class="comment-f"></span>
                     <div class="comment-main">
-                        <p><a class="address" href="http://www.muzhuangnet.com/" rel="nofollow" target="_blank">比丘特之剑</a><span class="time">(2019/01/28 11:41:03)</span><br>不错的网站主题，看着相当舒服</p>
-                        <div class="reply"><span class="glyphicon glyphicon-comment" data-id="10" onclick="addReply(this)">回复</span></div>
+                        <p><a class="address" href="javascript:void(0)" rel="nofollow" target="_blank">{{reply.userName}}</a><span class="time">{{reply.time}}</span><br>{{reply.content}}</p>
+                        <div class="reply"><span class="glyphicon glyphicon-comment" v-bind:data-id="reply.id" onclick="addReply(this)">回复</span></div>
                     </div>
                 </li>
             </ol>

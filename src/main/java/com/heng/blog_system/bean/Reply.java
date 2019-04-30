@@ -14,6 +14,8 @@ public class Reply {
 
     private String time;
 
+    private String userName;
+
     public Integer getId() {
         return id;
     }
@@ -60,5 +62,13 @@ public class Reply {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }

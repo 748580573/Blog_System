@@ -8,4 +8,6 @@ public interface CommentService {
     Map<String,Object> addComment(HttpServletRequest request);
 
     Map<String,Object> addReply(HttpServletRequest request);
+
+    Map<String,Object> selectCommentsById(HttpServletRequest request);
 }

@@ -22,6 +22,13 @@ var rank = new Vue({
     }
 });
 
+var com = new Vue({
+    el:"#postcomments",
+    data:{
+        comments: null
+    }
+});
+
 $(document).ready(function () {
     initPage();
 
@@ -64,6 +71,19 @@ var initPage = function () {
         success:function (result) {
             var data = result.data;
             rank.blogs = data;
+        }
+    });
+
+    $.ajax({
+        url:"/blog_system/comment/searchComment.html",
+        data:{"blogCode":blogCode},
+        type:"POST",
+        success:function (result) {
+            if (result.code == 200){
+                com.comments = result.data;
+            } else {
+                alert("加载评论失败")
+            }
         }
     })
 };

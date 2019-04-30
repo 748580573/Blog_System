@@ -1,5 +1,7 @@
 package com.heng.blog_system.bean;
 
+import java.util.List;
+
 public class Comment {
 
     private Integer id;
@@ -13,6 +15,8 @@ public class Comment {
     private String time;
 
     private String userName;
+
+    private List<Reply> replies;
 
     public Integer getId() {
         return id;
@@ -60,5 +64,13 @@ public class Comment {
 
     public void setBlogCode(Integer blogCode) {
         this.blogCode = blogCode;
+    }
+
+    public List<Reply> getReplies() {
+        return replies;
+    }
+
+    public void setReplies(List<Reply> replies) {
+        this.replies = replies;
     }
 }
