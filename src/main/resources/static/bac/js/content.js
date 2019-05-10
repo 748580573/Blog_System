@@ -22,6 +22,7 @@ var listBlog = function (pageNumber) {
             var data = result.data;
             dataList.blogs = data;
             generatePage(result.pageNumber,result.total);
+
         }
     })
 };

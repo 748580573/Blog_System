@@ -85,12 +85,16 @@ public interface BlogService {
      */
     public Map<String,Object> selectTags();
 
+
+
+    public Map<String,Object> selectImgs();
+
     /**
      * 测试用接口
      * @param form
      * @return
      */
-
     public Map<String,Object> test(Map<String,Object> form);
+
 
 }

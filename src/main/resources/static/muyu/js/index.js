@@ -32,6 +32,18 @@ $(function () {
 
 var initPage = function () {
     $.ajax({
+        url:"/blog_system/template/carouse.html?id=1",
+        type:"GET",
+        success:function (result) {
+            if (result.code == 200){
+                $("#carousel").html(result.data);
+            }else {
+
+            }
+        }
+    });
+
+    $.ajax({
         url:"/blog_system/blog/searchRecommendBlog",
         type:"POST",
         success:function (result) {

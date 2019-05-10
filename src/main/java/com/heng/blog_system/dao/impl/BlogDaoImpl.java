@@ -74,4 +74,14 @@ public class BlogDaoImpl  implements BlogDao {
     public int updateBlog(Map<String, Object> param) throws Exception {
         return commonDao.update("blogTag.updateBlog", param);
     }
+
+    @Override
+    public List<String> selectImgs() throws Exception {
+        return commonDao.getList("blogTag.selectImgs");
+    }
+
+    @Override
+    public List<Blog> randomSelectBlog(Map<String, Object> param) throws Exception {
+        return commonDao.getList("blogTag.randomSelectBlogs",param);
+    }
 }

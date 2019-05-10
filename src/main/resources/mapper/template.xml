@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="template">
+
+    <resultMap id="templateMapper" type="com.heng.blog_system.bean.Template">
+        <result column="id" property="id"/>
+        <result column="templateName" property="templateName"/>
+        <result column="templateContent" property="templateContent"/>
+    </resultMap>
+
+    <insert id="addTemplate" parameterType="com.heng.blog_system.bean.Template" useGeneratedKeys="true" keyProperty="id">
+        insert into template(templateName,templateContent) values (#{templateName},#{templateContent})
+    </insert>
+
+    <select id="selectTemplate" parameterType="map" resultType="map">
+        select *
+        from template
+        where  1 = 1
+        <if test="id != null">
+            and id = #{id}
+        </if>
+        <if test="templateName != null">
+           and templateName like "${templateName}"
+        </if>
+    </select>
+</mapper>
+

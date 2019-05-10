@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -152,6 +153,11 @@ public class BlogController {
         Map<String,Object> form = RequestUtil.getFormData(request);
         result = blogService.deleteBlog(form);
         return result;
+    }
+
+    @RequestMapping(value = "/imgs")
+    public Map<String,Object> imgs(HttpServletRequest request){
+        return blogService.selectImgs();
     }
 
     @RequestMapping(value = {"/tags"})

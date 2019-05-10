@@ -22,6 +22,8 @@ public interface BlogDao {
 
     public int updateBlog(Map<String,Object> param) throws Exception;
 
+    public List<Blog> randomSelectBlog(Map<String,Object> param) throws Exception;
+
     /**
      * 查询所有tags
      * @return
@@ -35,5 +37,7 @@ public interface BlogDao {
     public int addBlogAndTag(Map<String,Object> param) throws Exception;
 
     public Map<String,Object> selectTagBlog(Map<String,Object> param) throws Exception;
+
+    public List<String> selectImgs() throws Exception;
 
 }

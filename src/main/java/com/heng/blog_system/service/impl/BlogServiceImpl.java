@@ -498,6 +498,20 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
+    public Map<String, Object> selectImgs() {
+        Map<String,Object> result = new HashMap<>();
+        try {
+            List<String> imgs = blogDao.selectImgs();
+            result.put("data",imgs );
+            MapUtils.setSuccess(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            MapUtils.setFail(result);
+        }
+        return result;
+    }
+
+    @Override
     @Permission(value = {PermissionEnum.SELECT})
     public Map<String, Object> test(Map<String, Object> form) {
         System.out.println("test");

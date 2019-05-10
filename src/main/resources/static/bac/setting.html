@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>设置</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css-v=3.3.5.css">
+
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/bootstrap.min.js-v=3.3.5"></script>
+</head>
+<body>
+
+<div class="panel panel-default container" style="width: 85%;box-shadow:0 0 1px #000 inset;">
+    <div class="panel-heading">
+        <h3 class="panel-title" style="display: inline-block">
+            模块设置
+        </h3>
+        <form id="query" style="display: inline-block">
+            <ul >
+                <li style="display: inline-block;margin-right: 5px;">
+                    <button id="blogTitle" type="button" class="btn btn-default btn-sm btn-primary" onclick="addSetting(this)"><span class="glyphicon glyphicon-plus"></span>添加</button>
+                </li>
+
+            </ul>
+        </form>
+    </div>
+    <div id="templateList" class="panel-body">
+        <table class="table table-hover table-striped table-bordered">
+            <thead>
+            <tr  class="btn-lg text-center">
+                <td><b>选择</b></td>
+                <td><b>编号</b></td>
+                <td><b>模块名</b></td>
+                <td><b>对应的类</b></td>
+                <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>操作</b><span class="glyphicon glyphicon-cog"></span></td>
+            </tr>
+            </thead>
+
+            <tbody >
+            <tr class="text-center" v-for="obj in templateList">
+                <td>
+                    <label>
+                        <input type="checkbox" v-bind:data-code="obj.id">
+                    </label>
+                </td>
+                <td>{{obj.id}}</td>
+                <td>{{obj.templateName}}</td>
+                <td>扩展字段（待填充）</td>
+                <td>
+                    <button type="button" class="btn btn-default btn-sm btn-primary" onclick="modify(this)" v-bind:data-code="obj.id"><span class="glyphicon glyphicon-pencil"></span>编辑</button>
+                    <button type="button" class="btn btn-default btn-sm btn-danger" onclick="dele(this)" v-bind:data-code="obj.id"><span class="glyphicon glyphicon-remove"></span>删除</button>
+                    <button type="button" class="btn btn-default btn-sm btn-warning" onclick="view(this)" v-bind:data-code="obj.id"><span class="glyphicon glyphicon-search"></span>查看</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+<!--添加 修改模态框-->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">添加模板</h4>
+            </div>
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label for="templateName" class="col-sm-2 control-label">模板名字</label>
+                    <div class="col-sm-9">
+                        <input  class="form-control" id="templateName">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="templateContent" class="col-sm-2 control-label">模板内容</label>
+                    <div class="col-sm-9">
+                        <textarea id="templateContent" class="form-control" rows="15"></textarea>
+
+                    </div>
+                </div>
+            </form>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="addTemplate()">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <script src="js/vue.js"></script>
+
+    <script>
+
+        var templates = new Vue({
+            el:"#templateList",
+            data:{
+                templateList:null
+            }
+        })
+
+        $(function () {
+            init();
+        });
+
+        var init = function () {
+            $.ajax({
+                url:"/blog_system/template/templateList.html",
+                type:"GET",
+                success:function (result) {
+                    if (result.code == 200) {
+                        templates.templateList = result.data;
+
+                    }else {
+                        alert("页面初始化失败");
+                    }
+                }
+            })
+        };
+
+        var addSetting = function () {
+            $("#myModal").modal("show");
+        };
+
+        var tr = "<tr class=\"text-center\">\n" +
+            "    <td>\n" +
+            "        <label>\n" +
+            "            <input type=\"checkbox\" data-code=\"{{id}}\">\n" +
+            "        </label>\n" +
+            "    </td>\n" +
+            "    <td>{{id}}</td>\n" +
+            "    <td>{{templateName}}</td>\n" +
+            "    <td>扩展字段（待填充）</td>\n" +
+            "    <td>\n" +
+            "        <button type=\"button\" class=\"btn btn-default btn-sm btn-primary\" onclick=\"modify_blog(this)\" data-code=\"{{id}}\"><span class=\"glyphicon glyphicon-pencil\"></span>编辑</button>\n" +
+            "        <button type=\"button\" class=\"btn btn-default btn-sm btn-danger\" onclick=\"dele_blog(this)\" data-code=\"{{id}}\"><span class=\"glyphicon glyphicon-remove\"></span>删除</button>\n" +
+            "        <button type=\"button\" class=\"btn btn-default btn-sm btn-warning\" onclick=\"view_blog(this)\" data-code=\"{{id}}\"><span class=\"glyphicon glyphicon-search\"></span>查看</button>\n" +
+            "    </td>\n" +
+            "</tr>";
+
+        var addTemplate = function () {
+            var templateName = $("#templateName").val();
+            var templateContent = $("#templateContent").val();
+            $.ajax({
+                url:"/blog_system/template/addTemplate.html",
+                data:{
+                    "templateName":templateName,"templateContent":templateContent
+                },
+                type:"POST",
+                success:function (result) {
+                    if (result.code == 200){
+                        var data = result.data;
+                        var html = tr.replace(/{{id}}/g,data.id);
+                        html = html.replace("{{templateName}}",data.templateName);
+                        $("#tbody").before(html);
+                        $("#myModal input,textarea").val("");
+                        $("#myModal").modal("hide");
+                    }else {
+                        alert("模板添加失败!");
+                    }
+                }
+            })
+
+        };
+
+        var modify = function (obj) {
+            var id = parseInt($(obj).attr("data-code"));
+            $.ajax({
+                url:"/blog_system/template/template.html",
+                data:{"id":id},
+                type:"GET",
+                success:function (result) {
+                    if (result.code == 200){
+                        var data = result.data;
+                        $("#templateName").val(data.templateName);
+                        $("#templateContent").val(data.templateContent);
+                        $("#myModal").modal("show");
+                    } else {
+                        alert("模板查询失败")
+                    }
+                }
+            })
+        }
+    </script>
+
+</body>
+</html>
+
+

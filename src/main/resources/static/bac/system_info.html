@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>系统资源监控</title>
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/vue.js"></script>
+    <script src="js/echarts.min.js"></script>
+
+    <link rel="stylesheet" href="css/bootstrap.min.css-v=3.3.5.css">
+</head>
+<style>
+    th,tr,td{
+        text-align: center;
+    }
+</style>
+
+<div class="container-fluid">
+    <div id="main" style="width: 800px;height:400px;margin: 0 auto"></div>
+</div>
+
+<div style="height: 250px">
+    <div id="server" class="col-lg-6">
+        <div class="container-fluid">
+            <div class="panel panel-success">
+                <!-- Default panel contents -->
+                <div class="panel-heading">服务器</div>
+                <div class="panel-body">
+                    <table class="table table-hover">
+                        <tr v-for="(value,key) in infos">
+                            <td>{{key}}</td>
+                            <td>{{value}}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="height: 60px;"></div>
+
+    <div id="jvm" class="col-lg-6">
+        <div  class="container-fluid">
+            <div class="panel panel-success">
+                <!-- Default panel contents -->
+                <div class="panel-heading">虚拟机信息</div>
+                <div class="panel-body">
+                    <table class="table table-hover">
+                        <tr v-for="(value,key) in infos">
+                            <td>{{key}}</td>
+                            <td>{{value}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="height: 60px;"></div>
+
+
+</body>
+<script>
+
+    var server = new Vue({
+        el:"#server",
+        data:{
+            infos:null
+        }
+    });
+
+    var jvm = new Vue({
+        el:"#jvm",
+        data:{
+            infos:null
+        }
+    });
+
+    $(function () {
+        init();
+    });
+
+
+    var init = function () {
+        $.ajax({
+            url:"/blog_system/info/systemInfo.html",
+            type:"GET",
+            success:function (result) {
+                server.infos = result.server;
+                jvm.infos = result.jvm;
+            }
+        })
+    }
+</script>
+
+<script>
+    var myChart = echarts.init(document.getElementById('main'));
+
+    var option = {
+        tooltip : {
+            formatter: "{a} <br/>{c} {b}"
+        },
+        toolbox: {
+            show: true,
+            feature: {
+                restore: {show: true},
+                saveAsImage: {show: true}
+            }
+        },
+        series : [
+            {
+                name: '服务器内存',
+                type: 'gauge',
+                z: 3,
+                min: 0,
+                max: 100,
+                splitNumber: 10,
+                radius: '80%',
+                axisLine: {            // 坐标轴线
+                    lineStyle: {       // 属性lineStyle控制线条样式
+                        width: 10
+                    }
+                },
+                axisTick: {            // 坐标轴小标记
+                    length: 15,        // 属性length控制线长
+                    lineStyle: {       // 属性lineStyle控制线条样式
+                        color: 'auto'
+                    }
+                },
+                splitLine: {           // 分隔线
+                    length: 20,         // 属性length控制线长
+                    lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
+                        color: 'auto'
+                    }
+                },
+                axisLabel: {
+                    backgroundColor: 'auto',
+                    borderRadius: 2,
+                    color: '#eee',
+                    padding: 3,
+                    textShadowBlur: 2,
+                    textShadowOffsetX: 1,
+                    textShadowOffsetY: 1,
+                    textShadowColor: '#222'
+                },
+                title : {
+                    // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                    fontWeight: 'bolder',
+                    fontSize: 20,
+                    fontStyle: 'italic'
+                },
+                detail : {
+                    // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                    formatter: function (value) {
+                        return value;
+                    },
+                    fontWeight: 'bolder',
+                    borderRadius: 3,
+                    backgroundColor: '#444',
+                    borderColor: '#aaa',
+                    shadowBlur: 5,
+                    shadowColor: '#333',
+                    shadowOffsetX: 0,
+                    shadowOffsetY: 3,
+                    borderWidth: 2,
+                    textBorderColor: '#000',
+                    textBorderWidth: 2,
+                    textShadowBlur: 2,
+                    textShadowColor: '#fff',
+                    textShadowOffsetX: 0,
+                    textShadowOffsetY: 0,
+                    fontFamily: 'Arial',
+                    width: 100,
+                    color: '#eee',
+                    rich: {}
+                },
+                data:[{value: 100, name: '%'}]
+            },
+            {
+                name: 'CPU使用率',
+                type: 'gauge',
+                center: ['20%', '55%'],    // 默认全局居中
+                radius: '55%',
+                min:0,
+                max:100,
+                endAngle:45,
+                splitNumber:10,
+                axisLine: {            // 坐标轴线
+                    lineStyle: {       // 属性lineStyle控制线条样式
+                        width: 8
+                    }
+                },
+                axisTick: {            // 坐标轴小标记
+                    length:12,        // 属性length控制线长
+                    lineStyle: {       // 属性lineStyle控制线条样式
+                        color: 'auto'
+                    }
+                },
+                splitLine: {           // 分隔线
+                    length:20,         // 属性length控制线长
+                    lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
+                        color: 'auto'
+                    }
+                },
+                pointer: {
+                    width:5
+                },
+                title: {
+                    offsetCenter: [0, '-30%'],       // x, y，单位px
+                },
+                detail: {
+                    // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                    formatter: function (value) {
+                        return value;
+                    },
+                    fontWeight: 'bolder'
+                },
+                data:[{value: 20, name: '%'}]
+            },
+            {
+                name: 'JVM使用率',
+                type: 'gauge',
+                center: ['80%', '55%'],    // 默认全局居中
+                radius: '55%',
+                min:0,
+                max:100,
+                startAngle:135,
+                endAngle:-45,
+                splitNumber:10,
+                axisLine: {            // 坐标轴线
+                    lineStyle: {       // 属性lineStyle控制线条样式
+                        width: 8
+                    }
+                },
+                axisTick: {            // 坐标轴小标记
+                    length:12,        // 属性length控制线长
+                    lineStyle: {       // 属性lineStyle控制线条样式
+                        color: 'auto'
+                    }
+                },
+                splitLine: {           // 分隔线
+                    length:20,         // 属性length控制线长
+                    lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
+                        color: 'auto'
+                    }
+                },
+                pointer: {
+                    width:5
+                },
+                title: {
+                    offsetCenter: [0, '-30%'],       // x, y，单位px
+                },
+                detail: {
+                    // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                    formatter: function (value) {
+                        return value;
+                    },
+                    fontWeight: 'bolder'
+                },
+                data:[{value: 20, name: '%'}]
+            }
+
+        ]
+    };
+    myChart.setOption(option,true)
+
+    var obj = setInterval(function (){
+        chageJvm();
+        myChart.setOption(option,true);
+        $(window).unload(function(){
+            clearInterval(obj);
+            return;
+        });
+    },2000);
+
+    var chageJvm = function (result) {
+        $.ajax({
+            url:"/blog_system/info/systemRate.html",
+            type:"GET",
+            success:function (result) {
+                option.series[0].data[0].value = result.memoryRate;
+                option.series[1].data[0].value = result.cupRate;
+                option.series[2].data[0].value = result.jvmRate;
+            }
+        })
+    }
+</script>
+
+</html>

@@ -15,6 +15,13 @@ var blog = new Vue({
     }
 });
 
+var tag = new Vue({
+    el:"#tags",
+    data:{
+        tags:null
+    }
+});
+
 var rank = new Vue({
     el:"#rank",
     data:{
@@ -56,7 +63,7 @@ var initPage = function () {
             var blogContent = data.blogContent;
             var createDate = data.createDate;
             $("#blog_content").html(blogContent);
-            blog.tags = tags;
+            tag.tags = tags;
             blog.blogCode = blogCode;
             blog.blogTilte = blogTilte;
             blog.blogDesc = blogDesc;

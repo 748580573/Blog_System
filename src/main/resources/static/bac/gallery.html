@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+
+    <title>图库</title>
+
+    <link rel="shortcut icon" href="favicon.ico"> <link href="css/bootstrap.min.css-v=3.3.5.css" tppabs="http://www.zi-han.net/theme/hplus/css/bootstrap.min.css?v=3.3.5" rel="stylesheet">
+    <link href="css/font-awesome.min.css-v=4.4.0.css" tppabs="http://www.zi-han.net/theme/hplus/css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+    <link href="js/plugins/fancybox/jquery.fancybox.css" tppabs="http://www.zi-han.net/theme/hplus/js/plugins/fancybox/jquery.fancybox.css" rel="stylesheet">
+    <link href="css/animate.min.css" tppabs="http://www.zi-han.net/theme/hplus/css/animate.min.css" rel="stylesheet">
+    <link href="css/style.min.css-v=4.0.0.css" tppabs="http://www.zi-han.net/theme/hplus/css/style.min.css?v=4.0.0" rel="stylesheet"><base target="_blank">
+
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>QQ: <small>748580573</small></h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div id="imgs" class="ibox-content">
+                        <a  v-for="img in list" class="fancybox" v-bind:href="img"  title="图片1">
+                            <img alt="image" v-bind:src="img" >
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script src="js/jquery.min.js-v=2.1.4" tppabs="http://www.zi-han.net/theme/hplus/js/jquery.min.js?v=2.1.4"></script>
+    <script src="js/bootstrap.min.js-v=3.3.5" tppabs="http://www.zi-han.net/theme/hplus/js/bootstrap.min.js?v=3.3.5"></script>
+    <script src="js/plugins/peity/jquery.peity.min.js" tppabs="http://www.zi-han.net/theme/hplus/js/plugins/peity/jquery.peity.min.js"></script>
+    <script src="js/content.min.js-v=1.0.0" tppabs="http://www.zi-han.net/theme/hplus/js/content.min.js?v=1.0.0"></script>
+    <script src="js/plugins/fancybox/jquery.fancybox.js" tppabs="http://www.zi-han.net/theme/hplus/js/plugins/fancybox/jquery.fancybox.js"></script>
+    <script src="js/vue.js"></script>
+    <script>
+        $(document).ready(function(){$(".fancybox").fancybox({openEffect:"none",closeEffect:"none"})});
+    </script>
+
+</body>
+
+<script>
+
+    var img = new Vue({
+        el:"#imgs",
+        data:{list:null}
+    });
+
+    $(function () {
+        init();
+    });
+
+    var init = function () {
+        $.ajax({
+            url:"/blog_system/blog/imgs",
+            type:"GET",
+            success:function (result) {
+                img.list = result.data;
+            }
+        })
+    }
+</script>
+
+</html>

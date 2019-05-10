@@ -48,6 +48,13 @@
         </trim>
     </insert>
 
+    <!--随机查找-->
+
+    <select id="randomSelectBlogs" resultMap="blogMapForIndex">
+            SELECT * FROM blog_article
+            WHERE blog_code >= ((SELECT MAX(blog_code) FROM blog_article)-(SELECT MIN(blog_code) FROM blog_article)) * RAND() + (SELECT MIN(blog_code) FROM blog_article)  LIMIT 3
+    </select>
+
     <!--用于首页-->
     <select id="selectBlogForIndex" parameterType="map" resultMap="blogMapForIndex">
         SELECT
@@ -262,6 +269,10 @@
                 and blog_code = #{blogCode}
             </if>
         </trim>
+    </select>
+
+    <select id="selectImgs" resultType="string">
+        select blog_conver_url from blog_article
     </select>
 </mapper>
 

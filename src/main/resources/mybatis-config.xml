@@ -17,7 +17,7 @@
         <mapper resource="mapper/permissionAuth.xml"/>
         <mapper resource="mapper/visitor.xml"/>
         <mapper resource="mapper/comment.xml"/>
-
+        <mapper resource="mapper/template.xml"/>
 
     </mappers>
 
