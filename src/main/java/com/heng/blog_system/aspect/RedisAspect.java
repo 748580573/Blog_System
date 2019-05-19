@@ -14,6 +14,7 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Map;
 
@@ -24,34 +25,18 @@ public class RedisAspect {
     @Autowired
     RedisCache redisCache;
 
-    @Pointcut("execution(* com.heng.blog_system.service.impl..*.*(..))")
+    @Pointcut("@annotation(com.heng.blog_system.anno.RedisKey)")
     public void controller(){}
 
     @Around("controller()")
-    public Object around(ProceedingJoinPoint jp) throws Throwable {
+    public void around(ProceedingJoinPoint jp) throws Throwable {
         Signature signature = jp.getSignature();
         MethodSignature methodSignature = (MethodSignature)signature;
         Method targetMethod = methodSignature.getMethod();
+        RedisKey annotation = targetMethod.getAnnotation(RedisKey.class);
+        System.out.println(annotation.name());
         String methodName = targetMethod.toGenericString();
-        boolean savaRedis = ReflectUtlis.methodHasAnnotation(targetMethod, RedisKey.class);
-        if (savaRedis){
-            Object cache = redisCache.get(methodName);
-            if (cache != null){
-                return cache;
-            }
-        }else {
-            return jp.proceed();
-        }
 
 
-        Object result =jp.proceed();
-        if (ReflectUtlis.isAssignableFrom(result.getClass(), Map.class)){
-            Integer code = MapUtils.getInteger((Map) result, "code", 0);
-            if (code == 201){
-                redisCache.put(methodName, result);
-            }
-        }
-
-        return result;
     }
 }

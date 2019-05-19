@@ -5,10 +5,7 @@ import java.lang.annotation.*;
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
-public @interface RedisKey {
+public @interface AccessLog {
 
-    int keyTimeOut() default 600;                //key超时，默认为600秒
-
-    String name();
-
+    String funcationname() default "";
 }

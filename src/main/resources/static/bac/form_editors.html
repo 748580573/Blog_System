@@ -220,7 +220,12 @@
             type:"POST",
             data:{"blogTilte":blog_title,"blogDesc":blog_desc,"tagName":bolg_tags,
                 "blogContent":blog_content,"blogConverUrl":imgUrl},
-            success:function () {
+            success:function (result) {
+                if (result.code == 200){
+                    alert("添加成功");
+                }else {
+                    alert("添加失败")
+                }
             }
         })
     };

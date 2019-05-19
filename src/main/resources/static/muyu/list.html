@@ -50,7 +50,7 @@
         <h3 style="line-height: 1.3">搜索结果...</h3>
       </div>
       <div id="list">
-          <article v-for="blog in blogs" class="excerpt excerpt-1">
+          <article v-for="blog in blogs" class="excerpt excerpt-1" v-if="blog != null">
               <a class="focus" href="javascript:void(0)" v-bind:data-code="blog.blogCode" onclick="view_blog(this)" target="_blank" >
                   <img class="thumb" v-lazy="blog.blogConverUrl"  style="display: inline;">
               </a>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="logger">
+
+    <resultMap id="loggerMapper" type="com.heng.blog_system.bean.Log">
+        <result column="ip" property="ip"/>
+        <result column="address" property="address"/>
+        <result column="type" property="type"/>
+        <result column="method" property="method"/>
+        <result column="desc" property="desc"/>
+        <result column="time" property="time"/>
+    </resultMap>
+
+    <insert id="addLogger" parameterType="map">
+        insert into logger
+        set ip = #{ip},
+        address = #{address},
+        `type` = #{type},
+        method = #{method},
+        `desc` = #{desc},
+        `time` = #{time}
+    </insert>
+    
+    <select id="selectLogger" parameterType="map" resultMap="loggerMapper">
+        select * from logger
+        where 1 = 1
+        <if test="id != null">
+            and id = #{id}
+        </if>
+        <if test="ip != null">
+            and ip = #{ip}
+        </if>
+        <if test="type != null">
+            and type = #{type}
+        </if>
+        <if test="start != null">
+            and `time` &gt; #{start}
+        </if>
+        <if test="end != null">
+            and `time` &lt; #{end}
+        </if>
+        order by `time`
+        <if test="pageNumber != null">
+            limit ${(pageNumber - 1) * pageSize},${pageSize}
+        </if>
+    </select>
+
+    <select id="selectTotal" parameterType="map" resultType="int">
+        select count(id) from logger
+        where 1 = 1
+        <if test="ip != null">
+            and ip = #{ip}
+        </if>
+        <if test="type != null">
+            and type = #{type}
+        </if>
+        <if test="start != null">
+            and `time` &gt; #{start}
+        </if>
+        <if test="end != null">
+            and `time` &lt; #{end}
+        </if>
+    </select>
+</mapper>
+

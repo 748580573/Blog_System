@@ -1,6 +1,7 @@
 package com.heng.blog_system.controller;
 
 
+import com.heng.blog_system.anno.AccessLog;
 import com.heng.blog_system.bean.User;
 import com.heng.blog_system.service.UserService;
 import com.heng.blog_system.utils.MapUtils;
@@ -23,6 +24,7 @@ public class LoginController {
     UserService userService;
 
     @RequestMapping(value = "/login.html")
+    @AccessLog(funcationname = "登录")
     public Map<String,Object> login(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String context = request.getContextPath();
         Map<String,Object> form = RequestUtil.getFormData(request);

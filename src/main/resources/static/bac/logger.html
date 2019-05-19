@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="renderer" content="webkit">
+    <title>博客管理</title>
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/bootstrap.min.js-v=3.3.5"></script>
+
+    <link rel="stylesheet" href="css/bootstrap.min.css-v=3.3.5.css">
+    <style type="text/css">
+        td{
+            word-break:keep-all;
+            white-space:nowrap;
+            overflow:hidden;
+            text-overflow:ellipsis;
+        }
+        .demo-input{padding-left: 10px; height: 35px; min-width: 200px; line-height: 38px; border: 1px solid #e6e6e6;  background-color: #fff;  border-radius: 2px;}
+
+    </style>
+</head>
+<body>
+
+<div style="height: 30px"></div>
+
+<div class="container white-bg" style="width: 85%;box-shadow:0 0 2px #000 inset;height: 65px;padding-top: 12px">
+    <form id="query">
+        <ul >
+            <li style="display: inline-block;margin-right: 5px;">
+                <label for="_ip">ip：</label>
+                <input id="_ip" name="ip" class="demo-input" placeholder="ip">
+            </li>
+            <li style="display: inline-block;margin-right: 5px;">
+                <label for="_address">地点</label>
+                <input id="_address" name="address" class="demo-input" placeholder="博客标题">
+            </li>
+            <li style="display: inline-block;margin-right: 5px;">
+                <label for="start">创建时间：</label> <input type="text" class="demo-input" name="start" placeholder="请选择日期" id="start" autocomplete="off"> &nbsp;-&nbsp;
+                <input type="text" class="demo-input" placeholder="请选择日期" id="end" name="end" autocomplete="off">
+            </li>
+            <li style="display: inline-block;margin-right: 5px;">
+                <a class="btn btn-primary btn-rounded btn-sm" style="border-radius:25px;" onclick="fuzzyByDB()"><span class="glyphicon glyphicon-search"></span></i>&nbsp;搜索</a>
+            </li>
+        </ul>
+    </form>
+</div>
+<div id="queryParam" data-param=""></div>
+
+<div style="height: 20px"></div>
+
+<div class="panel panel-default container" style="width: 85%;box-shadow:0 0 1px #000 inset;">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            日志管理
+        </h3>
+    </div>
+    <div id="logs" class="panel-body">
+        <table class="table table-hover table-striped table-bordered">
+            <thead>
+            <tr  class="btn-lg text-center">
+                <td><b>选择</b></td>
+                <td><b>编号</b></td>
+                <td><b>ip</b></td>
+                <td><b>地点</b></td>
+                <td><b>功能描述</b></td>
+                <td><b>时间</b></td>
+                <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>操作</b><span class="glyphicon glyphicon-cog"></span></td>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr class="text-center" v-for="log in list">
+                <td>
+                    <label>
+                        <input type="checkbox" v-bind:data-code="log.id">
+                    </label>
+                </td>
+                <td>{{log.id}}</td>
+                <td>{{log.ip}}</td>
+                <td>{{log.address}}</td>
+                <td>{{log.desc}}</td>
+                <td>{{log.time}}</td>
+                <td>
+                    <button type="button" class="btn btn-default btn-sm btn-warning" onclick="view(this)" v-bind:data-code="log.id"><span class="glyphicon glyphicon-search"></span>查看详情</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="container" style="text-align: center">
+            <nav aria-label="Page navigation">
+                <ul id="pagination" class="pagination">
+
+                    <li><a href="javascript:void(0)" data-page="">上一页</a></li>
+                    <li><a href="#" data-page="">1</a></li>
+                    <li><a href="#" data-page="">下一页</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">日志详情</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="ip">ip</label>
+                        <input class="form-control" id="ip" placeholder="ip">
+                    </div>
+                    <div class="form-group">
+                        <label for="address">address</label>
+                        <input class="form-control" id="address" placeholder="address">
+                    </div>
+                    <div class="form-group">
+                        <label for="desc">desc</label>
+                        <input  class="form-control" id="desc">
+                    </div>
+                    <div class="form-group">
+                        <label for="time">time</label>
+                        <input  class="form-control" id="time">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+<script src="../bac/js/vue.js"></script>
+<script src="../page/js/utils.js"></script>
+<script src="js/laydate/laydate.js"></script>
+<script>
+    laydate.render({
+        elem: '#start', //指定元素
+        type:"date"
+    });
+    laydate.render({
+        elem: '#end', //指定元素
+        type:"date"
+    });
+
+    var dataList= new Vue({
+        el:"#logs",
+        data:{
+            list:null
+        }
+    });
+
+    $(function () {
+        var pageNumber = getUrlParam("pageNumber");
+        if (pageNumber == null || pageNumber == ""){
+            pageNumber = 1;
+        }
+        listBlog(pageNumber);
+    });
+
+    var listBlog = function (pageNumber) {
+        $.ajax({
+            url:"/blog_system/logger/loggerList.html",
+            data:{"pageNumber":pageNumber},
+            type:"POST",
+            success:function (result) {
+                var data = result.data;
+                dataList.list = data;
+                generatePage(result.pageNumber,result.total);
+            }
+        })
+    };
+
+
+    var generatePage = function (pageNumber,total) {
+        var html = "";
+        if (pageNumber <= 1){
+            html += "<li class='disabled'><a href=\"javascript:void(0)\" data-page=\"" + pageNumber + "\">上一页</a></li>";
+        }else {
+            html += "<li><a href=\"javascript:void(0)\" data-page=\"" + pageNumber + "\" onclick='previousPage(this)'>上一页</a></li>";
+        }
+
+        for (var i = 0; i < 5 && pageNumber + i <= total;i++){
+            html += "<li><a href=\"javascript:void(0)\" data-page=\" " + (pageNumber + i) + "\" onclick='turnPage(this)'> " + (pageNumber + i) +"</li>";
+        }
+
+        if (pageNumber >= total){
+            html += "<li class='disabled'><a href=\"javascript:void(0)\" data-page=\"" + pageNumber + "\">下一页</a></li>";
+        }else {
+            html += "<li><a href=\"javascript:void(0)\" data-page=\"" + pageNumber + "\" onclick='nextPage(this)'>下一页</a></li>";
+        }
+        $("#pagination").html(html);
+    };
+
+    var previousPage = function (obj) {
+        var pageNumber = parseInt($(obj).attr("data-page")) - 1;
+        var param = $("#queryParam").attr("data-param");
+        param = serializeFormPutParam(param,"pageNumber",pageNumber);
+        $.ajax({
+            url:"/blog_system/logger/loggerList.html",
+            data:param,
+            type:"POST",
+            success:function (result) {
+                var msg = result.msg;
+                dataList.list = result.data;
+                var pageNumber = result.pageNumber;
+                var total = result.total;
+                generatePage(pageNumber,total);
+            }
+        })
+    };
+
+    var nextPage = function (obj) {
+        var pageNumber = parseInt($(obj).attr("data-page")) + 1;
+        var param = $("#queryParam").attr("data-param");
+        param = serializeFormPutParam(param,"pageNumber",pageNumber);
+        $.ajax({
+            url:"/blog_system/logger/loggerList.html",
+            data:param,
+            type:"POST",
+            success:function (result) {
+                var msg = result.msg;
+                dataList.list = result.data;
+                var pageNumber = result.pageNumber;
+                var total = result.total;
+                generatePage(pageNumber,total);
+            }
+        })
+    };
+
+    var turnPage = function (obj) {
+        var pageNumber = parseInt($(obj).attr("data-page")) ;
+        var param = $("#queryParam").attr("data-param");
+        param = serializeFormPutParam(param,"pageNumber",pageNumber);
+        $.ajax({
+            url:"/blog_system/logger/loggerList.html",
+            data:param,
+            type:"POST",
+            success:function (result) {
+                var msg = result.msg;
+                dataList.list = result.data;
+                var pageNumber = result.pageNumber;
+                var total = result.total;
+                generatePage(pageNumber,total);
+            }
+        })
+    };
+
+
+    var fuzzyByDB = function () {
+        var form =  $("#query").serialize();
+        form = serializeFormPutParam(form,"pageNumber",1);
+        form = serializeFormPutParam(form,"pageSize",10);
+        $.ajax({
+            url:"/blog_system/logger/loggerList.html",
+            data:form,
+            type: 'POST',
+            success:function (result) {
+                if (result.code == 200){
+                    $("#queryParam").attr("data-param",form);
+                    var msg = result.msg;
+                    dataList.list = result.data;
+                    var pageNumber = result.pageNumber;
+                    var total = result.total;
+                    generatePage(pageNumber,total);
+                }
+            }
+        })
+    };
+
+    var view = function (obj) {
+        var id = $(obj).attr("data-code");
+        $.ajax({
+            url:"/blog_system/logger/logger.html",
+            data:{"id":id},
+            type:"GET",
+            success:function (result) {
+                if (result.code == 200){
+                    var data = result.data;
+                    $("#ip").val(data.ip);
+                    $("#address").val(data.address);
+                    $("#desc").val(data.desc);
+                    $("#time").val(data.time);
+                    $("#myModal").modal("show");
+                } else {
+                    alert(result.msg);
+                }
+            }
+        })
+    };
+
+
+</script>
+</html>

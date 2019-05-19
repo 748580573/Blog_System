@@ -49,6 +49,7 @@ public class BlogServiceImpl implements BlogService {
     private TagDao tagDao;
 
     @Override
+    @Transactional
     public Map<String, Object> addBlog(Map<String, Object> map) {
         Map<String, Object> result = new HashMap<>();
         String blogCode = null;
@@ -109,7 +110,7 @@ public class BlogServiceImpl implements BlogService {
                     }
                 }
             }
-            result.put("code", 201);
+            result.put("code", 200);
             return result;
         } catch (IOException e) {
             e.printStackTrace();
@@ -168,7 +169,7 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     @Transactional
-    @RedisKey
+    @RedisKey(name = "")
     public Map<String, Object> selectHostBlogs(Map<String, Object> form) {
         Map<String, Object> result = new HashMap<>();
 

@@ -36,7 +36,7 @@
                     <li><a data-cont="源码分享" title="源码分享" href="javascript:void(0)" onclick="lookTag(this)" value="源码分享">源码分享</a></li>
                     <li><a data-cont="IT技术笔记" title="IT技术笔记" href="javascript:void(0)" onclick="lookTag(this)" value="IT技术笔记">IT技术笔记</a></li>
                     <li><a data-cont="资讯分享" title="资讯分享" href="javascript:void(0)" onclick="lookTag(this)" value="资讯分享">资讯分享</a></li>
-                    <li> <a data-cont="登陆" title="资讯分享" href="javascript:void(0)" onclick="lookTag(this)"><span class="glyphicon glyphicon-user"></span>&nbsp;登陆</a></li>
+                    <li> <a data-cont="登陆" title="资讯分享" href="javascript:void(0)" onclick="refuse(this)"><span class="glyphicon glyphicon-user"></span>&nbsp;登录</a></li>
                 </ul>
             </div>
         </div>
@@ -47,9 +47,9 @@
     <div class="content">
       <div id="focusslide" class="carousel slide" data-ride="carousel">
         <ol class="carousel-indicators">
-          <li data-target="#focusslide" data-slide-to="0" class="active"></li>
-          <li data-target="#focusslide" data-slide-to="1"></li>
-          <li data-target="#focusslide" data-slide-to="2"></li>
+          <li class="index" data-target="#focusslide" data-slide-to="0" class="active"></li>
+          <li class="index" data-target="#focusslide" data-slide-to="1"></li>
+          <li class="index" data-target="#focusslide" data-slide-to="2"></li>
         </ol>
           <!--###########################轮播#####################################-->
         <div id="carousel" class="carousel-inner" role="listbox">

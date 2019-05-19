@@ -37,6 +37,7 @@ var initPage = function () {
         success:function (result) {
             if (result.code == 200){
                 $("#carousel").html(result.data);
+
             }else {
 
             }
@@ -107,3 +108,23 @@ var look = function () {
     var key = $("#key").val();
     window.location = "/blog_system/muyu/list.html?key="+key;
 };
+
+
+var carouselControl = function () {
+    $(".left").click(function () {
+        $("#focusslide").carousel('prev');
+    });
+
+    $(".right").click(function () {
+        $("#focusslide").carousel('next');
+    });
+    
+    $(".index").click(function () {
+        var id = $(this).attr("data-slide-to");
+        $("#focusslide").carousel(id);
+    })
+};
+
+var refuse = function (obj) {
+    alert("抱歉，现在暂时只支持游客功能");
+}

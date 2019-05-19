@@ -1,5 +1,7 @@
 package com.heng.blog_system.controller;
 
+import com.heng.blog_system.anno.AccessLog;
+import com.heng.blog_system.anno.RedisKey;
 import com.heng.blog_system.dao.BlogDao;
 import com.heng.blog_system.dao.RedisCache;
 import com.heng.blog_system.service.BlogService;
@@ -35,9 +37,8 @@ public class TestController {
 
     @RequestMapping(value = {"/test"})
     @ResponseBody
+    @AccessLog(funcationname = "测试")
     public void test(HttpServletRequest request) throws Exception {
-        MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) request;
-        multipartHttpServletRequest.getFileMap();
-
+        System.out.println("hello");
     }
 }

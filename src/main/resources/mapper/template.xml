@@ -25,5 +25,15 @@
            and templateName like "${templateName}"
         </if>
     </select>
+
+    <update id="updateTemplate" parameterType="map">
+        update template
+        set templateName = #{templateName},templateContent = #{templateContent}
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTemplate" parameterType="map">
+        delete from template  where id = #{id}
+    </delete>
 </mapper>
 

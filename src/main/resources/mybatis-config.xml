@@ -18,6 +18,7 @@
         <mapper resource="mapper/visitor.xml"/>
         <mapper resource="mapper/comment.xml"/>
         <mapper resource="mapper/template.xml"/>
+        <mapper resource="mapper/logger.xml"/>
 
     </mappers>
 

@@ -30,6 +30,16 @@ public class TemplateDaoImpl implements TemplateDao {
 
     @Override
     public Map<String, Object> selectTemplate(Map<String, Object> param) throws Exception {
+        Map<String,Object> data = commonDao.get("template.selectTemplate",param);
         return commonDao.get("template.selectTemplate",param);
+    }
+
+    @Override
+    public int updateTemplate(Map<String, Object> param) throws Exception {
+        return commonDao.update("template.updateTemplate",param);
+    }
+
+    public int deleteTemplate(Map<String,Object> param) throws Exception{
+        return commonDao.delete("template.deleteTemplate", param);
     }
 }

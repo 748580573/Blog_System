@@ -8,7 +8,11 @@ public interface TemplateService {
 
     Map<String,Object> selectTemplateByHtmlId(Map<String,Object> form);
 
-    Map<String,Object> selectTemplateList(Map<String,Object> from);
+    Map<String,Object> selectTemplateList(Map<String,Object> form);
 
-    Map<String,Object> selectTemplateById(Map<String,Object> from);
+    Map<String,Object> selectTemplateById(Map<String,Object> form);
+
+    Map<String,Object> updataTemplateById(Map<String,Object> form);
+
+    Map<String,Object> delerteTemplateById(Map<String,Object> from);
 }

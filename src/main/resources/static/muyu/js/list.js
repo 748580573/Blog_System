@@ -67,7 +67,7 @@ var initPage = function () {
             var data = result.data;
             tag.tags = data;
         }
-    })
+    });
 
     $.ajax({
         url:"/blog_system/blog/rank",

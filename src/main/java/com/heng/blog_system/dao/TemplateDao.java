@@ -12,4 +12,8 @@ public interface TemplateDao {
     List<Map> selectTemplateList(Map<String,Object> param) throws Exception;
 
     Map<String,Object> selectTemplate(Map<String,Object> param) throws Exception;
+
+    int updateTemplate(Map<String,Object> param) throws Exception;
+
+    public int deleteTemplate(Map<String,Object> param) throws Exception;
 }

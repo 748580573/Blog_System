@@ -1,5 +1,6 @@
 package com.heng.blog_system.controller;
 
+import com.heng.blog_system.anno.AccessLog;
 import com.heng.blog_system.utils.RequestUtil;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,6 +20,7 @@ public class FileController {
 
 
     @RequestMapping("/fileUpload")
+    @AccessLog(funcationname = "图片上传")
     public Map<String,Object> upLoadFile(HttpServletRequest request) throws IOException {
         Map<String,Object> map = new HashMap<>();
         String path = "/home/F/img/";

@@ -80,7 +80,36 @@ public class TemplateServiceImpl implements TemplateService {
         Map<String,Object> result = new HashMap<>();
         try {
             Map<String,Object> map = templateDao.selectTemplate(from);
+
             result.put("data",map );
+            MapUtils.setSuccess(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.info(e);
+            MapUtils.setFail(result);
+        }
+        return result;
+    }
+
+    @Override
+    public Map<String, Object> updataTemplateById(Map<String, Object> form) {
+        Map<String,Object> result = new HashMap<>();
+        try {
+            templateDao.updateTemplate(form);
+            MapUtils.setSuccess(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.info(e);
+            MapUtils.setFail(result);
+        }
+        return result;
+    }
+
+    @Override
+    public Map<String, Object> delerteTemplateById(Map<String, Object> form) {
+        Map<String,Object> result = new HashMap<>();
+        try {
+            templateDao.deleteTemplate(form);
             MapUtils.setSuccess(result);
         } catch (Exception e) {
             e.printStackTrace();
