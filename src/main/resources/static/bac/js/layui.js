@@ -520,7 +520,7 @@
       config.event[eventName] = config.event[eventName] || {};
 
       //这里不再对多次事件监听做支持，避免更多麻烦
-      //config.event[eventName][filterName] ? config.event[eventName][filterName].push(fn) : 
+      //configa.event[eventName][filterName] ? configa.event[eventName][filterName].push(fn) :
       config.event[eventName][filterName] = [fn];
       return this;
     }

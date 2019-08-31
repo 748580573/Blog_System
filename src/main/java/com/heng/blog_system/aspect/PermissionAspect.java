@@ -36,6 +36,9 @@ public class PermissionAspect {
 
     @Around("controller()")
     public Object around(ProceedingJoinPoint jp) throws Throwable {
+
+        System.out.println("*************" + getClass() + "**********************");
+
         Signature signature = jp.getSignature();
         MethodSignature methodSignature = (MethodSignature)signature;
         Method targetMethod = methodSignature.getMethod();

@@ -37,6 +37,9 @@ public class AccessLogAspect {
 
     @Around("controller()")
     public Object arround(ProceedingJoinPoint jp) throws Throwable {
+        System.out.println("*************" + getClass() + "**********************");
+
+
         Signature signature = jp.getSignature();
         MethodSignature methodSignature = (MethodSignature)signature;
         Method targetMethod = methodSignature.getMethod();
